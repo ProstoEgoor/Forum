@@ -16,8 +16,8 @@ namespace Forum_Part1 {
         public int Rating;
 
         public override string ToString() {
-            string answer = "Автор: \t" + Author + Environment.NewLine;
-            answer += "Дата: \t" + Date + Environment.NewLine;
+            string answer = "Автор: \t\t" + Author + Environment.NewLine;
+            answer += "Дата: \t\t" + Date + Environment.NewLine;
             answer += "Рейтинг: \t" + Rating + Environment.NewLine;
             answer += "< " + AnswerMsg + " >";
             return answer;

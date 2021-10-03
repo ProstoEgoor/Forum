@@ -14,26 +14,26 @@ namespace Forum_Part1 {
             Question question = new Question(author, date, tags, topic, questionMsg);
 
             Console.WriteLine("Введите ответы: ");
+            Console.WriteLine("Нажмите ESC, чтобы завершить ввод ответов, или любую другую клавишу, чтобы начать.");
 
-            do {
+            while (Console.ReadKey(true).Key != ConsoleKey.Escape) {
                 Console.WriteLine();
-                string authorA = ReadAuthorA();
-                DateTime dateA = DateTime.Now;
-                string answerMsg = ReadAnswerMsg();
-                int rating = ReadRating();
-                Answer answer = new Answer(authorA, date, answerMsg, rating);
+                Answer answer = CreateAnswer();
                 question.AddAnswer(answer);
-                Console.WriteLine(
-                    "Нажмите ESC, чтобы завершить, или любую другую клавишу, чтобы продолжить."
-                );
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+                Console.WriteLine("Нажмите ESC, чтобы завершить ввод ответов, или любую другую клавишу, чтобы продолжить.");
+            } 
 
             Console.WriteLine();
+            Console.WriteLine("Вопрос:");
             Console.WriteLine(question.ToString());
         }
 
-        public static void CreateAnswer() {
-
+        public static Answer CreateAnswer() {
+            string author = ReadAuthorA();
+            DateTime date = DateTime.Now;
+            string answerMsg = ReadAnswerMsg();
+            int rating = ReadRating();
+            return new Answer(author, date, answerMsg, rating);
         }
 
         private static string ReadAuthorQ() {
@@ -48,7 +48,7 @@ namespace Forum_Part1 {
 
         private static string[] ReadTags() {
             Console.WriteLine("Введите теги через пробел: ");
-            return Console.ReadLine().Split(' ');
+            return Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static string ReadTopic() {
