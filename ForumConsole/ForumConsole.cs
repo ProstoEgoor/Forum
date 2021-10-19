@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using ForumModel;
 
-namespace Forum_Part1 {
+namespace ForumConsole {
     class ForumConsole {
         public static void CreateQuestion() {
             string author = ReadAuthorQ();
@@ -11,7 +10,14 @@ namespace Forum_Part1 {
             string topic = ReadTopic();
             string questionMsg = ReadQuestionMsg();
 
-            Question question = new Question(author, date, tags, topic, questionMsg);
+            Question question = new Question(tags) {
+                Author = author,
+                Date = date,
+                Topic = topic,
+                Text = questionMsg
+            };
+
+
 
             Console.WriteLine("Введите ответы: ");
             Console.WriteLine("Нажмите ESC, чтобы завершить ввод ответов, или любую другую клавишу, чтобы начать.");
@@ -32,8 +38,12 @@ namespace Forum_Part1 {
             string author = ReadAuthorA();
             DateTime date = DateTime.Now;
             string answerMsg = ReadAnswerMsg();
-            int rating = ReadRating();
-            return new Answer(author, date, answerMsg, rating);
+            /*int rating = ReadRating();*/
+            return new Answer() {
+                Author = author,
+                Date = date,
+                Text = answerMsg
+            };
         }
 
         private static string ReadAuthorQ() {

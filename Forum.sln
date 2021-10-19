@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum_Part1", "Forum_Part1\Forum_Part1.csproj", "{3C993555-7DB1-4382-A157-2890AD3B5619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumConsole", "ForumConsole\ForumConsole.csproj", "{3C993555-7DB1-4382-A157-2890AD3B5619}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC405771-DA31-4569-AC4D-3D9334F9D1F7} = {EC405771-DA31-4569-AC4D-3D9334F9D1F7}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumModel", "ForumModel\ForumModel.csproj", "{EC405771-DA31-4569-AC4D-3D9334F9D1F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{090526B7-0543-4AEF-8553-388A62F0EC27}"
+	ProjectSection(SolutionItems) = preProject
+		Naming convetion.txt = Naming convetion.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,10 @@ Global
 		{3C993555-7DB1-4382-A157-2890AD3B5619}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C993555-7DB1-4382-A157-2890AD3B5619}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C993555-7DB1-4382-A157-2890AD3B5619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
