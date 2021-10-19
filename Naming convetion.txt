@@ -1,0 +1,15 @@
+	Вопрос								Question
+Автор								Author
+Дата и время публикации				Date
+Теги								TagSet
+Тема								Topic
+Текст вопроса						Text
+Список ответов						ListAnswer
+	
+	Ответ								Answer
+Автор								Author
+Дата и время публикации				Date
+Текст ответа						Text
+Рейтинг								Rating
+Количество голосов					NumberOfVotes
+	
