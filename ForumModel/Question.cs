@@ -11,8 +11,8 @@ namespace ForumModel {
         public string Text { get; set; }
         List<Answer> ListAnswer { get; } = new List<Answer>();
 
-        IEnumerable<Answer> Answers => ListAnswer;
-        IEnumerable<string> Tags => TagSet;
+        public IEnumerable<Answer> Answers => ListAnswer;
+        public IEnumerable<string> Tags => TagSet;
 
         public Question() { }
 
