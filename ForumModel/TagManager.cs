@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace ForumModel {
-    public class CatalogTag {
+    public class TagManager {
         Dictionary<string, uint> TagDictionary { get; } = new Dictionary<string, uint>();
 
 
@@ -17,8 +17,8 @@ namespace ForumModel {
             }
         }
 
-        public CatalogTag() { }
-        public CatalogTag(IEnumerable<string> tags) {
+        public TagManager() { }
+        public TagManager(IEnumerable<string> tags) {
             foreach (var tag in tags) {
                 TagDictionary[tag] = 0;
             }
