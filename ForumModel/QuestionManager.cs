@@ -6,15 +6,25 @@ namespace ForumModel {
     public class QuestionManager {
         List<Question> ListQuestion { get; } = new List<Question>();
 
-        TagManager tagManager;
+        TagManager TagManager { get; }
+
+        public IEnumerable<Question> Questions => ListQuestion;
 
         public QuestionManager(TagManager tagManager) {
-            this.tagManager = tagManager;
+            TagManager = tagManager;
+        }
+
+        public QuestionManager(TagManager tagManager, IEnumerable<Question> questions) {
+            TagManager = tagManager;
+
+            foreach (var question in questions) {
+                AddQuestion(question);
+            }
         }
 
         public void AddQuestion(Question question) {
             ListQuestion.Add(question);
-            tagManager.UpdateTags(question.Tags);
+            TagManager.UpdateTags(question.Tags);
         }
 
         public bool RemoveQuestion(Question question) {
