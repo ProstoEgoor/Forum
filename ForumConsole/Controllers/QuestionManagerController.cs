@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ForumModel;
+using ForumConsole.Validation;
 
 namespace ForumConsole {
     class QuestionManagerController { 
@@ -16,12 +17,11 @@ namespace ForumConsole {
         }
 
         public Question FillQuestion() {
-            //TODO input question's fields
-            string author = "";
+            string author = InputValidator.ReadAuthorQ();
             /*DateTime date = DateTime.Now;*/
-            string[] tags = new string[0];
-            string topic = "";
-            string text = "";
+            string[] tags = InputValidator.ReadTags();
+            string topic = InputValidator.ReadTopic();
+            string text = InputValidator.ReadQuestionMsg();
 
             Question question = new Question(tags) {
                 Author = author,
@@ -35,10 +35,9 @@ namespace ForumConsole {
         }
 
         public Answer FillAnswer(Question question) {
-            //TODO input answer's fields
-            string author = "";
+            string author = InputValidator.ReadAuthorA();
             /*DateTime date = DateTime.Now;*/
-            string text = "";
+            string text = InputValidator.ReadAnswerMsg();
 
             Answer answer = new Answer() {
                 Author = author,

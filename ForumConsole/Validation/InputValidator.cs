@@ -4,37 +4,37 @@ using System.Text;
 
 namespace ForumConsole.Validation {
     static class InputValidator {
-        private static string ReadAuthorQ() {
+        public static string ReadAuthorQ() {
             Console.Write("Введите автора вопроса: ");
             return Console.ReadLine();
         }
 
-        private static string ReadAuthorA() {
+        public static string ReadAuthorA() {
             Console.Write("Введите автора ответа: ");
             return Console.ReadLine();
         }
 
-        private static string[] ReadTags() {
+        public static string[] ReadTags() {
             Console.WriteLine("Введите теги через пробел: ");
             return Console.ReadLine().Split(' ', StringSplitOptions.RemoveEmptyEntries);
         }
 
-        private static string ReadTopic() {
+        public static string ReadTopic() {
             Console.Write("Введите тему вопроса: ");
             return Console.ReadLine();
         }
 
-        private static string ReadQuestionMsg() {
+        public static string ReadQuestionMsg() {
             Console.WriteLine("Введите текст вопроса, чтобы закончить ввод нажмите ctrl + enter: ");
             return ReadAreaText();
         }
 
-        private static string ReadAnswerMsg() {
+        public static string ReadAnswerMsg() {
             Console.WriteLine("Введите текст ответа, чтобы закончить ввод нажмите ctrl + enter: ");
             return ReadAreaText();
         }
 
-        private static int ReadRating() {
+        public static int ReadRating() {
             Console.Write("Введите рейтинг ответа: ");
             int value;
             while (!int.TryParse(Console.ReadLine(), out value)) {
