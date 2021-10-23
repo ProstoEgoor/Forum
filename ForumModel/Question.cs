@@ -11,7 +11,7 @@ namespace ForumModel {
         public string Text { get; set; }
         List<Answer> ListAnswer { get; } = new List<Answer>();
 
-        public IEnumerable<Answer> Answers => ListAnswer;
+        public IReadOnlyList<Answer> Answers => ListAnswer;
         public IEnumerable<string> Tags => TagSet;
 
         public Question() { }

@@ -15,7 +15,7 @@ namespace ForumConsole.UserInterface {
                 item.Print();
                 Console.Write(" ");
             }
-            Console.WriteLine();
+            Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
 
             Console.ResetColor();
         }

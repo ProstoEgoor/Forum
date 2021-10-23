@@ -8,9 +8,7 @@ namespace ForumConsole {
             TagManager tagManager = new TagManager();
             QuestionManager questionManager = new QuestionManager(tagManager);
 
-            ConsoleItem currentItem = new MainItem(questionManager, new Menu(new MenuItem[] {
-                MenuItemFabric.CreateEscapeMI("Выйти")
-            }));
+            ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManager);
 
             ConsoleEvent consoleEvent;
             ConsoleKeyInfo keyInfo;
@@ -18,10 +16,8 @@ namespace ForumConsole {
                 Console.Clear();
                 currentItem.Print();
                 keyInfo = Console.ReadKey(true);
-                consoleEvent = currentItem.TakeKey(keyInfo);
-                if (consoleEvent != ConsoleEvent.Idle) {
-                    currentItem = currentItem.Next;
-                }
+                currentItem.TakeKey(keyInfo);
+                currentItem = currentItem.Next;
             }
 
             Console.Clear();

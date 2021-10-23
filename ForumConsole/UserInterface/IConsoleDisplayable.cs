@@ -5,6 +5,7 @@ using System.Text;
 namespace ForumConsole.UserInterface {
     public enum ConsoleEvent {
         Escape,
+        ShowSelectedContent,
         ShowQuestion,
         WriteQuestion,
         WriteAnswer,
@@ -12,6 +13,6 @@ namespace ForumConsole.UserInterface {
     }
     public interface IConsoleDisplayable {
         public void Print();
-        ConsoleEvent TakeKey(ConsoleKeyInfo key);
+        ConsoleEvent TakeKey(ConsoleKeyInfo keyInfo);
     }
 }

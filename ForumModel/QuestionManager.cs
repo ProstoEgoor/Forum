@@ -8,8 +8,7 @@ namespace ForumModel {
 
         TagManager TagManager { get; }
 
-        public IEnumerable<Question> Questions => ListQuestion;
-        public int Count => ListQuestion.Count; 
+        public IReadOnlyList<Question> Questions => ListQuestion;
 
         public QuestionManager(TagManager tagManager) {
             TagManager = tagManager;
@@ -22,8 +21,6 @@ namespace ForumModel {
                 AddQuestion(question);
             }
         }
-
-        public Question this[int index] => ListQuestion[index];
 
         public void AddQuestion(Question question) {
             ListQuestion.Add(question);
