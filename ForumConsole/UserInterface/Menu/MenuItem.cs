@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace ForumConsole.UserInterface {
-    public class MenuItem : IConsoleDisplayable {
+    public class MenuItem : IConsolePrintable, IConsoleReactive {
         public ConsoleKeyInfo KeyInfo { get; }
         public ConsoleEvent ConsoleEvent { get; }
         public string Title { get; }
@@ -15,7 +15,15 @@ namespace ForumConsole.UserInterface {
             Title = title;
         }
 
-        public void Print() {
+        public ConsoleEvent TakeKey(ConsoleKeyInfo keyInfo) {
+            if (KeyInfo.Equals(keyInfo)) {
+                return ConsoleEvent;
+            } else {
+                return ConsoleEvent.Idle;
+            }
+        }
+
+        public void Print(int width, int indent = 0, bool briefly = false) {
             ConsoleColor background = Console.BackgroundColor;
 
             if (Selected) {
@@ -28,14 +36,6 @@ namespace ForumConsole.UserInterface {
             Console.Write(" " + Title);
 
             Console.BackgroundColor = background;
-        }
-
-        public ConsoleEvent TakeKey(ConsoleKeyInfo keyInfo) {
-            if (KeyInfo.Equals(keyInfo)) {
-                return ConsoleEvent;
-            } else {
-                return ConsoleEvent.Idle;
-            }
         }
     }
 }

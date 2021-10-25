@@ -6,7 +6,7 @@ using ForumConsole.UserInterface;
 namespace ForumConsole.UserInterface {
     public class ShowableConsoleItem<T> : ConsoleItem {
 
-        public IReadOnlyList<T> ContentItems { get; }
+        public IReadOnlyList<T> ContentItems { get; set; }
         public int Position { get; private set; }
         int NextPosition {
             get {
@@ -17,7 +17,6 @@ namespace ForumConsole.UserInterface {
                 return (Position + 1) % ContentItems.Count;
             }
         }
-
         int PrevPosition {
             get {
                 if (ContentItems.Count == 0) {
@@ -32,21 +31,43 @@ namespace ForumConsole.UserInterface {
         public delegate ConsoleItem NextContentDel(int position);
         public NextContentDel NextContent { get; set; }
 
+        int SelectedCursorStart { get; set; }
+        int SelectedCursorEnd { get; set; }
+
         public ShowableConsoleItem(ConsoleItem prev, Menu menu, IReadOnlyList<T> contentItems) : base(prev, menu) {
             ContentItems = contentItems;
         }
 
-        public override void Print() {
-            base.Print();
-            for (int i = 0; i < ContentItems.Count; i++) {
-                if (Position == i) {
-                    Console.BackgroundColor = ConsoleColor.Green;
-                }
+        public override void Print(int width, int indent = 1, bool briefly = true) {
+            Console.CursorVisible = false;
+            base.Print(width);
 
-                Console.WriteLine(ContentItems[i].ToString());
+            if (ContentItems != null) {
+                for (int i = 0; i < ContentItems.Count; i++) {
+                    if (Position == i) {
+                        SelectedCursorStart = Console.CursorTop;
+                    }
 
-                if (Position == i) {
-                    Console.ResetColor();
+                    if (ContentItems[i] is IConsolePrintable) {
+                        (ContentItems[i] as IConsolePrintable).Print(width, indent, briefly);
+                    } else {
+                        Console.WriteLine(ContentItems[i].ToString());
+                    }
+
+                    if (Position == i && ContentItems[i] is IConsolePrintable) {
+                        SelectedCursorEnd = Console.CursorTop;
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        for (int j = SelectedCursorStart; j < SelectedCursorEnd; j++) {
+                            Console.CursorLeft = 0;
+                            Console.CursorTop = j;
+                            Console.Write(' ');
+                        }
+                        Console.ResetColor();
+                        Console.CursorLeft = 0;
+                        Console.CursorTop = SelectedCursorEnd;
+                    }
+
+                    Console.WriteLine();
                 }
             }
         }

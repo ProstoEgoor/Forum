@@ -6,10 +6,10 @@ namespace ForumModel {
     public class Question {
         public string Author { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
-        HashSet<string> TagSet { get; } = new HashSet<string>();
+        protected HashSet<string> TagSet { get; } = new HashSet<string>();
         public string Topic { get; set; }
         public string Text { get; set; }
-        List<Answer> ListAnswer { get; } = new List<Answer>();
+        protected List<Answer> ListAnswer { get; } = new List<Answer>();
 
         public IReadOnlyList<Answer> Answers => ListAnswer;
         public IEnumerable<string> Tags => TagSet;
@@ -27,14 +27,14 @@ namespace ForumModel {
         }
 
         public override string ToString() {
-            string answer = "Автор: \t" + Author + Environment.NewLine;
-            answer += "Дата: \t" + Date + Environment.NewLine;
-            answer += "Теги: \t" + String.Join(", ", Tags) + Environment.NewLine;
-            answer += "Тема: \t" + Topic + Environment.NewLine;
-            answer += "< " + Text + " >" + Environment.NewLine;
-            answer += "Ответы: " + Environment.NewLine + Environment.NewLine;
-            answer += String.Join(Environment.NewLine + Environment.NewLine, Answers);
-            return answer;
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"Тема:\t{Topic}\n\r");
+            sb.Append($"Теги:\t{string.Join(", ", Tags)}\n\r");
+            sb.Append($"Автор:\t{Author}\n\r");
+            sb.Append($"Дата:\t{Date}\n\r");
+            sb.Append($"{Answers.Count} Ответов\n\r");
+            sb.Append(Text);
+            return sb.ToString();
         }
 
     }

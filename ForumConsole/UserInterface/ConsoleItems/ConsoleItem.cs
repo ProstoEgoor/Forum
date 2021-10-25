@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ForumConsole.UserInterface {
-    public abstract class ConsoleItem : IConsoleDisplayable {
+    public abstract class ConsoleItem : IConsolePrintable, IConsoleReactive {
 
         ConsoleItem Prev { get; }
         public ConsoleItem Next { get; protected set; }
@@ -17,19 +17,20 @@ namespace ForumConsole.UserInterface {
             Next = this;
             Menu = menu;
         }
-
-        public virtual void Print() {
-            Menu.Print();
+        public virtual void Print(int width, int indent = 0, bool briefly = false) {
+            Menu.Print(width);
         }
 
         public virtual ConsoleEvent TakeKey(ConsoleKeyInfo keyInfo) {
             ConsoleEvent consoleEvent = Menu.TakeKey(keyInfo);
             if (consoleEvent == ConsoleEvent.Escape) {
+                Prev.Next = Prev;
                 Next = Prev;
             } else if (NextMenu != null && consoleEvent != ConsoleEvent.Idle) {
                 Next = NextMenu(consoleEvent);
             }
             return consoleEvent;
         }
+
     }
 }

@@ -9,9 +9,9 @@ namespace ForumModel {
         public uint NumberOfVotes { get; private set; } = 0;
 
         public Answer() { }
-        public Answer(int rating, uint numberOfVotes) {
+        public Answer(int rating, uint numberOfVotes = 0) {
             Rating = rating;
-            NumberOfVotes = (uint) Math.Min(Math.Abs(rating), numberOfVotes);
+            NumberOfVotes = (uint) Math.Max(Math.Abs(rating), numberOfVotes);
         }
 
         public int Vote(int rating) {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ForumModel {
     public class QuestionManager {
-        List<Question> ListQuestion { get; } = new List<Question>();
+        protected List<Question> ListQuestion { get; } = new List<Question>();
 
         TagManager TagManager { get; }
 
