@@ -16,10 +16,6 @@ namespace ForumConsole.UserInterface {
                 return false;
             }
 
-            /*            if (start + width >= text.Length) {
-                            boundaries = (start, text.Length);
-                            return true;
-                        }*/
             int end = text.IndexOfAny(new char[] { '\n', '\r' }, start, Math.Min(width, text.Length - start));
 
             if (start + width >= text.Length) {

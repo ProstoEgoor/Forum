@@ -1,41 +1,37 @@
 ﻿using System;
 
 namespace ForumConsole.UserInterface {
-    public class MenuItem : IConsolePrintable, IConsoleReactive {
+    public class MenuItem : IConsoleDisplayable, IConsoleReactive {
         public ConsoleKeyInfo KeyInfo { get; }
-        public ConsoleEvent ConsoleEvent { get; }
+        public ConsoleEvent Type { get; }
         public string Title { get; }
-        public bool Selected { get; set; }
 
-        public ConsoleColor SelectedColor { get; set; } = ConsoleColor.DarkBlue;
-
-        public MenuItem(ConsoleKeyInfo keyInfo, ConsoleEvent consoleEvent, string title) {
+        public MenuItem(ConsoleKeyInfo keyInfo, ConsoleEvent type, string title) {
             KeyInfo = keyInfo;
-            ConsoleEvent = consoleEvent;
+            Type = type;
             Title = title;
         }
 
-        public ConsoleEvent TakeKey(ConsoleKeyInfo keyInfo) {
-            if (KeyInfo.Equals(keyInfo)) {
-                return ConsoleEvent;
-            } else {
-                return ConsoleEvent.Idle;
-            }
-        }
+        public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
-        public void Print(int width, int indent = 0, bool briefly = false) {
-            ConsoleColor background = Console.BackgroundColor;
-
-            if (Selected) {
-                Console.BackgroundColor = SelectedColor;
-            }
-
+        public void Show(int width, int indent = 0, bool briefly = false) {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write(KeyInfo.Key);
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write(" " + Title);
+        }
 
-            Console.BackgroundColor = background;
+        public bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
+            if (keyInfo == KeyInfo) {
+                RaiseEvent?.Invoke(this, new ConsoleEventArgs(Type));
+                return true;
+            }
+
+            return false;
+        }
+
+        public void OnRaiseEvent(object obj, ConsoleEventArgs consoleEvent) {
+            throw new NotImplementedException();
         }
     }
 }

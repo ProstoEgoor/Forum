@@ -2,6 +2,9 @@
 
 namespace ForumConsole.UserInterface {
     interface IConsoleReactive {
-        ConsoleEvent TakeKey(ConsoleKeyInfo keyInfo);
+        bool HandlePressedKey(ConsoleKeyInfo keyInfo);
+
+        event EventHandler<ConsoleEventArgs> RaiseEvent;
+        void OnRaiseEvent(object obj, ConsoleEventArgs consoleEvent);
     }
 }

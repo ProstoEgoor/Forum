@@ -5,6 +5,9 @@
         ShowQuestion,
         WriteQuestion,
         WriteAnswer,
-        Idle
+        Idle,
+        SelectItem,
+        SelectAbove,
+        SelectBelow
     }
 }

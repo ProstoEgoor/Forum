@@ -7,19 +7,16 @@ namespace ForumConsole {
     class Program {
         static void Main(string[] args) {
             TagManager tagManager = new TagManager();
-            QuestionManagerC questionManager = new QuestionManagerC(tagManager, Mocks.MocksFabric.MockQuestion());
+            QuestionManager questionManager = new QuestionManager(tagManager, Mocks.MocksFabric.MockQuestion());
+            QuestionManagerWrapper questionManagerWrapper = new QuestionManagerWrapper(questionManager);
 
-            ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManager);
+            ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManagerWrapper);
 
             ConsoleKeyInfo keyInfo;
-            int windowTop;
             while (currentItem != null) {
-                windowTop = Console.WindowTop;
-                Console.Clear();
-                currentItem.Print(Console.WindowWidth - 1, 1, true);
-                Console.WindowTop = windowTop;
+                currentItem.Show(Console.WindowWidth - 1, 1, true);
                 keyInfo = Console.ReadKey(true);
-                currentItem.TakeKey(keyInfo);
+                currentItem.HandlePressedKey(keyInfo);
                 currentItem = currentItem.Next;
             }
 
