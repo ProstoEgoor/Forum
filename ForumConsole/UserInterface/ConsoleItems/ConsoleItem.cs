@@ -9,7 +9,7 @@ namespace ForumConsole.UserInterface {
         ConsoleItem Prev { get; }
         public ConsoleItem Next { get; set; }
 
-        public string Title { get; set; }
+        public IConsoleDisplayable Title { get; set; }
 
         public Menu Menu { get; } = new Menu();
         public ConsoleEventHandlerController EventHandlers { get; } = new ConsoleEventHandlerController();
@@ -17,7 +17,7 @@ namespace ForumConsole.UserInterface {
 
         protected int WindowTop { get; set; } = 0;
 
-        public ConsoleItem(ConsoleItem prev, string title) {
+        public ConsoleItem(ConsoleItem prev, IConsoleDisplayable title) {
             Prev = prev;
             Next = this;
             Title = title;
@@ -43,6 +43,7 @@ namespace ForumConsole.UserInterface {
         public virtual void Reset() {
             Next = this;
             WindowTop = 0;
+            Console.Clear();
         }
 
         public virtual void Show(int width, int indent = 0, bool briefly = false) {
@@ -50,11 +51,8 @@ namespace ForumConsole.UserInterface {
             Console.Clear();
             Menu.Show(width);
 
-            (int start, int end) boundaries = (0, 0);
-            while (PrintHelper.TryGetLineBoundaries(Title, boundaries.end, width - indent, out boundaries)) {
-                Console.Write(new String(' ', indent));
-                Console.WriteLine(Title[boundaries.start..boundaries.end]);
-            }
+            Title.Show(width, indent, false);
+            Console.WriteLine();
 
             Console.WindowTop = WindowTop;
         }

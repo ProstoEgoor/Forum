@@ -4,12 +4,17 @@ using System.Text;
 using System;
 using System.Collections;
 using ForumModel;
+using System.Linq;
 
 namespace ForumConsole.ConsoleModel {
     public class QuestionWrapper : IConsoleDisplayable, IConsoleEditable {
         public Question Question { get; }
         public QuestionWrapper(Question question) {
             Question = question;
+        }
+
+        public IReadOnlyList<AnswerWrapper> GetWrappedAnswers() {
+            return Question.Answers.Select(item => new AnswerWrapper(item)).ToList();
         }
 
         public void Show(int width, int indent = 0, bool briefly = true) {

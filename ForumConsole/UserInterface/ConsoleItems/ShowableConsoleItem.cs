@@ -27,12 +27,21 @@ namespace ForumConsole.UserInterface {
                 position = value;
             }
         }
+        public IConsoleDisplayable SelectedItem {
+            get {
+                if (ContentItems.Count == 0) {
+                    return default;
+                }
+
+                return ContentItems[Position];
+            }
+        }
 
         public bool Selectable { get; set; } = true;
         int SelectedCursorStart { get; set; }
         int SelectedCursorEnd { get; set; }
 
-        public ShowableConsoleItem(ConsoleItem prev, string title, Func<IReadOnlyList<IConsoleDisplayable>> getContentItems, Action<ConsoleItem, ConsoleEventArgs> selectItem) : base(prev, title) {
+        public ShowableConsoleItem(ConsoleItem prev, IConsoleDisplayable title, Func<IReadOnlyList<IConsoleDisplayable>> getContentItems, Action<ConsoleItem, ConsoleEventArgs> selectItem) : base(prev, title) {
             this.getContentItems = getContentItems;
 
             ConsoleEventHandler upEvent = new ConsoleEventHandler(ConsoleEvent.SelectAbove, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
@@ -51,7 +60,7 @@ namespace ForumConsole.UserInterface {
 
         public override void Show(int width, int indent = 1, bool briefly = true) {
             Console.CursorVisible = false;
-            base.Show(width);
+            base.Show(width, indent, briefly);
 
             if (ContentItems != null) {
                 for (int i = 0; i < ContentItems.Count; i++) {
@@ -59,7 +68,7 @@ namespace ForumConsole.UserInterface {
                         SelectedCursorStart = Console.CursorTop;
                     }
 
-                    ContentItems[i].Show(width, indent, briefly);
+                    ContentItems[i].Show(width, indent + 1, briefly);
 
                     if (Selectable && Position == i) {
                         SelectedCursorEnd = Console.CursorTop;
