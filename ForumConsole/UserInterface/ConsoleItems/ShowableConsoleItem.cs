@@ -5,57 +5,12 @@ using ForumConsole.UserInterface;
 using ForumConsole.ConsoleModel;
 
 namespace ForumConsole.UserInterface {
-    public class ShowableConsoleItem : ConsoleItem {
-        Func<IReadOnlyList<IConsoleDisplayable>> getContentItems;
-        public IReadOnlyList<IConsoleDisplayable> ContentItems => getContentItems();
+    public class ShowableConsoleItem<T> : ConsoleItem where T : class {
+        public SelectFromList<T> SelectFromList { get; }
 
-        int position;
-        public int Position {
-            get => position;
-            set {
-                if (ContentItems.Count == 0) {
-                    position = 0;
-                    return;
-                }
-
-                if (value > ContentItems.Count - 1) {
-                    value = ContentItems.Count - 1;
-                } else if (value < 0) {
-                    value = 0;
-                }
-
-                position = value;
-            }
-        }
-        public IConsoleDisplayable SelectedItem {
-            get {
-                if (ContentItems.Count == 0) {
-                    return default;
-                }
-
-                return ContentItems[Position];
-            }
-        }
-
-        public bool Selectable { get; set; } = true;
-        int SelectedCursorStart { get; set; }
-        int SelectedCursorEnd { get; set; }
-
-        public ShowableConsoleItem(ConsoleItem prev, IConsoleDisplayable title, Func<IReadOnlyList<IConsoleDisplayable>> getContentItems, Action<ConsoleItem, ConsoleEventArgs> selectItem) : base(prev, title) {
-            this.getContentItems = getContentItems;
-
-            ConsoleEventHandler upEvent = new ConsoleEventHandler(ConsoleEvent.SelectAbove, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
-                if ((consoleItem as ShowableConsoleItem).Position == 0) {
-                    Console.Clear(); // костыль
-                }
-                (consoleItem as ShowableConsoleItem).Position--;
-            });
-            EventHandlers.AddHandler(upEvent);
-
-            ConsoleEventHandler downEvent = new ConsoleEventHandler(ConsoleEvent.SelectBelow, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
-                (consoleItem as ShowableConsoleItem).Position++;
-            });
-            EventHandlers.AddHandler(downEvent);
+        public ShowableConsoleItem(ConsoleItem prev, IConsoleDisplayable title, Func<IReadOnlyList<T>> getContentItems, Action<ConsoleItem, ConsoleEventArgs> selectItem) : base(prev, title) {
+            SelectFromList = new SelectFromList<T>(getContentItems);
+            SelectFromList.RaiseEvent += OnRaiseEvent;
 
             ConsoleEventHandler selectEvent = new ConsoleEventHandler(ConsoleEvent.SelectItem, selectItem);
             EventHandlers.AddHandler(selectEvent);
@@ -65,63 +20,17 @@ namespace ForumConsole.UserInterface {
             Console.CursorVisible = false;
             base.Show(width, indent, briefly);
 
-            if (ContentItems != null) {
-                for (int i = 0; i < ContentItems.Count; i++) {
-                    if (Selectable && Position == i) {
-                        SelectedCursorStart = Console.CursorTop;
-                    }
-
-                    ContentItems[i].Show(width, indent + 1, briefly);
-
-                    if (Selectable && Position == i) {
-                        SelectedCursorEnd = Console.CursorTop;
-                        Console.BackgroundColor = ConsoleColor.Green;
-                        for (int j = SelectedCursorStart; j < SelectedCursorEnd; j++) {
-                            Console.CursorLeft = 0;
-                            Console.CursorTop = j;
-                            Console.Write(' ');
-                        }
-                        Console.ResetColor();
-                        Console.CursorLeft = 0;
-                        Console.CursorTop = SelectedCursorEnd;
-                    }
-
-                    Console.WriteLine();
-                }
-            }
-
-            if (Selectable && SelectedCursorEnd - SelectedCursorStart < Console.WindowHeight) {
-                if (SelectedCursorEnd > WindowTop + Console.WindowHeight) {
-                    WindowTop = SelectedCursorEnd - Console.WindowHeight;
-                }
-
-                if (SelectedCursorStart < WindowTop) {
-                    WindowTop = SelectedCursorStart;
-                }
-            }
+            SelectFromList.Show(width, indent, briefly);
 
             Console.WindowTop = WindowTop;
         }
 
         public override bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
-            if (base.HandlePressedKey(keyInfo)) {
+            if (base.HandlePressedKey(keyInfo)) 
                 return true;
-            }
 
-            if (keyInfo.Key == ConsoleKey.UpArrow) {
-                OnRaiseEvent(this, new ConsoleEventArgs(ConsoleEvent.SelectAbove));
+            if (SelectFromList.HandlePressedKey(keyInfo))
                 return true;
-            }
-
-            if (keyInfo.Key == ConsoleKey.DownArrow) {
-                OnRaiseEvent(this, new ConsoleEventArgs(ConsoleEvent.SelectBelow));
-                return true;
-            }
-
-            if (keyInfo.Key == ConsoleKey.Enter) {
-                OnRaiseEvent(this, new ConsoleEventArgs(ConsoleEvent.SelectItem));
-                return true;
-            }
 
             return false;
         }

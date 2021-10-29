@@ -12,11 +12,9 @@ namespace ForumConsole {
 
             ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManagerWrapper);
 
-            ConsoleKeyInfo keyInfo;
             while (currentItem != null) {
                 currentItem.Show(Console.WindowWidth - 1, 1, true);
-                keyInfo = Console.ReadKey(true);
-                currentItem.HandlePressedKey(keyInfo);
+                currentItem.HandlePressedKey(Console.ReadKey(true));
                 currentItem = currentItem.Next;
             }
 

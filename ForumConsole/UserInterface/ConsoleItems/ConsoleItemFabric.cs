@@ -13,9 +13,9 @@ namespace ForumConsole.UserInterface {
                 MenuItemFabric.CreateAskMI("Задать вопрос", ConsoleKey.F1),
                 MenuItemFabric.CreateEscapeMI("Выйти")
             });
-            ShowableConsoleItem mainItem = new ShowableConsoleItem(null, questionManager, questionManager.GetWrappedQuestions,
+            ShowableConsoleItem<QuestionWrapper> mainItem = new ShowableConsoleItem<QuestionWrapper>(null, questionManager, questionManager.GetWrappedQuestions,
                 delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
-                    consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ShowableConsoleItem).SelectedItem as QuestionWrapper);
+                    consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ShowableConsoleItem<QuestionWrapper>).SelectFromList.SelectedItem);
                     consoleItem.OnPause();
                 });
 
@@ -27,7 +27,7 @@ namespace ForumConsole.UserInterface {
                 MenuItemFabric.CreateToAnswerMI("Ответить", ConsoleKey.F1),
                 MenuItemFabric.CreateEscapeMI("Назад")
             });
-            ShowableConsoleItem showQuestion = new ShowableConsoleItem(mainItem, question, question.GetWrappedAnswers,
+            ShowableConsoleItem<AnswerWrapper> showQuestion = new ShowableConsoleItem<AnswerWrapper>(mainItem, question, question.GetWrappedAnswers,
                 delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
                     return;
                 });
