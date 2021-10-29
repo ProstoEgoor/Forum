@@ -33,16 +33,19 @@ namespace ForumConsole.UserInterface {
             Menu.AddMenuItem(itemEscape);
 
             ConsoleEventHandler escapeEvent = new ConsoleEventHandler(ConsoleEvent.Escape, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
-                consoleItem.Prev?.Reset();
+                consoleItem.Prev?.OnResume();
                 consoleItem.Next = consoleItem.Prev;
             });
 
             EventHandlers.AddHandler(escapeEvent);
         }
 
-        public virtual void Reset() {
+        public void OnResume() {
             Next = this;
-            WindowTop = 0;
+            Console.WindowTop = WindowTop;
+        }
+        public void OnPause() {
+            WindowTop = Console.WindowTop;
             Console.Clear();
         }
 

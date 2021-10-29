@@ -16,7 +16,7 @@ namespace ForumConsole.UserInterface {
             ShowableConsoleItem mainItem = new ShowableConsoleItem(null, questionManager, questionManager.GetWrappedQuestions,
                 delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
                     consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ShowableConsoleItem).SelectedItem as QuestionWrapper);
-                    consoleItem.Next.Reset();
+                    consoleItem.OnPause();
                 });
 
             return mainItem;

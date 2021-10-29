@@ -45,6 +45,9 @@ namespace ForumConsole.UserInterface {
             this.getContentItems = getContentItems;
 
             ConsoleEventHandler upEvent = new ConsoleEventHandler(ConsoleEvent.SelectAbove, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
+                if ((consoleItem as ShowableConsoleItem).Position == 0) {
+                    Console.Clear(); // костыль
+                }
                 (consoleItem as ShowableConsoleItem).Position--;
             });
             EventHandlers.AddHandler(upEvent);
@@ -84,6 +87,16 @@ namespace ForumConsole.UserInterface {
                     }
 
                     Console.WriteLine();
+                }
+            }
+
+            if (Selectable && SelectedCursorEnd - SelectedCursorStart < Console.WindowHeight) {
+                if (SelectedCursorEnd > WindowTop + Console.WindowHeight) {
+                    WindowTop = SelectedCursorEnd - Console.WindowHeight;
+                }
+
+                if (SelectedCursorStart < WindowTop) {
+                    WindowTop = SelectedCursorStart;
                 }
             }
 
