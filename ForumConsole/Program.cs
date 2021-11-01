@@ -1,11 +1,12 @@
 ﻿using System;
 using ForumModel;
 using ForumConsole.UserInterface;
-using ForumConsole.ConsoleModel;
+using ForumConsole.ModelWrapper;
 
 namespace ForumConsole {
     class Program {
         static void Main(string[] args) {
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
             TagManager tagManager = new TagManager();
             QuestionManager questionManager = new QuestionManager(tagManager, Mocks.MocksFabric.MockQuestion());
             QuestionManagerWrapper questionManagerWrapper = new QuestionManagerWrapper(questionManager);
@@ -13,7 +14,7 @@ namespace ForumConsole {
             ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManagerWrapper);
 
             while (currentItem != null) {
-                currentItem.Show(Console.WindowWidth - 1, 1, true);
+                currentItem.Show(Console.WindowWidth, 0, true);
                 currentItem.HandlePressedKey(Console.ReadKey(true));
                 currentItem = currentItem.Next;
             }

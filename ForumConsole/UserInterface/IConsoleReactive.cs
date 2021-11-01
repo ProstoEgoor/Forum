@@ -5,6 +5,6 @@ namespace ForumConsole.UserInterface {
         bool HandlePressedKey(ConsoleKeyInfo keyInfo);
 
         event EventHandler<ConsoleEventArgs> RaiseEvent;
-        void OnRaiseEvent(object obj, ConsoleEventArgs consoleEvent);
+        void OnRaiseEvent(ConsoleEventArgs consoleEvent);
     }
 }

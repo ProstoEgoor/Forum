@@ -7,7 +7,11 @@
         WriteAnswer,
         Idle,
         SelectItem,
+        RemoveItem,
         SelectAbove,
-        SelectBelow
+        SelectBelow,
+        Save,
+        VotePos,
+        VoteNeg
     }
 }

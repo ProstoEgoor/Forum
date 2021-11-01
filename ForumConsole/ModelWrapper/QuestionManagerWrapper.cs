@@ -5,9 +5,10 @@ using ForumModel;
 using ForumConsole.UserInterface;
 using System.Linq;
 
-namespace ForumConsole.ConsoleModel {
-    public class QuestionManagerWrapper : IConsoleDisplayable, IConsoleEditable {
+namespace ForumConsole.ModelWrapper {
+    public class QuestionManagerWrapper : IConsoleDisplayable, IConsoleEditableContainer<Question> {
         public QuestionManager QuestionManager { get; }
+
         public QuestionManagerWrapper(QuestionManager questionManager) {
             QuestionManager = questionManager;
         }
@@ -19,6 +20,19 @@ namespace ForumConsole.ConsoleModel {
         public void Show(int width, int indent, bool briefly) {
             Console.Write(new string(' ', indent));
             Console.WriteLine("Список вопросов:");
+        }
+
+        public void Add(Question item) {
+            QuestionManager.AddQuestion(item);
+        }
+
+        public bool Remove(Question item) {
+            return QuestionManager.RemoveQuestion(item);
+        }
+
+        public bool Replace(Question oldItem, Question newItem) {
+            newItem.AddAnswer(oldItem.Answers.ToArray());
+            return QuestionManager.ReplaceQuestion(oldItem, newItem);
         }
     }
 }

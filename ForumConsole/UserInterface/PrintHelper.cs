@@ -4,16 +4,31 @@ using System.Text;
 
 namespace ForumConsole.UserInterface {
     public static class PrintHelper {
-        public static bool TryGetLineBoundaries(string text, int start, int width, out (int start, int end) boundaries) {
+        public static bool TryGetLine(string text, int width, ref int start, out string line) {
             if (width <= 1) {
                 throw new ArgumentException("Width must be larger than 1.");
             }
-            while (start < text.Length && (text[start] == '\n' || text[start] == '\r' || text[start] == ' ')) {
-                ++start;
-            }
+
             if (start >= text.Length) {
-                boundaries = (start, start);
+                line = "";
                 return false;
+            }
+
+            if (start != -1) {
+                if (text[start] == '\r') {
+                    start++;
+                }
+
+                if (text[start] == '\n') {
+                    start++;
+                }
+            } else {
+                start = 0;
+            }
+
+            if (start >= text.Length) {
+                line = "";
+                return true;
             }
 
             int end = text.IndexOfAny(new char[] { '\n', '\r' }, start, Math.Min(width, text.Length - start));
@@ -31,7 +46,14 @@ namespace ForumConsole.UserInterface {
                 }
             }
 
-            boundaries = (start, end);
+            if (start == end) {
+                line = "";
+            } else {
+                line = text[start..end];
+            }
+
+            start = end;
+
             return true;
         }
 

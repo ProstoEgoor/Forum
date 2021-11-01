@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ForumModel;
-using ForumConsole.ConsoleModel;
+using ForumConsole.ModelWrapper;
 
 namespace ForumConsole.Mocks {
     public static class MocksFabric {

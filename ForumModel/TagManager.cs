@@ -24,12 +24,20 @@ namespace ForumModel {
             }
         }
 
-        public void UpdateTags(IEnumerable<string> tags) {
+        public void UpdateTags(IEnumerable<string> tags, bool remove = false) {
             foreach (var tag in tags) {
                 try {
-                    TagDictionary[tag]++;
+                    if (remove) {
+                        TagDictionary[tag]--;
+                    } else {
+                        TagDictionary[tag]++;
+                    }
                 } catch (Exception) {
-                    TagDictionary[tag] = 1;
+                    if (remove) {
+                        TagDictionary[tag] = 0;
+                    } else {
+                        TagDictionary[tag] = 1;
+                    }
                 }
             }
         }

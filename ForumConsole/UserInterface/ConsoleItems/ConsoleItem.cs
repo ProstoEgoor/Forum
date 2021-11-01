@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ForumConsole.ConsoleModel;
+using ForumConsole.ModelWrapper;
 
 namespace ForumConsole.UserInterface {
     public abstract class ConsoleItem : IConsoleDisplayable, IConsoleReactive {
 
         ConsoleItem Prev { get; }
         public ConsoleItem Next { get; set; }
-
-        public IConsoleDisplayable Title { get; set; }
-
         public Menu Menu { get; } = new Menu();
-        public ConsoleEventHandlerController EventHandlers { get; } = new ConsoleEventHandlerController();
+        public ConsoleEventHandler EventHandler { get; } = new ConsoleEventHandler();
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
         protected int WindowTop { get; set; } = 0;
 
-        public ConsoleItem(ConsoleItem prev, IConsoleDisplayable title) {
+        public ConsoleItem(ConsoleItem prev) {
             Prev = prev;
             Next = this;
-            Title = title;
-            Menu.RaiseEvent += OnRaiseEvent;
+            Menu.RaiseEvent += HandleEvent;
 
             MenuItem itemEscape;
             if (prev == null) {
@@ -32,12 +28,10 @@ namespace ForumConsole.UserInterface {
 
             Menu.AddMenuItem(itemEscape);
 
-            ConsoleEventHandler escapeEvent = new ConsoleEventHandler(ConsoleEvent.Escape, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+            EventHandler.AddHandler(ConsoleEvent.Escape, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Prev?.OnResume();
                 consoleItem.Next = consoleItem.Prev;
             });
-
-            EventHandlers.AddHandler(escapeEvent);
         }
 
         public void OnResume() {
@@ -54,9 +48,6 @@ namespace ForumConsole.UserInterface {
             Console.Clear();
             Menu.Show(width);
 
-            Title.Show(width, indent, false);
-            Console.WriteLine();
-
             Console.WindowTop = WindowTop;
         }
 
@@ -64,9 +55,13 @@ namespace ForumConsole.UserInterface {
             return Menu.HandlePressedKey(keyInfo);
         }
 
-        public void OnRaiseEvent(object obj, ConsoleEventArgs consoleEvent) {
-            EventHandlers.HandleEvent(this, consoleEvent);
-            RaiseEvent?.Invoke(obj, consoleEvent);
+        public void HandleEvent(object obj, ConsoleEventArgs consoleEvent) {
+            EventHandler.HandleEvent(this, consoleEvent);
+            OnRaiseEvent(consoleEvent);
+        }
+
+        public void OnRaiseEvent(ConsoleEventArgs consoleEvent) {
+            RaiseEvent?.Invoke(this, consoleEvent);
         }
     }
 }

@@ -1,21 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ForumConsole.UserInterface {
     public class Menu : IConsoleDisplayable, IConsoleReactive {
-        List<MenuItem> Items { get; } = new List<MenuItem>();
+        List<MenuItem> Items { get; set; } = new List<MenuItem>();
 
         public Menu() { }
         public Menu(IEnumerable<MenuItem> items) {
             foreach (var item in items) {
                 Items.Add(item);
-                item.RaiseEvent += OnRaiseEvent;
+                if (item is ReactMenuItem reactMenuItem) {
+                    reactMenuItem.RaiseEvent += HandleEvent;
+                }
             }
+
+            Items.Sort((left, right) => left.Order - right.Order);
         }
 
         public void AddMenuItem(MenuItem item) {
             Items.Add(item);
-            item.RaiseEvent += OnRaiseEvent;
+            if (item is ReactMenuItem reactMenuItem) {
+                reactMenuItem.RaiseEvent += HandleEvent;
+            }
+            Items.Sort((left, right) => left.Order - right.Order);
         }
 
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
@@ -33,15 +41,20 @@ namespace ForumConsole.UserInterface {
 
         public bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
             foreach (var item in Items) {
-                if (item.HandlePressedKey(keyInfo))
+                if ((item as ReactMenuItem)?.HandlePressedKey(keyInfo) ?? false) {
                     return true;
+                }
             }
 
             return false;
         }
 
-        public void OnRaiseEvent(object obj, ConsoleEventArgs consoleEvent) {
-            RaiseEvent?.Invoke(obj, consoleEvent);
+        public void HandleEvent(object obj, ConsoleEventArgs consoleEvent) {
+            OnRaiseEvent(consoleEvent);
+        }
+
+        public void OnRaiseEvent(ConsoleEventArgs consoleEvent) {
+            RaiseEvent?.Invoke(this, consoleEvent);
         }
     }
 }

@@ -26,6 +26,10 @@ namespace ForumModel {
             ListAnswer.AddRange(answers);
         }
 
+        public bool RemoveAnswer(Answer answer) {
+            return ListAnswer.Remove(answer);
+        }
+
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
             sb.Append($"Тема:\t{Topic}\n\r");

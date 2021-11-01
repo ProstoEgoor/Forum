@@ -30,5 +30,15 @@ namespace ForumModel {
         public bool RemoveQuestion(Question question) {
             return ListQuestion.Remove(question);
         }
+
+        public bool ReplaceQuestion(Question oldQuestion, Question newQuestion) {
+            int position = ListQuestion.IndexOf(oldQuestion);
+            if (position == -1)
+                return false;
+            TagManager.UpdateTags(oldQuestion.Tags, true);
+            ListQuestion[position] = newQuestion;
+            TagManager.UpdateTags(newQuestion.Tags);
+            return true;
+        }
     }
 }
