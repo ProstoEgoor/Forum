@@ -6,26 +6,56 @@ using System.Text;
 namespace ForumConsole.UserInterface {
     class ListConsoleItem<TitleType, ContentType> : EntitledConsoleItem<TitleType> where ContentType : class {
 
+        public bool Briefly { get; set; } = true;
         public SelectFromList<ContentType> SelectFromList { get; }
+        public override ConsoleColor Foreground {
+            set {
+                base.Foreground = value;
+                SelectFromList.Foreground = Foreground;
+            }
+        }
+        public override ConsoleColor Background {
+            set {
+                base.Background = value;
+                SelectFromList.Background = Background;
+            }
+        }
+
+        public override bool CursorVisible => base.CursorVisible || SelectFromList.CursorVisible;
 
         public ListConsoleItem(ConsoleItem prev, TitleType title, Func<IReadOnlyList<ContentType>> getContentItems, Action<ConsoleItem, ConsoleEventArgs> selectItem, Action<ConsoleItem, ConsoleEventArgs> removeItem) : base(prev, title) {
             SelectFromList = new SelectFromList<ContentType>(getContentItems);
             SelectFromList.RaiseEvent += HandleEvent;
+            SelectFromList.Foreground = Foreground;
+            SelectFromList.Background = Background;
 
-            EventHandler.AddHandler(ConsoleEvent.SelectItem, selectItem);
+            EventHandler.AddHandler("SelectItem", selectItem);
 
-            EventHandler.AddHandler(ConsoleEvent.RemoveItem, removeItem);
-
-        }
-
-        public override void Show(int width, int indent = 1, bool briefly = true) {
-            Console.CursorVisible = false;
-            base.Show(width, indent, briefly);
+            EventHandler.AddHandler("RemoveItem", removeItem);
 
             SelectFromList.UpdateList();
-            SelectFromList.Show(width, indent + 1, briefly);
+        }
+
+        public override void Show((int left, int right) indent) {
+            base.Show(indent);
+
+            SelectFromList.Show((indent.left + 1, indent.right), Briefly);
+
+            if (SelectFromList.Selectable && SelectFromList.SelectedCursorEnd - SelectFromList.SelectedCursorStart < Console.WindowHeight) {
+                if (SelectFromList.SelectedCursorEnd > WindowTop + Console.WindowHeight) {
+                    WindowTop = SelectFromList.SelectedCursorEnd - Console.WindowHeight;
+                }
+
+                if (SelectFromList.SelectedCursorStart < WindowTop) {
+                    WindowTop = SelectFromList.SelectedCursorStart;
+                }
+            }
 
             Console.WindowTop = WindowTop;
+
+            if (CursorVisible && !base.CursorVisible) {
+                Cursor = SelectFromList.Cursor;
+            }
         }
 
         public override bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
@@ -36,6 +66,11 @@ namespace ForumConsole.UserInterface {
                 return true;
 
             return false;
+        }
+
+        public override void OnResume() {
+            base.OnResume();
+            SelectFromList.UpdateList();
         }
     }
 }

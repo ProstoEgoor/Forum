@@ -9,27 +9,36 @@ using ForumConsole.ModelWrapper;
 namespace ForumConsole.UserInterface {
     public static class ConsoleItemFabric {
         public static ConsoleItem CreateMainItem(QuestionManagerWrapper questionManager) {
-            ListConsoleItem<QuestionManagerWrapper, QuestionWrapper> mainItem = new ListConsoleItem<QuestionManagerWrapper, QuestionWrapper>(null, questionManager, questionManager.GetWrappedQuestions,
+            ListConsoleItem<string, QuestionWrapper> mainItem = new ListConsoleItem<string, QuestionWrapper>(null, "Список вопросов", questionManager.GetWrappedQuestions,
                 delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
-                    consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ListConsoleItem<QuestionManagerWrapper, QuestionWrapper>).SelectFromList.SelectedItem, questionManager);
+                    consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.SelectedItem, questionManager);
                     consoleItem.OnPause();
                 }, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
-                    _ = questionManager.Remove((consoleItem as ListConsoleItem<QuestionManagerWrapper, QuestionWrapper>).SelectFromList.SelectedItem.Question);
+                    questionManager.Remove((consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.SelectedItem.Question);
+                    (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.UpdateList();
                 });
 
             mainItem.Menu.AddMenuItem(MenuItemFabric.CreateAskMI("Задать вопрос", ConsoleKey.F1));
-            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateTemp());
+            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateSet());
 
-            mainItem.EventHandler.AddHandler(ConsoleEvent.WriteQuestion, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+            mainItem.EventHandler.AddHandler("WriteQuestion", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Next = CreateWriteQuestion(consoleItem, new QuestionWrapper(), questionManager);
                 consoleItem.OnPause();
             });
 
-            mainItem.EventHandler.AddHandler(ConsoleEvent.Idle, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+            mainItem.EventHandler.AddHandler("FindOff", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 Console.Beep();
             });
 
-            mainItem.SelectFromList.SelectedColor = ConsoleColor.Gray;
+            mainItem.EventHandler.AddHandler("FindText", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                Console.Beep();
+            });
+
+            mainItem.EventHandler.AddHandler("FindTags", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                Console.Beep();
+            });
+
+
             return mainItem;
         }
 
@@ -41,8 +50,9 @@ namespace ForumConsole.UserInterface {
                 }, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
                     return;
                 });
+            showQuestion.Briefly = false;
             showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateAskMI("Изменить вопрос", ConsoleKey.F1));
-            showQuestion.EventHandler.AddHandler(ConsoleEvent.WriteQuestion, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+            showQuestion.EventHandler.AddHandler("WriteQuestion", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Next = CreateWriteQuestion(consoleItem, question, questionManager);
                 consoleItem.OnPause();
             });

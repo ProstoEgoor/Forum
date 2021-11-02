@@ -17,7 +17,7 @@ namespace ForumConsole.UserInterface {
         public bool Editable { get; }
         public bool HighlightError { get; set; }
 
-        public (int Top, int Left) Cursor { get; private set; }
+        public (int top, int left) Cursor { get; set; } = (0, 0);
         protected StringBuilder Field { get; } = new StringBuilder();
         protected Predicate<string> ValidateField { get; }
 
@@ -26,6 +26,17 @@ namespace ForumConsole.UserInterface {
         }
 
         public List<CharType> AllowedCharTypes { get; } = new List<CharType>();
+
+        public ConsoleColor UneditableColor { get; set; } = ConsoleColor.DarkGray;
+        public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
+
+        ConsoleColor foreground = ConsoleColor.Gray;
+        ConsoleColor background = ConsoleColor.Black;
+        public ConsoleColor Foreground { get => foreground; set => foreground = value; }
+        public ConsoleColor Background { get => background; set => background = value; }
+        public bool CursorVisible { get => Editable; }
+
+        bool IConsoleDisplayable.CursorVisible => Editable;
 
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
@@ -46,7 +57,8 @@ namespace ForumConsole.UserInterface {
                 }
 
                 if (keyInfo.Key == ConsoleKey.Backspace && Field.Length > 0) {
-                    Field.Remove(Field.Length - 1, 1);
+                    int length = (Field.Length > 1 && Field[Field.Length - 1] == '\n' && Field[Field.Length - 2] == '\r') ? 2 : 1;
+                    Field.Remove(Field.Length - length, length);
                     HighlightError = false;
                     return true;
                 }
@@ -88,44 +100,41 @@ namespace ForumConsole.UserInterface {
             return false;
         }
 
-        public virtual void Show(int width, int indent, bool briefly) {
-            ConsoleColor background = Console.BackgroundColor;
-            ConsoleColor foreground = Console.ForegroundColor;
-
+        public virtual void Show((int left, int right) indent) {
             if (HighlightError && !IsValide) {
-                Console.BackgroundColor = ConsoleColor.Red;
+                Console.BackgroundColor = ErrorColor;
             }
 
-            Console.Write(new string(' ', indent));
+            Console.Write(new string(' ', indent.left));
             Console.Write(Title);
             Console.Write(": ");
             Cursor = (Console.CursorTop, Console.CursorLeft);
 
             if (!Editable) {
-                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.BackgroundColor = UneditableColor;
             }
 
             int start = -1;
             string line;
             string str = Field.ToString();
+            int width = Console.WindowWidth - indent.left - indent.right;
 
-            if (PrintHelper.TryGetLine(str, width - indent - Title.Length - 2, ref start, out line)) {
+            if (PrintHelper.TryGetLine(str, width - Title.Length - 2, ref start, out line)) {
                 Console.Write(line);
                 Cursor = (Console.CursorTop, Console.CursorLeft);
-                Console.WriteLine();
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
             } else {
-                Console.WriteLine();
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
 
-            while (PrintHelper.TryGetLine(str, width - indent, ref start, out line)) {
-                Console.Write(new string(' ', indent));
+            while (PrintHelper.TryGetLine(str, width, ref start, out line)) {
+                Console.Write(new string(' ', indent.left));
                 Console.Write(line);
                 Cursor = (Console.CursorTop, Console.CursorLeft);
-                Console.WriteLine();
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
 
-            Console.BackgroundColor = background;
-            Console.ForegroundColor = foreground;
+            Console.ResetColor();
         }
 
         public void OnRaiseEvent(ConsoleEventArgs consoleEvent) {

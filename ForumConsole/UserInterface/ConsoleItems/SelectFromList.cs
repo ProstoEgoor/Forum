@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ForumConsole.UserInterface {
     public class SelectFromList<ContentType> : IConsoleDisplayable, IConsoleReactive where ContentType : class {
-        public ConsoleColor SelectedColor { get; set; } = ConsoleColor.Green;
         readonly Func<IReadOnlyList<ContentType>> getContentItems;
 
         IReadOnlyList<ContentType> contentItems;
@@ -55,8 +55,19 @@ namespace ForumConsole.UserInterface {
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
         public bool Selectable { get; set; } = true;
-        int SelectedCursorStart { get; set; }
-        int SelectedCursorEnd { get; set; }
+        public int SelectedCursorStart { get; set; }
+        public int SelectedCursorEnd { get; set; }
+        public ConsoleColor SelectedForeground { get; set; } = ConsoleColor.Black;
+        public ConsoleColor SelectedBackground { get; set; } = ConsoleColor.DarkGreen;
+
+        ConsoleColor foreground = ConsoleColor.Gray;
+        ConsoleColor background = ConsoleColor.Black;
+        public ConsoleColor Foreground { get => foreground; set => foreground = value; }
+        public ConsoleColor Background { get => background; set => background = value; }
+
+        public bool CursorVisible => Selectable && ((ContentItems[Position] as IConsoleDisplayable)?.CursorVisible ?? false);
+
+        public (int top, int left) Cursor { get; set; } = (0, 0);
 
         public SelectFromList(Func<IReadOnlyList<ContentType>> getContentItems) {
             this.getContentItems = getContentItems;
@@ -74,23 +85,23 @@ namespace ForumConsole.UserInterface {
 
             if (keyInfo.Key == ConsoleKey.UpArrow) {
                 Position--;
-                RaiseEvent?.Invoke(this, new ConsoleEventArgs(ConsoleEvent.SelectAbove));
+                RaiseEvent?.Invoke(this, new ConsoleEventArgs("SelectAbove"));
                 return true;
             }
 
             if (keyInfo.Key == ConsoleKey.DownArrow) {
                 Position++;
-                RaiseEvent?.Invoke(this, new ConsoleEventArgs(ConsoleEvent.SelectBelow));
+                RaiseEvent?.Invoke(this, new ConsoleEventArgs("SelectBelow"));
                 return true;
             }
 
             if (keyInfo.Key == ConsoleKey.Enter) {
-                RaiseEvent?.Invoke(this, new ConsoleEventArgs(ConsoleEvent.SelectItem));
+                RaiseEvent?.Invoke(this, new ConsoleEventArgs("SelectItem"));
                 return true;
             }
 
             if (keyInfo.Key == ConsoleKey.Delete) {
-                RaiseEvent?.Invoke(this, new ConsoleEventArgs(ConsoleEvent.RemoveItem));
+                RaiseEvent?.Invoke(this, new ConsoleEventArgs("RemoveItem"));
                 return true;
             }
 
@@ -104,60 +115,52 @@ namespace ForumConsole.UserInterface {
             RaiseEvent?.Invoke(this, consoleEvent);
         }
 
-        public void Show(int width, int indent, bool briefly) {
+        public void Show((int left, int right) indent, bool briefly) {
             if (ContentItems != null) {
-                Console.WriteLine();
                 for (int i = 0; i < ContentItems.Count; i++) {
+                    Console.ForegroundColor = Selectable && Position == i ? SelectedForeground : Foreground;
+                    Console.BackgroundColor = Selectable && Position == i ? SelectedBackground : Background;
+                    if (ContentItems[i] is IConsoleDisplayable displayableItem) {
+                        displayableItem.Foreground = Selectable && Position == i ? SelectedForeground : Foreground;
+                        displayableItem.Background = Selectable && Position == i ? SelectedBackground : Background;
+                    }
+
                     if (Selectable && Position == i) {
                         SelectedCursorStart = Console.CursorTop;
                     }
 
-                    if (ContentItems[i] is IConsoleDisplayable) {
-                        (ContentItems[i] as IConsoleDisplayable)?.Show(width - 1, indent + 1, briefly);
+                    if (ContentItems[i] is IConsoleDisplayableBriefly displayableBrieflyItem) {
+                        displayableBrieflyItem.Show(indent, briefly);
+                    } else if (ContentItems[i] is IConsoleDisplayable _displayableItem) {
+                        _displayableItem.Show(indent);
                     } else {
                         int start = -1;
                         string str = ContentItems[i].ToString();
+                        int width = Console.WindowWidth - indent.left - indent.right;
 
-                        while (PrintHelper.TryGetLine(str, width - indent - 1, ref start, out string line)) {
-                            Console.Write(new string(' ', indent + 1));
-                            Console.WriteLine(line);
+                        while (PrintHelper.TryGetLine(str, width, ref start, out string line)) {
+                            Console.Write(new string(' ', indent.left));
+                            Console.Write(line);
+                            Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
                         }
                     }
 
+                    Console.CursorVisible = true;
                     if (Selectable && Position == i) {
-                        Console.BackgroundColor = SelectedColor;
                         SelectedCursorEnd = Console.CursorTop;
-                        Console.CursorLeft = indent;
-                        Console.CursorTop = SelectedCursorStart - 1;
-                        Console.WriteLine(new string(' ', width - indent));
-                        for (int j = SelectedCursorStart; j < SelectedCursorEnd; j++) {
-                            Console.CursorLeft = indent;
-                            Console.CursorTop = j;
-                            Console.Write(' ');
-                            Console.CursorLeft = width - 1;
-                            Console.Write(' ');
-                        }
-                        Console.CursorLeft = indent;
-                        Console.CursorTop = SelectedCursorEnd;
-                        Console.Write(new string(' ', width - indent));
-                        Console.ResetColor();
                     }
 
-                    Console.WriteLine();
-                    Console.WriteLine();
+                    Console.ForegroundColor = Foreground;
+                    Console.BackgroundColor = Background;
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
                 }
+
+                Cursor = (ContentItems[position] as IConsoleDisplayable).Cursor;
             }
-
-            /*if (Selectable && SelectedCursorEnd - SelectedCursorStart < Console.WindowHeight) {
-                if (SelectedCursorEnd > WindowTop + Console.WindowHeight) {
-                    WindowTop = SelectedCursorEnd - Console.WindowHeight;
-                }
-
-                if (SelectedCursorStart < WindowTop) {
-                    WindowTop = SelectedCursorStart;
-                }
-            }*/
         }
 
+        public void Show((int left, int right) indent) {
+            Show(indent, true);
+        }
     }
 }

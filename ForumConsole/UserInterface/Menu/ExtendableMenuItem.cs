@@ -6,49 +6,46 @@ namespace ForumConsole.UserInterface {
     public class ExtendableMenuItem<TypeExpandableContent> : ActivatableMenuItem {
         public TypeExpandableContent Content { get; }
 
-        public ExtendableMenuItem(TypeExpandableContent content, ConsoleEvent activeType, ConsoleEvent type, ConsoleKeyInfo keyInfo, string keyTitle, string description, int order = 1) : base(activeType, type, keyInfo, keyTitle, description, order) {
+        public override bool CursorVisible => (Content as IConsoleDisplayable)?.CursorVisible ?? false;
+
+        public ExtendableMenuItem(TypeExpandableContent content, string activeType, string type, ConsoleKeyInfo keyInfo, string keyTitle, string description, int order = 1) : base(activeType, type, keyInfo, keyTitle, description, order) {
             Content = content;
             if (Content is IConsoleReactive reactiveContent) {
                 reactiveContent.RaiseEvent += HandleEvent;
             }
+            if(Content is IConsoleDisplayable displayableContent) {
+                displayableContent.Foreground = Foreground;
+                displayableContent.Background = Background;
+            }
         }
 
-        public ExtendableMenuItem(TypeExpandableContent content, ConsoleEvent activeType, ConsoleEvent type, ConsoleKeyInfo keyInfo, string description, int order = 1) : this(content, activeType, type, keyInfo, keyInfo.Key.ToString(), description, order) { }
+        public ExtendableMenuItem(TypeExpandableContent content, string activeType, string type, ConsoleKeyInfo keyInfo, string description, int order = 1) : this(content, activeType, type, keyInfo, keyInfo.Key.ToString(), description, order) { }
 
-        public override void Show(int width, int indent = 0, bool briefly = false) {
-            int length = KeyTitle.Length + 1 + Description.Length;
-            if (width - Console.CursorLeft < length) {
-                Console.WriteLine(new string(' ', width - Console.CursorLeft));
-            }
+        public override void Show((int left, int right) indent) {
+            base.Show(indent);
 
-            ConsoleColor backgroung = Console.BackgroundColor;
-            if (Active) {
-                Console.BackgroundColor = ActiveBackgroundColor;
-            }
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write(KeyTitle);
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.Write(" " + Description);
-
-            Console.ResetColor();
-            Console.BackgroundColor = backgroung;
+            Console.ForegroundColor = Foreground;
+            Console.BackgroundColor = Background;
 
             if (Active && Content != null) {
-                Console.WriteLine(new string(' ', width - Console.CursorLeft));
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
 
                 if (Content is IConsoleDisplayable displayableContent) {
-                    displayableContent.Show(width, indent, false);
+                    displayableContent.Show(indent);
+                    Cursor = displayableContent.Cursor;
                 } else {
                     int start = -1;
                     string str = Content.ToString();
-
-                    while (PrintHelper.TryGetLine(str, width - indent - 1, ref start, out string line)) {
-                        Console.Write(new string(' ', indent + 1));
-                        Console.WriteLine(line);
+                    int width = Console.WindowWidth - indent.left - indent.right;
+                    Console.ForegroundColor = Foreground;
+                    Console.BackgroundColor = Background;
+                    while (PrintHelper.TryGetLine(str, width, ref start, out string line)) {
+                        Console.Write(new string(' ', indent.left));
+                        Console.Write(line);
+                        Cursor = (Console.CursorTop, Console.CursorLeft);
+                        Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
                     }
                 }
-
-                Console.WriteLine();
             }
         }
 
@@ -56,7 +53,7 @@ namespace ForumConsole.UserInterface {
             if (base.HandlePressedKey(keyInfo)) {
                 return true;
             }
-            
+
             if (Active && Content is IConsoleReactive reactiveContent) {
                 return reactiveContent.HandlePressedKey(keyInfo);
             }

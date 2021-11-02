@@ -14,6 +14,15 @@ namespace ForumConsole.UserInterface {
 
         protected int WindowTop { get; set; } = 0;
 
+        ConsoleColor foreground = ConsoleColor.Gray;
+        ConsoleColor background = ConsoleColor.Black;
+        public virtual ConsoleColor Foreground { get => foreground; set => foreground = value; }
+        public virtual ConsoleColor Background { get => background; set => background = value; }
+
+        public virtual bool CursorVisible => Menu.CursorVisible;
+
+        public (int top, int left) Cursor { get; set; } = (0, 0);
+
         public ConsoleItem(ConsoleItem prev) {
             Prev = prev;
             Next = this;
@@ -28,27 +37,38 @@ namespace ForumConsole.UserInterface {
 
             Menu.AddMenuItem(itemEscape);
 
-            EventHandler.AddHandler(ConsoleEvent.Escape, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+            EventHandler.AddHandler("Escape", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Prev?.OnResume();
                 consoleItem.Next = consoleItem.Prev;
             });
         }
 
-        public void OnResume() {
+        public virtual void OnResume() {
             Next = this;
             Console.WindowTop = WindowTop;
         }
-        public void OnPause() {
+        public virtual void OnPause() {
             WindowTop = Console.WindowTop;
             Console.Clear();
         }
 
-        public virtual void Show(int width, int indent = 0, bool briefly = false) {
+        public virtual void Show((int left, int right) indent) {
             WindowTop = Console.WindowTop;
             Console.Clear();
-            Menu.Show(width);
+            Menu.Show(indent);
+            Cursor = Menu.Cursor;
 
             Console.WindowTop = WindowTop;
+        }
+
+        public void SetCursor() {
+            if (CursorVisible) {
+                Console.CursorTop = Cursor.top;
+                Console.CursorLeft = Cursor.left;
+                Console.CursorVisible = true;
+            } else {
+                Console.CursorVisible = false;
+            }
         }
 
         public virtual bool HandlePressedKey(ConsoleKeyInfo keyInfo) {

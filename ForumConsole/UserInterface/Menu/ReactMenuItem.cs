@@ -4,15 +4,15 @@ using System.Text;
 
 namespace ForumConsole.UserInterface {
     public class ReactMenuItem : MenuItem, IConsoleReactive {
-        public ConsoleEvent Type { get; }
+        public string Type { get; set; }
 
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
-        public ReactMenuItem(ConsoleEvent type, ConsoleKeyInfo keyInfo, string keyTitle, string description, int order = 1) : base(keyInfo, keyTitle, description, order) {
+        public ReactMenuItem(string type, ConsoleKeyInfo keyInfo, string keyTitle, string description, int order = 1) : base(keyInfo, keyTitle, description, order) {
             Type = type;
         }
 
-        public ReactMenuItem(ConsoleEvent type, ConsoleKeyInfo keyInfo, string description, int order = 1) : this(type, keyInfo, keyInfo.Key.ToString(), description, order) { }
+        public ReactMenuItem(string type, ConsoleKeyInfo keyInfo, string description, int order = 1) : this(type, keyInfo, keyInfo.Key.ToString(), description, order) { }
 
         public virtual bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
             if (KeyInfo == keyInfo) {
@@ -22,7 +22,7 @@ namespace ForumConsole.UserInterface {
 
             return false;
         }
-        public void HandleEvent(object obj, ConsoleEventArgs consoleEvent) {
+        public virtual void HandleEvent(object obj, ConsoleEventArgs consoleEvent) {
             OnRaiseEvent(consoleEvent);
         }
 

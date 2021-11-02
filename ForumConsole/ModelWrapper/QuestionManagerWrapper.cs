@@ -6,7 +6,7 @@ using ForumConsole.UserInterface;
 using System.Linq;
 
 namespace ForumConsole.ModelWrapper {
-    public class QuestionManagerWrapper : IConsoleDisplayable, IConsoleEditableContainer<Question> {
+    public class QuestionManagerWrapper : IConsoleEditableContainer<Question> {
         public QuestionManager QuestionManager { get; }
 
         public QuestionManagerWrapper(QuestionManager questionManager) {

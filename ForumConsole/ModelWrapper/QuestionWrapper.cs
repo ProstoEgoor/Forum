@@ -7,7 +7,7 @@ using ForumModel;
 using System.Linq;
 
 namespace ForumConsole.ModelWrapper {
-    public class QuestionWrapper : IConsoleDisplayable, IConsoleEditable<Question>, IConsoleEditableContainer<Answer> {
+    public class QuestionWrapper : IConsoleDisplayableBriefly, IConsoleEditable<Question>, IConsoleEditableContainer<Answer> {
         public Question Question { get; set; }
 
         public IReadOnlyList<WriteField> GetWriteFields {
@@ -25,6 +25,15 @@ namespace ForumConsole.ModelWrapper {
 
         Question IConsoleEditable<Question>.Element { get => Question; set => Question = value; }
 
+        ConsoleColor foreground = ConsoleColor.Gray;
+        ConsoleColor background = ConsoleColor.Black;
+        public ConsoleColor Foreground { get => foreground; set => foreground = value; }
+        public ConsoleColor Background { get => background; set => background = value; }
+
+        public bool CursorVisible => false;
+
+        public (int top, int left) Cursor { get; set; } = (0, 0);
+
         public QuestionWrapper() { }
 
         public QuestionWrapper(Question question) {
@@ -35,34 +44,42 @@ namespace ForumConsole.ModelWrapper {
             return Question.Answers.Select(item => new AnswerWrapper(item)).ToList();
         }
 
-        public void Show(int width, int indent = 0, bool briefly = true) {
+        public void Show((int left, int right) indent, bool briefly) {
             StringBuilder buffer = new StringBuilder();
-            buffer.Append($"Тема:\t{Question.Topic}\r\n");
-            buffer.Append($"Теги:\t{string.Join(", ", Question.Tags)}\r\n");
-            buffer.Append($"Автор:\t{Question.Author}\r\n");
-            buffer.Append($"Дата:\t{Question.Date}\r\n");
+            buffer.Append($"Тема: {Question.Topic}\r\n");
+            buffer.Append($"Теги: {string.Join(", ", Question.Tags)}\r\n");
+            buffer.Append($"Автор: {Question.Author}\r\n");
+            buffer.Append($"Дата: {Question.Date}\r\n");
             buffer.Append($"{Question.Answers.Count} {PrintHelper.GetNumAddition(Question.Answers.Count, "Ответ", "Ответа", "Ответов")}\r\n");
             string str = buffer.ToString();
 
             int start = -1;
             string line;
+            int width = Console.WindowWidth - indent.left - indent.right;
 
-            while (PrintHelper.TryGetLine(str, width - indent, ref start, out line)) {
-                Console.Write(new string(' ', indent));
-                Console.WriteLine(line);
+            while (PrintHelper.TryGetLine(str, width, ref start, out line)) {
+                Console.Write(new string(' ', indent.left));
+                Console.Write(line);
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
+
             }
 
             start = 0;
-            for (int i = 0; (!briefly || i < 2) && PrintHelper.TryGetLine(Question.Text, width - indent - 1, ref start, out line); i++) {
-                Console.Write(new string(' ', indent + 1));
-                Console.WriteLine(line);
+            for (int i = 0; (!briefly || i < 2) && PrintHelper.TryGetLine(Question.Text, width - 1, ref start, out line); i++) {
+                Console.Write(new string(' ', indent.left + 1));
+                Console.Write(line);
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
 
-            if (briefly && PrintHelper.TryGetLine(Question.Text, width - indent - 4, ref start, out line)) {
-                Console.Write(new string(' ', indent + 1));
+            if (briefly && PrintHelper.TryGetLine(Question.Text, width - 4, ref start, out line)) {
+                Console.Write(new string(' ', indent.left + 1));
                 Console.Write(line);
-                Console.WriteLine("...");
+                Console.Write("...");
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
+        }
+        public void Show((int left, int right) indent) {
+            Show(indent, false);
         }
 
         public Question CreateFromWriteFields(IReadOnlyList<WriteField> writeFields) {
@@ -91,5 +108,6 @@ namespace ForumConsole.ModelWrapper {
         public bool Replace(Answer oldItem, Answer newItem) {
             throw new NotImplementedException();
         }
+
     }
 }

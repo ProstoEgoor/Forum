@@ -12,6 +12,8 @@ namespace ForumConsole.UserInterface {
         IConsoleEditable<EditableType> EditableItem { get; }
         IConsoleEditableContainer<EditableType> EditableContainer { get; }
 
+        public override bool CursorVisible => base.CursorVisible || SelectFromList.CursorVisible;
+
         IReadOnlyList<WriteField> WriteFields { get; }
         public WriteConsoleItem(ConsoleItem prev, TitleType title, IConsoleEditable<EditableType> editableItem, IConsoleEditableContainer<EditableType> editableContainer) : base(prev, title) {
             EditableItem = editableItem;
@@ -20,17 +22,17 @@ namespace ForumConsole.UserInterface {
             SelectFromList = new SelectFromList<WriteField>(() => WriteFields);
             SelectFromList.RaiseEvent += HandleEvent;
 
-            EventHandler.AddHandler(ConsoleEvent.Save, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+            EventHandler.AddHandler("Save", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 if (WriteFields.All(item => item.IsValide)) {
                     if (EditableItem.Element == null) {
                         EditableType newElement = EditableItem.CreateFromWriteFields(WriteFields);
                         EditableContainer.Add(newElement);
-                        OnRaiseEvent(new ConsoleEventArgs(ConsoleEvent.Escape));
+                        HandleEvent(this, new ConsoleEventArgs("Escape"));
                     } else {
                         EditableType newElement = EditableItem.CreateFromWriteFields(WriteFields);
                         EditableContainer.Replace(editableItem.Element, newElement);
                         editableItem.Element = newElement;
-                        OnRaiseEvent(new ConsoleEventArgs(ConsoleEvent.Escape));
+                        HandleEvent(this, new ConsoleEventArgs("Escape"));
                     }
                 } else {
                     foreach (var item in WriteFields) {
@@ -41,20 +43,16 @@ namespace ForumConsole.UserInterface {
 
         }
 
-        public override void Show(int width, int indent = 0, bool briefly = false) {
-            base.Show(width, indent, briefly);
+        public override void Show((int left, int right) indent) {
+            base.Show(indent);
 
-            SelectFromList.Show(width, indent, briefly);
+            SelectFromList.Show(indent);
 
-            Console.CursorTop = SelectFromList.SelectedItem.Cursor.Top;
-            Console.CursorLeft = SelectFromList.SelectedItem.Cursor.Left;
-
-            if (SelectFromList.SelectedItem.Editable) {
-                Console.CursorVisible = true;
-            } else {
-                Console.CursorVisible = false;
-            }
             Console.WindowTop = WindowTop;
+
+            if (CursorVisible && !base.CursorVisible) {
+                Cursor = SelectFromList.Cursor;
+            }
         }
 
         public override bool HandlePressedKey(ConsoleKeyInfo keyInfo) {

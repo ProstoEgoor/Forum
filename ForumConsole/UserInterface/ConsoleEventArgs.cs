@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ForumConsole.UserInterface {
     public class ConsoleEventArgs : EventArgs {
-        public ConsoleEventArgs(ConsoleEvent type) {
+        public ConsoleEventArgs(string type) {
             Type = type;
         }
 
-        public ConsoleEvent Type{ get; set; }
+        public string Type{ get; set; }
     }
 }

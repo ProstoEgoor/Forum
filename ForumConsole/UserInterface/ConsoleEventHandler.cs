@@ -6,9 +6,9 @@ using ForumConsole.UserInterface;
 namespace ForumConsole {
     public class ConsoleEventHandler {
 
-        Dictionary<ConsoleEvent, Action<ConsoleItem, ConsoleEventArgs>> HandlerDictionary { get; } = new Dictionary<ConsoleEvent, Action<ConsoleItem, ConsoleEventArgs>>();
+        Dictionary<string, Action<ConsoleItem, ConsoleEventArgs>> HandlerDictionary { get; } = new Dictionary<string, Action<ConsoleItem, ConsoleEventArgs>>();
 
-        public void AddHandler(ConsoleEvent type, Action<ConsoleItem, ConsoleEventArgs> handler) {
+        public void AddHandler(string type, Action<ConsoleItem, ConsoleEventArgs> handler) {
             if (HandlerDictionary.ContainsKey(type)) {
                 HandlerDictionary[type] += handler;
             } else {

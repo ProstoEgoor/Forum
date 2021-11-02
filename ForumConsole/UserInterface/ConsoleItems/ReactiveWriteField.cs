@@ -19,10 +19,10 @@ namespace ForumConsole.UserInterface {
             React = react;
         }
 
-        public override void Show(int width, int indent, bool briefly) {
+        public override void Show((int left, int right) indent) {
             Field.Clear();
             Field.Append(React());
-            base.Show(width, indent, briefly);
+            base.Show(indent);
         }
     }
 }

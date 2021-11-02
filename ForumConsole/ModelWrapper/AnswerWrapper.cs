@@ -5,7 +5,7 @@ using ForumModel;
 using ForumConsole.UserInterface;
 
 namespace ForumConsole.ModelWrapper {
-    public class AnswerWrapper : IConsoleDisplayable, IConsoleEditable<Answer> {
+    public class AnswerWrapper : IConsoleDisplayableBriefly, IConsoleEditable<Answer> {
         public Answer Answer { get; set; }
 
         public IReadOnlyList<WriteField> GetWriteFields {
@@ -22,38 +22,54 @@ namespace ForumConsole.ModelWrapper {
 
         public Answer Element { get => Answer; set => Answer = value; }
 
+        ConsoleColor foreground = ConsoleColor.Gray;
+        ConsoleColor background = ConsoleColor.Black;
+        public ConsoleColor Foreground { get => foreground; set => foreground = value; }
+        public ConsoleColor Background { get => background; set => background = value; }
+
+        public bool CursorVisible => false;
+
+        public (int top, int left) Cursor { get; set; } = (0, 0);
+
         public AnswerWrapper(Answer answer) {
             Answer = answer;
         }
 
-        public void Show(int width, int indent = 0, bool briefly = false) {
-            briefly = false;
+        public void Show((int left, int right) indent, bool briefly) {
+            Console.ForegroundColor = Foreground;
+            Console.BackgroundColor = Background;
 
             StringBuilder buffer = new StringBuilder();
-            buffer.Append($"Автор:\t{Answer.Author}\r\n");
-            buffer.Append($"Дата:\t{Answer.Date}\r\n");
-            buffer.Append($"Рейтинг:\t{Answer.Rating}\r\n");
+            buffer.Append($"Автор: {Answer.Author}\r\n");
+            buffer.Append($"Дата: {Answer.Date}\r\n");
+            buffer.Append($"Рейтинг: {Answer.Rating}\r\n");
             string str = buffer.ToString();
 
             int start = -1;
             string line;
+            int width = Console.WindowWidth - indent.left - indent.right;
 
-            while (PrintHelper.TryGetLine(str, width - indent, ref start, out line)) {
-                Console.Write(new string(' ', indent));
-                Console.WriteLine(line);
+            while (PrintHelper.TryGetLine(str, width, ref start, out line)) {
+                Console.Write(new string(' ', indent.left));
+                Console.Write(line);
+                Console.Write(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
 
             start = 0;
-            for (int i = 0; (!briefly || i < 2) && PrintHelper.TryGetLine(Answer.Text, width - indent - 1, ref start, out line); i++) {
-                Console.Write(new string(' ', indent + 1));
-                Console.WriteLine(line);
+            for (int i = 0; (!briefly || i < 2) && PrintHelper.TryGetLine(Answer.Text, width - 1, ref start, out line); i++) {
+                Console.Write(new string(' ', indent.left + 1));
+                Console.Write(line);
+                Console.Write(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
 
-            if (briefly && PrintHelper.TryGetLine(Answer.Text, width - indent - 4, ref start, out line)) {
-                Console.Write(new string(' ', indent + 1));
+            if (briefly && PrintHelper.TryGetLine(Answer.Text, width - 4, ref start, out line)) {
+                Console.Write(new string(' ', indent.left + 1));
                 Console.Write(line);
-                Console.WriteLine("...");
+                Console.Write("...");
+                Console.Write(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }
+
+            Console.WriteLine();
         }
 
         public Answer CreateFromWriteFields(IReadOnlyList<WriteField> writeFields) {
@@ -68,6 +84,10 @@ namespace ForumConsole.ModelWrapper {
                 Date = date,
                 Text = text,
             };
+        }
+
+        public void Show((int left, int right) indent) {
+            Show(indent, false);
         }
     }
 }

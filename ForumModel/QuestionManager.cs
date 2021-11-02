@@ -28,6 +28,7 @@ namespace ForumModel {
         }
 
         public bool RemoveQuestion(Question question) {
+            TagManager.UpdateTags(question.Tags, true);
             return ListQuestion.Remove(question);
         }
 

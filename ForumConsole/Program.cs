@@ -14,7 +14,8 @@ namespace ForumConsole {
             ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManagerWrapper);
 
             while (currentItem != null) {
-                currentItem.Show(Console.WindowWidth, 0, true);
+                currentItem.Show((1, 1));
+                currentItem.SetCursor();
                 currentItem.HandlePressedKey(Console.ReadKey(true));
                 currentItem = currentItem.Next;
             }
