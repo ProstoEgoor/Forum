@@ -6,26 +6,30 @@ using ForumConsole.UserInterface;
 
 namespace ForumConsole.UserInterface {
     public enum CharType {
-        letter,
-        digit,
-        punctuation,
-        space,
-        lineSeparator
+        Letter = 1,
+        Digit = 2,
+        Space = 4,
+        Punctuation = 8,
+        Symbol = 16,
+        LineSeparator = 32,
+        All = 63
     }
     public abstract class WriteField : IConsoleDisplayable, IConsoleReactive {
+        public string EventTag { get; }
         protected string Title { get; }
-        public bool Editable { get; }
+        public bool Editable { get; } = true;
+        public bool WriteState { get; set; } = true;
         public bool HighlightError { get; set; }
 
         public (int top, int left) Cursor { get; set; } = (0, 0);
         protected StringBuilder Field { get; } = new StringBuilder();
         protected Predicate<string> ValidateField { get; }
 
-        public bool IsValide {
+        public bool IsValid {
             get => ValidateField?.Invoke(Field.ToString()) ?? false;
         }
 
-        public List<CharType> AllowedCharTypes { get; } = new List<CharType>();
+        public int AllowedCharTypes { get; } = (int) CharType.All;
 
         public ConsoleColor UneditableColor { get; set; } = ConsoleColor.DarkGray;
         public ConsoleColor ErrorColor { get; set; } = ConsoleColor.Red;
@@ -40,19 +44,21 @@ namespace ForumConsole.UserInterface {
 
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
-        public WriteField(bool editable, string title, string field, Predicate<string> validateField, IEnumerable<CharType> allowedCharTypes) {
+        public WriteField(bool editable, string eventTag, string title, string field, Predicate<string> validateField, int allowedCharTypes) {
             Editable = editable;
+            EventTag = eventTag;
             Title = title;
             Field = new StringBuilder(field);
             ValidateField = validateField;
-            AllowedCharTypes.AddRange(allowedCharTypes);
+            AllowedCharTypes = allowedCharTypes;
         }
 
-        public bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
+        public virtual bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
             if (Editable) {
                 if (IsValidChar(keyInfo.KeyChar)) {
                     Field.Append(keyInfo.KeyChar == '\r' ? '\n' : keyInfo.KeyChar);
                     HighlightError = false;
+                    WriteState = true;
                     return true;
                 }
 
@@ -60,48 +66,32 @@ namespace ForumConsole.UserInterface {
                     int length = (Field.Length > 1 && Field[Field.Length - 1] == '\n' && Field[Field.Length - 2] == '\r') ? 2 : 1;
                     Field.Remove(Field.Length - length, length);
                     HighlightError = false;
+                    WriteState = true;
                     return true;
                 }
 
             }
-
-
-
-
             return false;
         }
 
         private bool IsValidChar(char keyChar) {
-            foreach (var charType in AllowedCharTypes) {
-                switch (charType) {
-                    case CharType.letter:
-                        if (char.IsLetter(keyChar))
-                            return true;
-                        break;
-                    case CharType.digit:
-                        if (char.IsDigit(keyChar))
-                            return true;
-                        break;
-                    case CharType.punctuation:
-                        if (char.IsPunctuation(keyChar))
-                            return true;
-                        break;
-                    case CharType.space:
-                        if (keyChar == ' ')
-                            return true;
-                        break;
-                    case CharType.lineSeparator:
-                        if (keyChar == '\n' || keyChar == '\r')
-                            return true;
-                        break;
-                }
-            }
+            if (char.IsLetter(keyChar) && ((AllowedCharTypes & (int) CharType.Letter) != 0)) return true;
+
+            if (char.IsDigit(keyChar) && ((AllowedCharTypes & (int)CharType.Digit) != 0)) return true;
+
+            if (keyChar == ' ' && ((AllowedCharTypes & (int)CharType.Space) != 0)) return true;
+
+            if (char.IsPunctuation(keyChar) && ((AllowedCharTypes & (int)CharType.Punctuation) != 0)) return true;
+
+            if (char.IsSymbol(keyChar) && ((AllowedCharTypes & (int)CharType.Symbol) != 0)) return true;
+
+            if ((keyChar == '\n' || keyChar == '\r') && ((AllowedCharTypes & (int)CharType.LineSeparator) != 0)) return true;
 
             return false;
         }
 
         public virtual void Show((int left, int right) indent) {
-            if (HighlightError && !IsValide) {
+            if (HighlightError && !IsValid) {
                 Console.BackgroundColor = ErrorColor;
             }
 
@@ -145,7 +135,7 @@ namespace ForumConsole.UserInterface {
 
         public virtual ContentType ParseField {
             get {
-                if (ParseFieldFunc != null && IsValide) {
+                if (ParseFieldFunc != null && IsValid) {
                     return ParseFieldFunc(Field.ToString());
                 }
 
@@ -154,8 +144,26 @@ namespace ForumConsole.UserInterface {
         }
         Func<string, ContentType> ParseFieldFunc { get; }
 
-        public WriteField(bool editable, string title, string field, Func<string, ContentType> parseField, Predicate<string> validateField, IEnumerable<CharType> allowedCharTypes) : base(editable, title, field, validateField, allowedCharTypes) {
+        public WriteField(bool editable, string eventTag, string title, string field, Func<string, ContentType> parseField, Predicate<string> validateField, int allowedCharTypes) 
+            : base(editable, eventTag, title, field, validateField, allowedCharTypes) {
             ParseFieldFunc = parseField;
+        }
+
+        public override bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
+            if (base.HandlePressedKey(keyInfo)) {
+                return true;
+            }
+
+            if (keyInfo.Key == ConsoleKey.Enter && WriteState) {
+                if (!IsValid) {
+                    HighlightError = true;
+                }
+                OnRaiseEvent(new ConsoleWriteEventArgs("WriteFieldEnd", EventTag, IsValid, ParseField, typeof(ContentType)));
+                WriteState = false;
+                return true;
+            }
+
+            return false;
         }
     }
 }

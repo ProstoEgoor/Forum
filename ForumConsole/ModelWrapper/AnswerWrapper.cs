@@ -11,10 +11,10 @@ namespace ForumConsole.ModelWrapper {
         public IReadOnlyList<WriteField> GetWriteFields {
             get {
                 List<WriteField> writeFields = new List<WriteField>();
-                writeFields.Add(new WriteField<string>(true, "Автор", Answer?.Author ?? "", (field) => field, (field) => field.Trim().Length > 0, new CharType[] { CharType.letter, CharType.digit, CharType.punctuation, CharType.space }));
+                writeFields.Add(new WriteField<string>(true, "AnswerAuthor", "Автор", Answer?.Author ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator));
                 writeFields.Add(new ReactiveWriteField<DateTime>("Дата", (Answer == null) ? DateTime.Now.ToString() : Answer.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
-                writeFields.Add(new WriteField<int>(false, "Рейтинг", (Answer == null) ? "0" : Answer.Rating.ToString(), (field) => int.Parse(field), (field) => int.TryParse(field, out _), new CharType[] { }));
-                writeFields.Add(new WriteField<string>(true, "Текст", Answer?.Text ?? "", (field) => field, (field) => field.Trim().Length > 0, new CharType[] { CharType.letter, CharType.digit, CharType.punctuation, CharType.space, CharType.lineSeparator }));
+                writeFields.Add(new WriteField<int>(false, "", "Рейтинг", (Answer == null) ? "0" : Answer.Rating.ToString(), (field) => int.Parse(field), (field) => int.TryParse(field, out _), (int)CharType.All ^ (int)CharType.LineSeparator));
+                writeFields.Add(new WriteField<string>(true, "AnswerText", "Текст", Answer?.Text ?? "", (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All));
 
                 return writeFields;
             }

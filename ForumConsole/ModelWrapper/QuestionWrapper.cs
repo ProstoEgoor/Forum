@@ -10,14 +10,18 @@ namespace ForumConsole.ModelWrapper {
     public class QuestionWrapper : IConsoleDisplayableBriefly, IConsoleEditable<Question>, IConsoleEditableContainer<Answer> {
         public Question Question { get; set; }
 
+        public bool Sort { get; set; }
+        public bool SortDateByAscending { get; set; }
+
         public IReadOnlyList<WriteField> GetWriteFields {
             get {
-                List<WriteField> writeFields = new List<WriteField>();
-                writeFields.Add(new WriteField<string>(true, "Тема", Question?.Topic ?? "", (field) => field, (field) => field.Trim().Length > 0, new CharType[] { CharType.letter, CharType.digit, CharType.punctuation, CharType.space }));
-                writeFields.Add(new WriteField<string>(true, "Теги", (Question == null) ? "" : string.Join(" ", Question.Tags), (field) => field, (field) => true, new CharType[] { CharType.letter, CharType.digit, CharType.punctuation, CharType.space })); ;
-                writeFields.Add(new WriteField<string>(true, "Автор", Question?.Author ?? "", (field) => field, (field) => field.Trim().Length > 0, new CharType[] { CharType.letter, CharType.digit, CharType.punctuation, CharType.space }));
-                writeFields.Add(new ReactiveWriteField<DateTime>("Дата", (Question == null) ? DateTime.Now.ToString() : Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
-                writeFields.Add(new WriteField<string>(true, "Текст", Question?.Text ?? "", (field) => field, (field) => field.Trim().Length > 0, new CharType[] { CharType.letter, CharType.digit, CharType.punctuation, CharType.space, CharType.lineSeparator }));
+                List<WriteField> writeFields = new List<WriteField> {
+                    new WriteField<string>(true, "QuestionTopic", "Тема", Question?.Topic ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
+                    new WriteField<string>(true, "QuestionTags", "Теги", (Question == null) ? "" : string.Join(" ", Question.Tags), (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
+                    new WriteField<string>(true, "QuestionAuthor", "Автор", Question?.Author ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
+                    new ReactiveWriteField<DateTime>("Дата", (Question == null) ? DateTime.Now.ToString() : Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)),
+                    new WriteField<string>(true, "QuestionText", "Текст", Question?.Text ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All)
+                };
 
                 return writeFields;
             }
@@ -41,7 +45,11 @@ namespace ForumConsole.ModelWrapper {
         }
 
         public IReadOnlyList<AnswerWrapper> GetWrappedAnswers() {
-            return Question.Answers.Select(item => new AnswerWrapper(item)).ToList();
+            if (Sort) {
+                return Question.GetSortedAnswers(SortDateByAscending).Select(answer => new AnswerWrapper(answer)).ToList();
+            } else {
+                return Question.Answers.Select(answer => new AnswerWrapper(answer)).ToList();
+            }
         }
 
         public void Show((int left, int right) indent, bool briefly) {

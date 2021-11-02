@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace ForumModel {
     public class QuestionManager {
@@ -9,6 +9,21 @@ namespace ForumModel {
         TagManager TagManager { get; }
 
         public IReadOnlyList<Question> Questions => ListQuestion;
+
+        public IReadOnlyList<Question> GetFilteredQuestions(string text, IEnumerable<string> tags) {
+            return ListQuestion.FindAll(delegate (Question question) {
+                bool textPrecidate = (text.Length == 0 || question.Text.Contains(text, StringComparison.OrdinalIgnoreCase));
+
+                bool tagsPredicate = true;
+                foreach (var tag in tags) {
+                    if (tagsPredicate) {
+                        tagsPredicate = question.ContainsTag(tag);
+                    }
+                }
+
+                return textPrecidate && tagsPredicate;
+            }).OrderByDescending(question => question.Answers.Count).ToList();
+        }
 
         public QuestionManager(TagManager tagManager) {
             TagManager = tagManager;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ForumModel {
     public class Question {
@@ -20,6 +21,18 @@ namespace ForumModel {
             foreach (var tag in tags) {
                 TagSet.Add(tag);
             }
+        }
+
+        public IReadOnlyList<Answer> GetSortedAnswers(bool sortDateByAscending = true) {
+            if (sortDateByAscending) {
+                return ListAnswer.OrderBy(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+            } else {
+                return ListAnswer.OrderByDescending(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+            }
+        }
+
+        public bool ContainsTag(string tag) {
+            return TagSet.Contains(tag);
         }
 
         public void AddAnswer(params Answer[] answers) {

@@ -32,6 +32,10 @@ namespace ForumConsole.UserInterface {
                 displayableTitle.Foreground = Foreground;
                 displayableTitle.Background = Background;
             }
+
+            if (Title is IConsoleReactive reactiveTitle) {
+                reactiveTitle.RaiseEvent += HandleEvent;
+            }
         }
 
         public override void Show((int left, int right) indent) {
@@ -60,6 +64,18 @@ namespace ForumConsole.UserInterface {
             if (CursorVisible && !base.CursorVisible && ((Title as IConsoleDisplayable)?.CursorVisible ?? false)) {
                 Cursor = (Title as IConsoleDisplayable).Cursor;
             }
+        }
+
+        public override bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
+            if (base.HandlePressedKey(keyInfo)) {
+                return true;
+            }
+
+            if (Title is IConsoleReactive reactiveTitle) {
+                return reactiveTitle.HandlePressedKey(keyInfo);
+            }
+
+            return false;
         }
     }
 }

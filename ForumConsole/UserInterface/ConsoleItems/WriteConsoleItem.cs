@@ -23,7 +23,7 @@ namespace ForumConsole.UserInterface {
             SelectFromList.RaiseEvent += HandleEvent;
 
             EventHandler.AddHandler("Save", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
-                if (WriteFields.All(item => item.IsValide)) {
+                if (WriteFields.All(item => item.IsValid)) {
                     if (EditableItem.Element == null) {
                         EditableType newElement = EditableItem.CreateFromWriteFields(WriteFields);
                         EditableContainer.Add(newElement);
@@ -47,6 +47,16 @@ namespace ForumConsole.UserInterface {
             base.Show(indent);
 
             SelectFromList.Show(indent);
+
+            if (SelectFromList.Selectable && SelectFromList.SelectedCursorEnd - SelectFromList.SelectedCursorStart < Console.WindowHeight) {
+                if (SelectFromList.SelectedCursorEnd > WindowTop + Console.WindowHeight) {
+                    WindowTop = SelectFromList.SelectedCursorEnd - Console.WindowHeight;
+                }
+
+                if (SelectFromList.SelectedCursorStart < WindowTop) {
+                    WindowTop = SelectFromList.SelectedCursorStart;
+                }
+            }
 
             Console.WindowTop = WindowTop;
 

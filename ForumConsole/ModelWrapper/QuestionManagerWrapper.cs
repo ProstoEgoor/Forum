@@ -9,17 +9,20 @@ namespace ForumConsole.ModelWrapper {
     public class QuestionManagerWrapper : IConsoleEditableContainer<Question> {
         public QuestionManager QuestionManager { get; }
 
+        public bool Find { get; set; }
+        public string FindText { get; set; } = "";
+        public List<string> FindTags { get; } = new List<string>();
+
         public QuestionManagerWrapper(QuestionManager questionManager) {
             QuestionManager = questionManager;
         }
 
         public IReadOnlyList<QuestionWrapper> GetWrappedQuestions() {
-            return QuestionManager.Questions.Select(item => new QuestionWrapper(item)).ToList();
-        }
-
-        public void Show(int width, int indent, bool briefly) {
-            Console.Write(new string(' ', indent));
-            Console.WriteLine("Список вопросов:");
+            if (Find) {
+                return QuestionManager.GetFilteredQuestions(FindText, FindTags).Select(question => new QuestionWrapper(question)).ToList();
+            } else {
+                return QuestionManager.Questions.Select(question => new QuestionWrapper(question)).ToList();
+            }
         }
 
         public void Add(Question item) {

@@ -48,6 +48,7 @@ namespace ForumConsole.UserInterface {
                 position = value;
             }
         }
+        bool UpState { get; set; } = true;
         public ContentType SelectedItem {
             get => (ContentItems != null && ContentItems.Count > 0) ? ContentItems[Position] : null;
         }
@@ -55,6 +56,7 @@ namespace ForumConsole.UserInterface {
         public event EventHandler<ConsoleEventArgs> RaiseEvent;
 
         public bool Selectable { get; set; } = true;
+        public bool Changeable { get; set; } = true;
         public int SelectedCursorStart { get; set; }
         public int SelectedCursorEnd { get; set; }
         public ConsoleColor SelectedForeground { get; set; } = ConsoleColor.Black;
@@ -65,7 +67,7 @@ namespace ForumConsole.UserInterface {
         public ConsoleColor Foreground { get => foreground; set => foreground = value; }
         public ConsoleColor Background { get => background; set => background = value; }
 
-        public bool CursorVisible => Selectable && ((ContentItems[Position] as IConsoleDisplayable)?.CursorVisible ?? false);
+        public bool CursorVisible => Selectable && ContentItems.Count > 0 && ((ContentItems[Position] as IConsoleDisplayable)?.CursorVisible ?? false);
 
         public (int top, int left) Cursor { get; set; } = (0, 0);
 
@@ -83,24 +85,28 @@ namespace ForumConsole.UserInterface {
                 return true;
             }
 
-            if (keyInfo.Key == ConsoleKey.UpArrow) {
+            if (Changeable && keyInfo.Key == ConsoleKey.UpArrow) {
+                if (Position == 0) {
+                    UpState = true;
+                }
                 Position--;
                 RaiseEvent?.Invoke(this, new ConsoleEventArgs("SelectAbove"));
                 return true;
             }
 
-            if (keyInfo.Key == ConsoleKey.DownArrow) {
+            if (Changeable && keyInfo.Key == ConsoleKey.DownArrow) {
                 Position++;
+                UpState = false;
                 RaiseEvent?.Invoke(this, new ConsoleEventArgs("SelectBelow"));
                 return true;
             }
 
-            if (keyInfo.Key == ConsoleKey.Enter) {
+            if (Changeable && keyInfo.Key == ConsoleKey.Enter) {
                 RaiseEvent?.Invoke(this, new ConsoleEventArgs("SelectItem"));
                 return true;
             }
 
-            if (keyInfo.Key == ConsoleKey.Delete) {
+            if (Changeable && keyInfo.Key == ConsoleKey.Delete) {
                 RaiseEvent?.Invoke(this, new ConsoleEventArgs("RemoveItem"));
                 return true;
             }
@@ -116,7 +122,7 @@ namespace ForumConsole.UserInterface {
         }
 
         public void Show((int left, int right) indent, bool briefly) {
-            if (ContentItems != null) {
+            if (ContentItems != null && ContentItems.Count > 0) {
                 for (int i = 0; i < ContentItems.Count; i++) {
                     Console.ForegroundColor = Selectable && Position == i ? SelectedForeground : Foreground;
                     Console.BackgroundColor = Selectable && Position == i ? SelectedBackground : Background;
@@ -126,7 +132,7 @@ namespace ForumConsole.UserInterface {
                     }
 
                     if (Selectable && Position == i) {
-                        SelectedCursorStart = Console.CursorTop;
+                        SelectedCursorStart = UpState ? 0 : Console.CursorTop;
                     }
 
                     if (ContentItems[i] is IConsoleDisplayableBriefly displayableBrieflyItem) {
@@ -147,7 +153,7 @@ namespace ForumConsole.UserInterface {
 
                     Console.CursorVisible = true;
                     if (Selectable && Position == i) {
-                        SelectedCursorEnd = Console.CursorTop;
+                        SelectedCursorEnd = UpState ? 0 : Console.CursorTop;
                     }
 
                     Console.ForegroundColor = Foreground;

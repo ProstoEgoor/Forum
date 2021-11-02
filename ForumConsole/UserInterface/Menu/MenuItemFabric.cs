@@ -20,10 +20,16 @@ namespace ForumConsole.UserInterface {
             return new ReactMenuItem("Save", new ConsoleKeyInfo('\0', key, false, false, false), description);
         }
 
+        public static MenuItem CreateFindMI() {
+            return new ActivatableMenuItem("FindOn", "FindOff", new ConsoleKeyInfo('\0', ConsoleKey.F2, false, false, false), "Поиск");
+        }
+
         public static MenuItem CreateSet() {
-            return new SetMenuItem("", "FindOff", new ActivatableMenuItem("", "FindChange", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск"), new ActivatableMenuItem[] {
-                new ExtendableMenuItem<string>("текст", "FindText", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск по тексту"),
-                new ExtendableMenuItem<string>("теги", "FindTags", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск по тегам")
+            return new SetMenuItem("InputFindStart", "InputFindEnd", new ActivatableMenuItem("", "FindChange", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Параметры поиска"), new ActivatableMenuItem[] {
+                new ExtendableMenuItem<WriteField<string>>(new WriteField<string>(true, "FindText", "Текст", "", (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
+                "FindText", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск по тексту"),
+                new ExtendableMenuItem<WriteField<string>>(new WriteField<string>(true, "FindTags", "Теги", "", (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator), 
+                "FindTags", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск по тегам")
             });
         }
     }

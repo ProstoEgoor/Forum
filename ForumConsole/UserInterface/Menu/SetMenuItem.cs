@@ -22,6 +22,9 @@ namespace ForumConsole.UserInterface {
                     Items[position].Active = false;
                     position = value;
                     Items[position].Active = true;
+                    if (Items[position] is ExtendableMenuItem<WriteField>) {
+                        (Items[position] as ExtendableMenuItem<WriteField>).Content.WriteState = true;
+                    }
                 }
             }
         }
@@ -90,10 +93,6 @@ namespace ForumConsole.UserInterface {
             }
 
             return (Items[Position] as ReactMenuItem)?.HandlePressedKey(keyInfo) ?? false;
-        }
-
-        public override void HandleEvent(object obj, ConsoleEventArgs consoleEvent) {
-            base.HandleEvent(obj, consoleEvent);
         }
     }
 }

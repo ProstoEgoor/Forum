@@ -15,7 +15,7 @@ namespace ForumConsole.UserInterface {
         }
 
         public ReactiveWriteField(string title, string field, Func<ContentType> react, Func<string, ContentType> parseField, Predicate<string> validateField) 
-            : base(false, title, field, parseField, validateField, new CharType[] { }) {
+            : base(false, "", title, field, parseField, validateField, 0) {
             React = react;
         }
 
