@@ -31,6 +31,7 @@ namespace ForumConsole.ModelWrapper {
 
         public (int top, int left) Cursor { get; set; } = (0, 0);
 
+        public AnswerWrapper() { }
         public AnswerWrapper(Answer answer) {
             Answer = answer;
         }

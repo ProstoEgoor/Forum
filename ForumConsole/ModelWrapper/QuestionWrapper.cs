@@ -105,12 +105,12 @@ namespace ForumConsole.ModelWrapper {
             };
         }
 
-        public void Add(Answer item) {
-            Question.AddAnswer(item);
+        public void Add(Answer answer) {
+            Question.AddAnswer(answer);
         }
 
-        public bool Remove(Answer item) {
-            throw new NotImplementedException();
+        public bool Remove(Answer answer) {
+            return Question.RemoveAnswer(answer);
         }
 
         public bool Replace(Answer oldItem, Answer newItem) {
