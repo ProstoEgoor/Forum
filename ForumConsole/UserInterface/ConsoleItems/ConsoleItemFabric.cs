@@ -151,7 +151,7 @@ namespace ForumConsole.UserInterface {
         public static ConsoleItem CreateAnswerShowItem(ConsoleItem prev, AnswerWrapper answerWrapper, QuestionWrapper questionWrapper) {
             EntitledConsoleItem<AnswerWrapper> showAnswer = new EntitledConsoleItem<AnswerWrapper>(prev, answerWrapper);
 
-            showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateToAnswerMI("Изменить вопрос", ConsoleKey.F1));
+            showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateToAnswerMI("Изменить ответ", ConsoleKey.F1));
 
             showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateVoteMI(true));
             showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateVoteMI(false));

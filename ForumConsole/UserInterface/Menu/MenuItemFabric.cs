@@ -56,7 +56,7 @@ namespace ForumConsole.UserInterface {
         }
 
         public static MenuItem CreateShowFileMi(ConsoleKey key) {
-            return new ReactMenuItem("ShowFileLoader", new ConsoleKeyInfo('\0', key, false, false, false), "Сохраненить/Загрузить");
+            return new ReactMenuItem("ShowFileLoader", new ConsoleKeyInfo('\0', key, false, false, false), "Сохранить/Загрузить");
         }
     }
 }
