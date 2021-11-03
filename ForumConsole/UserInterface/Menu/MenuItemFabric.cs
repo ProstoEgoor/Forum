@@ -39,7 +39,7 @@ namespace ForumConsole.UserInterface {
 
         public static MenuItem CreateSortMI(ConsoleKey key) {
             return new SetMenuItem("", "", new ActivatableMenuItem("SortAnswersOff", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать") { ActiveBackgroundColor = ConsoleColor.DarkCyan}, new ActivatableMenuItem[] {
-                new ActivatableMenuItem("SortAnswerDateByAscending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначало старые"),
+                new ActivatableMenuItem("SortAnswerDateByAscending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначала старые"),
                 new ActivatableMenuItem("SortAnswerDateByDescending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначала новые"),
                 new ActivatableMenuItem("SortAnswerRatingByDescending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать по рейтингу")
             });

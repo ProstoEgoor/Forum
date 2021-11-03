@@ -49,15 +49,18 @@ namespace ForumConsole.UserInterface {
             Console.BackgroundColor = Background;
             Console.Write(new string(' ', indent.left));
 
-            foreach (var item in Items) {
-                item.Show(indent);
+            for (int i = 0; i < Items.Count; i++) {
+                Items[i].Show(indent);
                 Console.ForegroundColor = Foreground;
                 Console.BackgroundColor = Background;
-                if (item.CursorVisible) {
-                    Cursor = item.Cursor;
+                if (Items[i].CursorVisible) {
+                    Cursor = Items[i].Cursor;
                 }
-                Console.Write(" ");
+                if (i + 1 < Items.Count) {
+                    Console.Write(" | ");
+                }
             }
+
             if (Console.CursorLeft > 1) {
                 Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
             }

@@ -23,7 +23,7 @@ namespace ForumConsole.UserInterface {
             }
         }
 
-        public override bool CursorVisible => base.CursorVisible;
+        public override bool CursorVisible => base.CursorVisible || PathField.CursorVisible;
 
         public WriteFileConsoleItem(ConsoleItem prev, string title, IFileEditable editableItem) : base(prev, title) {
             EditableItem = editableItem;
@@ -74,6 +74,14 @@ namespace ForumConsole.UserInterface {
         public override void Show((int left, int right) indent) {
             base.Show(indent);
             PathField.Show(indent);
+
+            if (CursorVisible) {
+                if (base.CursorVisible) {
+                    Cursor = base.Cursor;
+                } else {
+                    Cursor = PathField.Cursor;
+                }
+            }
         }
 
         public override bool HandlePressedKey(ConsoleKeyInfo keyInfo) {
