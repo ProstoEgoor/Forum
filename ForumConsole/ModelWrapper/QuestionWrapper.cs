@@ -84,7 +84,6 @@ namespace ForumConsole.ModelWrapper {
                 Console.Write(new string(' ', indent.left));
                 Console.Write(line);
                 Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
-
             }
 
             start = 0;

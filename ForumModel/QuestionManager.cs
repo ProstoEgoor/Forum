@@ -6,7 +6,7 @@ namespace ForumModel {
     public class QuestionManager {
         protected List<Question> ListQuestion { get; } = new List<Question>();
 
-        TagManager TagManager { get; }
+        public TagManager TagManager { get; }
 
         public IReadOnlyList<Question> Questions => ListQuestion;
 

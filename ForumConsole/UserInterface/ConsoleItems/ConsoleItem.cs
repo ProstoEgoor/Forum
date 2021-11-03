@@ -53,6 +53,8 @@ namespace ForumConsole.UserInterface {
         }
 
         public virtual void Show((int left, int right) indent) {
+            EventHandler.HandleEvent(this, new ConsoleEventArgs("UpdateView"));
+
             WindowTop = Console.WindowTop;
             Console.Clear();
             Menu.Show(indent);

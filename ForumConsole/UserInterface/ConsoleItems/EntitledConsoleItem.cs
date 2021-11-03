@@ -42,15 +42,15 @@ namespace ForumConsole.UserInterface {
             base.Show(indent);
 
             if (Title is IConsoleDisplayable displayableTitle) {
-                displayableTitle.Show((indent.left + 1, indent.right));
+                displayableTitle.Show((indent.left, indent.right));
             } else {
                 int start = -1;
                 string str = Title.ToString();
-                int width = Console.WindowWidth - indent.left - indent.right - 1;
+                int width = Console.WindowWidth - indent.left - indent.right;
                 Console.ForegroundColor = Foreground;
                 Console.BackgroundColor = Background;
                 while (PrintHelper.TryGetLine(str, width, ref start, out string line)) {
-                    Console.Write(new string(' ', indent.left + 1));
+                    Console.Write(new string(' ', indent.left));
                     Console.Write(line);
                     Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
                 }

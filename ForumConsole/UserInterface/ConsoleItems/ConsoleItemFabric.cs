@@ -8,44 +8,45 @@ using ForumConsole.ModelWrapper;
 
 namespace ForumConsole.UserInterface {
     public static class ConsoleItemFabric {
-        public static ConsoleItem CreateMainItem(QuestionManagerWrapper questionManager) {
-            ListConsoleItem<string, QuestionWrapper> mainItem = new ListConsoleItem<string, QuestionWrapper>(null, "Вопросы:", questionManager.GetWrappedQuestions,
+        public static ConsoleItem CreateMainItem(QuestionManagerWrapper questionManagerWrapper) {
+            ListConsoleItem<string, QuestionWrapper> mainItem = new ListConsoleItem<string, QuestionWrapper>(null, "Вопросы:", questionManagerWrapper.GetWrappedQuestions,
                 delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
-                    consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.SelectedItem, questionManager);
+                    consoleItem.Next = CreateQuestionShowItem(consoleItem, (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.SelectedItem, questionManagerWrapper);
                     consoleItem.OnPause();
                 }, delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
-                    questionManager.Remove((consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.SelectedItem.Question);
+                    questionManagerWrapper.Remove((consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.SelectedItem.Question);
                     (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.UpdateList();
                 });
 
             mainItem.Menu.AddMenuItem(MenuItemFabric.CreateAskMI("Задать вопрос", ConsoleKey.F1));
-            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateFindMI());
-            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateFindPropertyMI());
+            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateFindPropertyMI(ConsoleKey.F2));
+            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateFindMI(ConsoleKey.F3));
+            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateShowTagsMI(ConsoleKey.F4));
 
             mainItem.EventHandler.AddHandler("WriteQuestion", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
-                consoleItem.Next = CreateWriteQuestion(consoleItem, new QuestionWrapper(), questionManager);
+                consoleItem.Next = CreateWriteQuestion(consoleItem, new QuestionWrapper(), questionManagerWrapper);
                 consoleItem.OnPause();
             });
 
             mainItem.EventHandler.AddHandler("FindOn", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
-                questionManager.Find = true;
+                questionManagerWrapper.Find = true;
                 (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.UpdateList();
             });
 
             mainItem.EventHandler.AddHandler("FindOff", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
-                questionManager.Find = false;
+                questionManagerWrapper.Find = false;
                 (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.UpdateList();
             });
 
             mainItem.EventHandler.AddHandler("WriteFieldEnd", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
                 if (e is ConsoleWriteEventArgs writeEvent) {
                     if (writeEvent.Tag == "FindText" && writeEvent.FieldType.Equals(typeof(string))) {
-                        questionManager.FindText = (writeEvent.Field as string) ?? "";
+                        questionManagerWrapper.FindText = (writeEvent.Field as string) ?? "";
                         (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.UpdateList();
                     } else if (writeEvent.Tag == "FindTags" && writeEvent.FieldType.Equals(typeof(string))) {
-                        questionManager.FindTags.Clear();
+                        questionManagerWrapper.FindTags.Clear();
                         if (writeEvent.Field is string tags && tags != null) {
-                            questionManager.FindTags.AddRange((writeEvent.Field as string).Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                            questionManagerWrapper.FindTags.AddRange((writeEvent.Field as string).Split(' ', StringSplitOptions.RemoveEmptyEntries));
                         }
                         (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.UpdateList();
                     }
@@ -60,6 +61,11 @@ namespace ForumConsole.UserInterface {
                 (consoleItem as ListConsoleItem<string, QuestionWrapper>).SelectFromList.Changeable = true;
             });
 
+            mainItem.EventHandler.AddHandler("ShowTagsFrequency", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
+                consoleItem.Next = CreateShowTagsItem(consoleItem, new TagManagerWrapper(questionManagerWrapper.QuestionManager.TagManager));
+                consoleItem.OnPause();
+            });
+
 
             return mainItem;
         }
@@ -72,11 +78,13 @@ namespace ForumConsole.UserInterface {
                 }, delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEvent) {
                     question.Remove((consoleItem as ListConsoleItem<QuestionWrapper, AnswerWrapper>).SelectFromList.SelectedItem.Answer);
                     (consoleItem as ListConsoleItem<QuestionWrapper, AnswerWrapper>).SelectFromList.UpdateList();
-                });
-            showQuestion.Briefly = false;
+                }) {
+                Briefly = false
+            };
+
             showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateAskMI("Изменить вопрос", ConsoleKey.F1));
             showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateToAnswerMI("Ответить", ConsoleKey.F2));
-            showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateSortMI());
+            showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateSortMI(ConsoleKey.F3));
 
             showQuestion.EventHandler.AddHandler("WriteQuestion", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Next = CreateWriteQuestion(consoleItem, question, questionManager);
@@ -156,6 +164,19 @@ namespace ForumConsole.UserInterface {
             });
 
             return showAnswer;
+        }
+
+        public static ConsoleItem CreateShowTagsItem(ConsoleItem prev, TagManagerWrapper tagManagerWrapper) {
+            ListConsoleItem<TagManagerWrapper, string> showTags = new ListConsoleItem<TagManagerWrapper, string>(prev, tagManagerWrapper, tagManagerWrapper.GetWrappedTags, null, null);
+            showTags.SelectFromList.Selectable = false;
+            showTags.SelectFromList.Changeable = false;
+            showTags.SelectFromList.UpdateAlways = true;
+
+            showTags.EventHandler.AddHandler("UpdateView", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                tagManagerWrapper.TagWidth = Console.WindowWidth / 2;
+            });
+
+            return showTags;
         }
     }
 }

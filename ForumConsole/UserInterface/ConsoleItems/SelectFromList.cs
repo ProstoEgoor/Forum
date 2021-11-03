@@ -57,6 +57,7 @@ namespace ForumConsole.UserInterface {
 
         public bool Selectable { get; set; } = true;
         public bool Changeable { get; set; } = true;
+        public bool UpdateAlways { get; set; }
         public int SelectedCursorStart { get; set; }
         public int SelectedCursorEnd { get; set; }
         public ConsoleColor SelectedForeground { get; set; } = ConsoleColor.Black;
@@ -123,12 +124,16 @@ namespace ForumConsole.UserInterface {
 
         public void Show((int left, int right) indent, bool briefly) {
             if (ContentItems != null && ContentItems.Count > 0) {
+                if (UpdateAlways) {
+                    UpdateList();
+                }
+
                 for (int i = 0; i < ContentItems.Count; i++) {
                     Console.ForegroundColor = Selectable && Position == i ? SelectedForeground : Foreground;
                     Console.BackgroundColor = Selectable && Position == i ? SelectedBackground : Background;
-                    if (ContentItems[i] is IConsoleDisplayable displayableItem) {
-                        displayableItem.Foreground = Selectable && Position == i ? SelectedForeground : Foreground;
-                        displayableItem.Background = Selectable && Position == i ? SelectedBackground : Background;
+                    if (ContentItems[i] is IConsoleDisplayable _displayableItem) {
+                        _displayableItem.Foreground = Selectable && Position == i ? SelectedForeground : Foreground;
+                        _displayableItem.Background = Selectable && Position == i ? SelectedBackground : Background;
                     }
 
                     if (Selectable && Position == i) {
@@ -137,8 +142,8 @@ namespace ForumConsole.UserInterface {
 
                     if (ContentItems[i] is IConsoleDisplayableBriefly displayableBrieflyItem) {
                         displayableBrieflyItem.Show(indent, briefly);
-                    } else if (ContentItems[i] is IConsoleDisplayable _displayableItem) {
-                        _displayableItem.Show(indent);
+                    } else if (ContentItems[i] is IConsoleDisplayable __displayableItem) {
+                        __displayableItem.Show(indent);
                     } else {
                         int start = -1;
                         string str = ContentItems[i].ToString();
@@ -161,7 +166,9 @@ namespace ForumConsole.UserInterface {
                     Console.WriteLine(new string(' ', Console.WindowWidth));
                 }
 
-                Cursor = (ContentItems[position] as IConsoleDisplayable).Cursor;
+                if (ContentItems[position] is IConsoleDisplayable displayableItem) {
+                    Cursor = displayableItem.Cursor;
+                }
             }
         }
 

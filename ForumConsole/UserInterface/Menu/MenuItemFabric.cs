@@ -20,16 +20,16 @@ namespace ForumConsole.UserInterface {
             return new ReactMenuItem("Save", new ConsoleKeyInfo('\0', key, false, false, false), description);
         }
 
-        public static MenuItem CreateFindMI() {
-            return new ActivatableMenuItem("FindOn", "FindOff", new ConsoleKeyInfo('\0', ConsoleKey.F2, false, false, false), "Поиск");
+        public static MenuItem CreateFindMI(ConsoleKey key) {
+            return new ActivatableMenuItem("FindOn", "FindOff", new ConsoleKeyInfo('\0', key, false, false, false), "Поиск");
         }
 
-        public static MenuItem CreateFindPropertyMI() {
-            return new SetMenuItem("InputFindStart", "InputFindEnd", new ActivatableMenuItem("", "FindChange", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Параметры поиска"), new ActivatableMenuItem[] {
+        public static MenuItem CreateFindPropertyMI(ConsoleKey key) {
+            return new SetMenuItem("InputFindStart", "InputFindEnd", new ActivatableMenuItem("", "FindChange", new ConsoleKeyInfo('\0', key, false, false, false), "Изменить параметры поиска"), new ActivatableMenuItem[] {
                 new ExtendableMenuItem<WriteField<string>>(new WriteField<string>(true, "FindText", "Текст", "", (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
-                "FindText", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск по тексту"),
+                "FindText", "", new ConsoleKeyInfo('\0', key, false, false, false), "Поиск по тексту"),
                 new ExtendableMenuItem<WriteField<string>>(new WriteField<string>(true, "FindTags", "Теги", "", (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator), 
-                "FindTags", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Поиск по тегам")
+                "FindTags", "", new ConsoleKeyInfo('\0', key, false, false, false), "Поиск по тегам")
             });
         }
 
@@ -37,12 +37,16 @@ namespace ForumConsole.UserInterface {
             return new ReactMenuItem(positive ? "VotePos" : "VoteNeg", new ConsoleKeyInfo('\0', positive ? ConsoleKey.UpArrow : ConsoleKey.DownArrow, false, false, false), positive ? "\u2191" : "\u2193", string.Format("голосовать {0}", positive ? "за" : "против"));
         }
 
-        public static MenuItem CreateSortMI() {
-            return new SetMenuItem("", "", new ActivatableMenuItem("SortAnswersOff", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировка"), new ActivatableMenuItem[] {
-                new ActivatableMenuItem("SortAnswerDateByAscending", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировать сначало старые"),
-                new ActivatableMenuItem("SortAnswerDateByDescending", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировать сначала новые"),
-                new ActivatableMenuItem("SortAnswerRatingByDescending", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировать по рейтингу")
+        public static MenuItem CreateSortMI(ConsoleKey key) {
+            return new SetMenuItem("", "", new ActivatableMenuItem("SortAnswersOff", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать"), new ActivatableMenuItem[] {
+                new ActivatableMenuItem("SortAnswerDateByAscending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначало старые"),
+                new ActivatableMenuItem("SortAnswerDateByDescending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначала новые"),
+                new ActivatableMenuItem("SortAnswerRatingByDescending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать по рейтингу")
             });
+        }
+
+        public static MenuItem CreateShowTagsMI(ConsoleKey key) {
+            return new ReactMenuItem("ShowTagsFrequency", new ConsoleKeyInfo('\0', key, false, false, false), "Показать Теги");
         }
     }
 }
