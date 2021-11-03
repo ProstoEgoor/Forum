@@ -23,11 +23,15 @@ namespace ForumModel {
             }
         }
 
-        public IReadOnlyList<Answer> GetSortedAnswers(bool sortDateByAscending = true) {
-            if (sortDateByAscending) {
-                return ListAnswer.OrderBy(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+        public IReadOnlyList<Answer> GetSortedAnswers(bool sortDate, bool sortDateByAscending = false) {
+            if (sortDate) {
+                if (sortDateByAscending) {
+                    return ListAnswer.OrderBy(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+                } else {
+                    return ListAnswer.OrderByDescending(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+                }
             } else {
-                return ListAnswer.OrderByDescending(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+                return ListAnswer.OrderByDescending(answer => answer.Rating).ToList();
             }
         }
 
@@ -41,6 +45,14 @@ namespace ForumModel {
 
         public bool RemoveAnswer(Answer answer) {
             return ListAnswer.Remove(answer);
+        }
+
+        public bool ReplaceAnswer(Answer oldAnswer, Answer newAnswer) {
+            int position = ListAnswer.IndexOf(oldAnswer);
+            if (position == -1)
+                return false;        
+            ListAnswer[position] = newAnswer;
+            return true;
         }
 
         public override string ToString() {

@@ -24,7 +24,7 @@ namespace ForumConsole.UserInterface {
 
             EventHandler.AddHandler("Save", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 if (WriteFields.All(item => item.IsValid)) {
-                    if (EditableItem.Element == null) {
+                    if (editableItem.IsEmpty) {
                         EditableType newElement = EditableItem.CreateFromWriteFields(WriteFields);
                         EditableContainer.Add(newElement);
                         HandleEvent(this, new ConsoleEventArgs("Escape"));

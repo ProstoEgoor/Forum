@@ -8,26 +8,25 @@ using System.Linq;
 
 namespace ForumConsole.ModelWrapper {
     public class QuestionWrapper : IConsoleDisplayableBriefly, IConsoleEditable<Question>, IConsoleEditableContainer<Answer> {
-        public Question Question { get; set; }
+        public Question Question { get; private set; }
 
         public bool Sort { get; set; }
+        public bool SortDate { get; set; }
         public bool SortDateByAscending { get; set; }
 
         public IReadOnlyList<WriteField> GetWriteFields {
             get {
                 List<WriteField> writeFields = new List<WriteField> {
-                    new WriteField<string>(true, "QuestionTopic", "Тема", Question?.Topic ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
-                    new WriteField<string>(true, "QuestionTags", "Теги", (Question == null) ? "" : string.Join(" ", Question.Tags), (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
-                    new WriteField<string>(true, "QuestionAuthor", "Автор", Question?.Author ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
-                    new ReactiveWriteField<DateTime>("Дата", (Question == null) ? DateTime.Now.ToString() : Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)),
-                    new WriteField<string>(true, "QuestionText", "Текст", Question?.Text ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All)
+                    new WriteField<string>(true, "QuestionTopic", "Тема", Question.Topic, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
+                    new WriteField<string>(true, "QuestionTags", "Теги", string.Join(" ", Question.Tags), (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
+                    new WriteField<string>(true, "QuestionAuthor", "Автор", Question.Author, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
+                    new ReactiveWriteField<DateTime>("Дата", Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)),
+                    new WriteField<string>(true, "QuestionText", "Текст", Question.Text, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All)
                 };
 
                 return writeFields;
             }
         }
-
-        Question IConsoleEditable<Question>.Element { get => Question; set => Question = value; }
 
         ConsoleColor foreground = ConsoleColor.Gray;
         ConsoleColor background = ConsoleColor.Black;
@@ -38,7 +37,23 @@ namespace ForumConsole.ModelWrapper {
 
         public (int top, int left) Cursor { get; set; } = (0, 0);
 
-        public QuestionWrapper() { }
+        bool isEmpty;
+        public bool IsEmpty => isEmpty;
+
+        public Question Element {
+            get => Question;
+            set {
+                if (value != null) {
+                    isEmpty = false;
+                    Question = value;
+                }
+            }
+        }
+
+        public QuestionWrapper() {
+            isEmpty = true;
+            Question = new Question();
+        }
 
         public QuestionWrapper(Question question) {
             Question = question;
@@ -46,7 +61,7 @@ namespace ForumConsole.ModelWrapper {
 
         public IReadOnlyList<AnswerWrapper> GetWrappedAnswers() {
             if (Sort) {
-                return Question.GetSortedAnswers(SortDateByAscending).Select(answer => new AnswerWrapper(answer)).ToList();
+                return Question.GetSortedAnswers(SortDate, SortDateByAscending).Select(answer => new AnswerWrapper(answer)).ToList();
             } else {
                 return Question.Answers.Select(answer => new AnswerWrapper(answer)).ToList();
             }
@@ -113,9 +128,8 @@ namespace ForumConsole.ModelWrapper {
             return Question.RemoveAnswer(answer);
         }
 
-        public bool Replace(Answer oldItem, Answer newItem) {
-            throw new NotImplementedException();
-        }
-
+        public bool Replace(Answer oldAnswer, Answer newAnswer) {
+            return Question.ReplaceAnswer(oldAnswer, newAnswer);
+        } 
     }
 }

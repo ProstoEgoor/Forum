@@ -10,17 +10,15 @@ namespace ForumConsole.ModelWrapper {
 
         public IReadOnlyList<WriteField> GetWriteFields {
             get {
-                List<WriteField> writeFields = new List<WriteField>();
-                writeFields.Add(new WriteField<string>(true, "AnswerAuthor", "Автор", Answer?.Author ?? "", (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator));
-                writeFields.Add(new ReactiveWriteField<DateTime>("Дата", (Answer == null) ? DateTime.Now.ToString() : Answer.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
-                writeFields.Add(new WriteField<int>(false, "", "Рейтинг", (Answer == null) ? "0" : Answer.Rating.ToString(), (field) => int.Parse(field), (field) => int.TryParse(field, out _), (int)CharType.All ^ (int)CharType.LineSeparator));
-                writeFields.Add(new WriteField<string>(true, "AnswerText", "Текст", Answer?.Text ?? "", (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All));
+                List<WriteField> writeFields = new List<WriteField> {
+                    new WriteField<string>(true, "AnswerAuthor", "Автор", Answer.Author, (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All ^ (int)CharType.LineSeparator),
+                    new ReactiveWriteField<DateTime>("Дата", Answer.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)),
+                    new WriteField<string>(true, "AnswerText", "Текст", Answer.Text, (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All)
+                };
 
                 return writeFields;
             }
         }
-
-        public Answer Element { get => Answer; set => Answer = value; }
 
         ConsoleColor foreground = ConsoleColor.Gray;
         ConsoleColor background = ConsoleColor.Black;
@@ -31,7 +29,23 @@ namespace ForumConsole.ModelWrapper {
 
         public (int top, int left) Cursor { get; set; } = (0, 0);
 
-        public AnswerWrapper() { }
+        bool isEmpty;
+        public bool IsEmpty => isEmpty;
+
+        public Answer Element {
+            get => Answer;
+            set {
+                if (value != null) {
+                    isEmpty = false;
+                    Answer = value;
+                }
+            }
+        }
+
+        public AnswerWrapper() {
+            isEmpty = true;
+            Answer = new Answer();
+        }
         public AnswerWrapper(Answer answer) {
             Answer = answer;
         }
@@ -76,9 +90,9 @@ namespace ForumConsole.ModelWrapper {
         public Answer CreateFromWriteFields(IReadOnlyList<WriteField> writeFields) {
             string author = (writeFields[0] as WriteField<string>).ParseField;
             DateTime date = (writeFields[1] as WriteField<DateTime>).ParseField;
-            int rating = (writeFields[2] as WriteField<int>).ParseField;
-            string text = (writeFields[3] as WriteField<string>).ParseField;
-            uint numberOfVotes = Answer?.NumberOfVotes ?? 0;
+            string text = (writeFields[2] as WriteField<string>).ParseField;
+            int rating = Answer.Rating;
+            uint numberOfVotes = Answer.NumberOfVotes;
 
             return new Answer(rating, numberOfVotes) {
                 Author = author,
@@ -89,6 +103,6 @@ namespace ForumConsole.ModelWrapper {
 
         public void Show((int left, int right) indent) {
             Show(indent, false);
-        }
+        } 
     }
 }

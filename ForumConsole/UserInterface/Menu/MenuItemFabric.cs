@@ -36,5 +36,13 @@ namespace ForumConsole.UserInterface {
         public static MenuItem CreateVoteMI(bool positive) {
             return new ReactMenuItem(positive ? "VotePos" : "VoteNeg", new ConsoleKeyInfo('\0', positive ? ConsoleKey.UpArrow : ConsoleKey.DownArrow, false, false, false), positive ? "\u2191" : "\u2193", string.Format("голосовать {0}", positive ? "за" : "против"));
         }
+
+        public static MenuItem CreateSortMI() {
+            return new SetMenuItem("", "", new ActivatableMenuItem("SortAnswersOff", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировка"), new ActivatableMenuItem[] {
+                new ActivatableMenuItem("SortAnswerDateByAscending", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировать сначало старые"),
+                new ActivatableMenuItem("SortAnswerDateByDescending", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировать сначала новые"),
+                new ActivatableMenuItem("SortAnswerRatingByDescending", "", new ConsoleKeyInfo('\0', ConsoleKey.F3, false, false, false), "Сортировать по рейтингу")
+            });
+        }
     }
 }

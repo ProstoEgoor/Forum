@@ -76,6 +76,7 @@ namespace ForumConsole.UserInterface {
             showQuestion.Briefly = false;
             showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateAskMI("Изменить вопрос", ConsoleKey.F1));
             showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateToAnswerMI("Ответить", ConsoleKey.F2));
+            showQuestion.Menu.AddMenuItem(MenuItemFabric.CreateSortMI());
 
             showQuestion.EventHandler.AddHandler("WriteQuestion", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Next = CreateWriteQuestion(consoleItem, question, questionManager);
@@ -85,6 +86,31 @@ namespace ForumConsole.UserInterface {
             showQuestion.EventHandler.AddHandler("WriteAnswer", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 consoleItem.Next = CreateWriteAnswer(consoleItem, new AnswerWrapper(), question);
                 consoleItem.OnPause();
+            });
+
+            showQuestion.EventHandler.AddHandler("SortAnswersOff", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                question.Sort = false;
+                (consoleItem as ListConsoleItem<QuestionWrapper, AnswerWrapper>).SelectFromList.UpdateList();
+            });
+
+            showQuestion.EventHandler.AddHandler("SortAnswerDateByAscending", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                question.Sort = true;
+                question.SortDate = true;
+                question.SortDateByAscending = true;
+                (consoleItem as ListConsoleItem<QuestionWrapper, AnswerWrapper>).SelectFromList.UpdateList();
+            });
+
+            showQuestion.EventHandler.AddHandler("SortAnswerDateByDescending", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                question.Sort = true;
+                question.SortDate = true;
+                question.SortDateByAscending = false;
+                (consoleItem as ListConsoleItem<QuestionWrapper, AnswerWrapper>).SelectFromList.UpdateList();
+            });
+
+            showQuestion.EventHandler.AddHandler("SortAnswerRatingByDescending", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                question.Sort = true;
+                question.SortDate = false;
+                (consoleItem as ListConsoleItem<QuestionWrapper, AnswerWrapper>).SelectFromList.UpdateList();
             });
 
             return showQuestion;
@@ -111,8 +137,15 @@ namespace ForumConsole.UserInterface {
         public static ConsoleItem CreateAnswerShowItem(ConsoleItem prev, AnswerWrapper answerWrapper, QuestionWrapper questionWrapper) {
             EntitledConsoleItem<AnswerWrapper> showAnswer = new EntitledConsoleItem<AnswerWrapper>(prev, answerWrapper);
 
+            showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateToAnswerMI("Изменить вопрос", ConsoleKey.F1));
+
             showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateVoteMI(true));
             showAnswer.Menu.AddMenuItem(MenuItemFabric.CreateVoteMI(false));
+
+            showAnswer.EventHandler.AddHandler("WriteAnswer", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
+                consoleItem.Next = CreateWriteAnswer(consoleItem, answerWrapper, questionWrapper);
+                consoleItem.OnPause();
+            });
 
             showAnswer.EventHandler.AddHandler("VotePos", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
                 answerWrapper.Answer.Vote(1);
