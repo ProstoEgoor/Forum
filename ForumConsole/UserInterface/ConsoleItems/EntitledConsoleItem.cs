@@ -6,7 +6,7 @@ using ForumConsole.ModelWrapper;
 
 namespace ForumConsole.UserInterface {
     public class EntitledConsoleItem<TitleType> : ConsoleItem {
-        public TitleType Title { get; }
+        public TitleType Title { get; set; }
         public override ConsoleColor Foreground {
             set {
                 base.Foreground = value;
@@ -41,18 +41,22 @@ namespace ForumConsole.UserInterface {
         public override void Show((int left, int right) indent) {
             base.Show(indent);
 
-            if (Title is IConsoleDisplayable displayableTitle) {
-                displayableTitle.Show((indent.left, indent.right));
-            } else {
-                int start = -1;
-                string str = Title.ToString();
-                int width = Console.WindowWidth - indent.left - indent.right;
+            if (Title != null) {
                 Console.ForegroundColor = Foreground;
                 Console.BackgroundColor = Background;
-                while (PrintHelper.TryGetLine(str, width, ref start, out string line)) {
-                    Console.Write(new string(' ', indent.left));
-                    Console.Write(line);
-                    Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
+                Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
+
+                if (Title is IConsoleDisplayable displayableTitle) {
+                    displayableTitle.Show((indent.left, indent.right));
+                } else {
+                    int start = -1;
+                    string str = Title.ToString();
+                    int width = Console.WindowWidth - indent.left - indent.right;
+                    while (PrintHelper.TryGetLine(str, width, ref start, out string line)) {
+                        Console.Write(new string(' ', indent.left));
+                        Console.Write(line);
+                        Console.WriteLine(new string(' ', Console.WindowWidth - Console.CursorLeft));
+                    }
                 }
             }
 

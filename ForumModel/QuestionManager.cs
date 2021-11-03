@@ -12,7 +12,9 @@ namespace ForumModel {
 
         public IReadOnlyList<Question> GetFilteredQuestions(string text, IEnumerable<string> tags) {
             return ListQuestion.FindAll(delegate (Question question) {
-                bool textPrecidate = (text.Length == 0 || question.Text.Contains(text, StringComparison.OrdinalIgnoreCase));
+                bool textPrecidate = (text.Length == 0 
+                || question.Text.Contains(text, StringComparison.OrdinalIgnoreCase) 
+                || question.Topic.Contains(text, StringComparison.OrdinalIgnoreCase));
 
                 bool tagsPredicate = true;
                 foreach (var tag in tags) {

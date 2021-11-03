@@ -58,7 +58,7 @@ namespace ForumConsole.UserInterface {
                 foreach (var item in Items) {
                     item.Background = value;
                 }
-                Items[0].ActiveBackgroundColor = value;
+                /*Items[0].ActiveBackgroundColor = value;*/
             }
         }
 
@@ -66,7 +66,6 @@ namespace ForumConsole.UserInterface {
 
         public SetMenuItem(string activeType, string type, ActivatableMenuItem defaultMenuItem, IEnumerable<ActivatableMenuItem> items) : base(activeType, type, defaultMenuItem.KeyInfo, defaultMenuItem.Description) {
             Items.Add(defaultMenuItem);
-            defaultMenuItem.ActiveBackgroundColor = Background;
 
             foreach (var item in items) {
                 item.KeyInfo = defaultMenuItem.KeyInfo;

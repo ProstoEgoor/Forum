@@ -22,6 +22,7 @@ namespace ForumConsole.UserInterface {
             mainItem.Menu.AddMenuItem(MenuItemFabric.CreateFindPropertyMI(ConsoleKey.F2));
             mainItem.Menu.AddMenuItem(MenuItemFabric.CreateFindMI(ConsoleKey.F3));
             mainItem.Menu.AddMenuItem(MenuItemFabric.CreateShowTagsMI(ConsoleKey.F4));
+            mainItem.Menu.AddMenuItem(MenuItemFabric.CreateShowFileMi(ConsoleKey.F5));
 
             mainItem.EventHandler.AddHandler("WriteQuestion", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
                 consoleItem.Next = CreateWriteQuestion(consoleItem, new QuestionWrapper(), questionManagerWrapper);
@@ -63,6 +64,11 @@ namespace ForumConsole.UserInterface {
 
             mainItem.EventHandler.AddHandler("ShowTagsFrequency", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
                 consoleItem.Next = CreateShowTagsItem(consoleItem, new TagManagerWrapper(questionManagerWrapper.QuestionManager.TagManager));
+                consoleItem.OnPause();
+            });
+
+            mainItem.EventHandler.AddHandler("ShowFileLoader", delegate (ConsoleItem consoleItem, ConsoleEventArgs e) {
+                consoleItem.Next = CreateFileItem(consoleItem, questionManagerWrapper);
                 consoleItem.OnPause();
             });
 
@@ -177,6 +183,12 @@ namespace ForumConsole.UserInterface {
             });
 
             return showTags;
+        }
+
+        public static ConsoleItem CreateFileItem(ConsoleItem prev, QuestionManagerWrapper questionManagerWrapper) {
+            WriteFileConsoleItem writeFile = new WriteFileConsoleItem(prev, "Сохранение/Загрузка", questionManagerWrapper);
+
+            return writeFile;
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ForumConsole.UserInterface {
         }
 
         public static MenuItem CreateFindPropertyMI(ConsoleKey key) {
-            return new SetMenuItem("InputFindStart", "InputFindEnd", new ActivatableMenuItem("", "FindChange", new ConsoleKeyInfo('\0', key, false, false, false), "Изменить параметры поиска"), new ActivatableMenuItem[] {
+            return new SetMenuItem("InputFindStart", "InputFindEnd", new ActivatableMenuItem("", "FindChange", new ConsoleKeyInfo('\0', key, false, false, false), "Изменить параметры поиска") { ActiveBackgroundColor = ConsoleColor.DarkCyan }, new ActivatableMenuItem[] {
                 new ExtendableMenuItem<WriteField<string>>(new WriteField<string>(true, "FindText", "Текст", "", (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
                 "FindText", "", new ConsoleKeyInfo('\0', key, false, false, false), "Поиск по тексту"),
                 new ExtendableMenuItem<WriteField<string>>(new WriteField<string>(true, "FindTags", "Теги", "", (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator), 
@@ -38,7 +38,7 @@ namespace ForumConsole.UserInterface {
         }
 
         public static MenuItem CreateSortMI(ConsoleKey key) {
-            return new SetMenuItem("", "", new ActivatableMenuItem("SortAnswersOff", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать"), new ActivatableMenuItem[] {
+            return new SetMenuItem("", "", new ActivatableMenuItem("SortAnswersOff", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать") { ActiveBackgroundColor = ConsoleColor.DarkCyan}, new ActivatableMenuItem[] {
                 new ActivatableMenuItem("SortAnswerDateByAscending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначало старые"),
                 new ActivatableMenuItem("SortAnswerDateByDescending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать сначала новые"),
                 new ActivatableMenuItem("SortAnswerRatingByDescending", "", new ConsoleKeyInfo('\0', key, false, false, false), "Сортировать по рейтингу")
@@ -47,6 +47,16 @@ namespace ForumConsole.UserInterface {
 
         public static MenuItem CreateShowTagsMI(ConsoleKey key) {
             return new ReactMenuItem("ShowTagsFrequency", new ConsoleKeyInfo('\0', key, false, false, false), "Показать Теги");
+        }
+
+        public static MenuItem CreateStateFileMi(ConsoleKey key) {
+            return new SetMenuItem("", "", new ActivatableMenuItem("SaveFileState", "", new ConsoleKeyInfo('\0', key, false, false, false), "Режим сохранения") { ActiveBackgroundColor = ConsoleColor.DarkCyan }, new ActivatableMenuItem[] {
+                new ActivatableMenuItem("LoadFileState", "", new ConsoleKeyInfo('\0', key, false, false, false), "Режим загрузки") { ActiveBackgroundColor = ConsoleColor.DarkCyan }
+            });
+        }
+
+        public static MenuItem CreateShowFileMi(ConsoleKey key) {
+            return new ReactMenuItem("ShowFileLoader", new ConsoleKeyInfo('\0', key, false, false, false), "Сохраненить/Загрузить");
         }
     }
 }

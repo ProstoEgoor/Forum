@@ -68,6 +68,9 @@ namespace ForumConsole.ModelWrapper {
         }
 
         public void Show((int left, int right) indent, bool briefly) {
+            Console.ForegroundColor = Foreground;
+            Console.BackgroundColor = Background;
+
             StringBuilder buffer = new StringBuilder();
             buffer.Append($"Тема: {Question.Topic}\r\n");
             buffer.Append($"Теги: {string.Join(", ", Question.Tags)}\r\n");

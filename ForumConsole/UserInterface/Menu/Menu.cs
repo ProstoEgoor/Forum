@@ -53,7 +53,9 @@ namespace ForumConsole.UserInterface {
                 item.Show(indent);
                 Console.ForegroundColor = Foreground;
                 Console.BackgroundColor = Background;
-                Cursor = item.Cursor;
+                if (item.CursorVisible) {
+                    Cursor = item.Cursor;
+                }
                 Console.Write(" ");
             }
             if (Console.CursorLeft > 1) {

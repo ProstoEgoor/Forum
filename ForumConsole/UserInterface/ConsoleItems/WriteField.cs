@@ -154,7 +154,7 @@ namespace ForumConsole.UserInterface {
                 return true;
             }
 
-            if (keyInfo.Key == ConsoleKey.Enter && WriteState) {
+            if (keyInfo.Key == ConsoleKey.Enter) {
                 if (!IsValid) {
                     HighlightError = true;
                 }

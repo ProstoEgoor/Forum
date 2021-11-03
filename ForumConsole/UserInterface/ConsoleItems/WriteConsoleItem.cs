@@ -46,7 +46,7 @@ namespace ForumConsole.UserInterface {
         public override void Show((int left, int right) indent) {
             base.Show(indent);
 
-            SelectFromList.Show(indent);
+            SelectFromList.Show((indent.left + 1, indent.right));
 
             if (SelectFromList.Selectable && SelectFromList.SelectedCursorEnd - SelectFromList.SelectedCursorStart < Console.WindowHeight) {
                 if (SelectFromList.SelectedCursorEnd > WindowTop + Console.WindowHeight) {

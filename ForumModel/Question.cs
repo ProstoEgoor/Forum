@@ -23,6 +23,10 @@ namespace ForumModel {
             }
         }
 
+        public Question(IEnumerable<string> tags, IEnumerable<Answer> answers) : this(tags) {
+            ListAnswer.AddRange(answers);
+        }
+
         public IReadOnlyList<Answer> GetSortedAnswers(bool sortDate, bool sortDateByAscending = false) {
             if (sortDate) {
                 if (sortDateByAscending) {
