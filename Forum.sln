@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Naming convetion.txt = Naming convetion.txt
 	EndProjectSection
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ForumDB", "ForumDB\ForumDB.sqlproj", "{AC67939F-538B-47E6-8930-AA24043CC8A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,12 @@ Global
 		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC405771-DA31-4569-AC4D-3D9334F9D1F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
