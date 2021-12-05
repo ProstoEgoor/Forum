@@ -12,7 +12,7 @@
     <RootPath />
     <RootNamespace>ForumDB</RootNamespace>
     <AssemblyName>ForumDB</AssemblyName>
-    <ModelCollation>1049,CS</ModelCollation>
+    <ModelCollation>1049,CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -21,7 +21,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
-    <DefaultCollation>Cyrillic_General_100_CS_AI</DefaultCollation>
+    <DefaultCollation>Cyrillic_General_100_CI_AI</DefaultCollation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>

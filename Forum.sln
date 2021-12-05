@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ForumDB", "ForumDB\ForumDB.sqlproj", "{AC67939F-538B-47E6-8930-AA24043CC8A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumDBContext", "ForumDBContext\ForumDBContext.csproj", "{F7CB9965-1736-474B-9B06-008A7E70BCC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC67939F-538B-47E6-8930-AA24043CC8A7}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F7CB9965-1736-474B-9B06-008A7E70BCC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CB9965-1736-474B-9B06-008A7E70BCC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7CB9965-1736-474B-9B06-008A7E70BCC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7CB9965-1736-474B-9B06-008A7E70BCC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
