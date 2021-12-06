@@ -15,7 +15,7 @@ VALUES ('20150401 10:18:00', 'Kyubey', 'Что такое NullReferenceException
 
 SET @QuestionId = (SELECT MAX([question_id]) FROM [question]);
 
-INSERT INTO [tag_in_question] ([question_id], [tag])
+INSERT INTO [tag_in_question] ([question_id], [tag_name])
 VALUES	(@QuestionId, 'c#'),
 		(@QuestionId, '.net'),
 		(@QuestionId, 'vb.net'),
@@ -45,7 +45,7 @@ VALUES ('20180406 15:07:00', 'Nofate', 'Книги и учебные ресур�
 
 SET @QuestionId = (SELECT MAX([question_id]) FROM [question]);
 
-INSERT INTO [tag_in_question] ([question_id], [tag])
+INSERT INTO [tag_in_question] ([question_id], [tag_name])
 VALUES	(@QuestionId, 'c#'),
 		(@QuestionId, 'книги'),
 		(@QuestionId, 'faq')
@@ -88,7 +88,7 @@ VALUES ('20150501 01:32:00', 'Kyubey', 'Как распарсить HTML в .NET
 
 SET @QuestionId = (SELECT MAX([question_id]) FROM [question]);
 
-INSERT INTO [tag_in_question] ([question_id], [tag])
+INSERT INTO [tag_in_question] ([question_id], [tag_name])
 VALUES	(@QuestionId, 'c#'),
 		(@QuestionId, 'книги'),
 		(@QuestionId, 'faq')
