@@ -11,7 +11,7 @@ namespace ForumDbContext.Migrations
                 name: "question",
                 columns: table => new
                 {
-                    QuestionId = table.Column<int>(type: "int", nullable: false)
+                    question_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     create_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     author_name = table.Column<string>(type: "nvarchar(100)", nullable: false),
@@ -20,7 +20,7 @@ namespace ForumDbContext.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_question", x => x.QuestionId);
+                    table.PrimaryKey("PK_question", x => x.question_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,7 +46,7 @@ namespace ForumDbContext.Migrations
                         name: "FK_answer_question_question_id",
                         column: x => x.question_id,
                         principalTable: "question",
-                        principalColumn: "QuestionId",
+                        principalColumn: "question_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -64,7 +64,7 @@ namespace ForumDbContext.Migrations
                         name: "FK_tag_in_question_question_question_id",
                         column: x => x.question_id,
                         principalTable: "question",
-                        principalColumn: "QuestionId",
+                        principalColumn: "question_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 

@@ -12,6 +12,12 @@ namespace ForumDbContext.Model.Configure {
 
             builder.HasKey("QuestionId");
 
+            builder.Property(question => question.QuestionId)
+                .IsRequired()
+                .HasColumnType("int")
+                .HasColumnName("question_id");
+
+
             builder.Property(question => question.CreateDate)
                 .IsRequired()
                 .HasColumnName("create_date")
