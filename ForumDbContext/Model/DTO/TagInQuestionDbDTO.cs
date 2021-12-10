@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ForumDbContext.Model.DTO {
-    class TagInQuestionDbDTO {
+    public class TagInQuestionDbDTO {
         public int QuestionId { get; set; }
         public string TagName { get; set; }
 

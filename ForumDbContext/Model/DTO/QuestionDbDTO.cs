@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ForumDbContext.Model.DTO {
-    class QuestionDbDTO {
+    public class QuestionDbDTO {
         public int QuestionId { get; set; }
         public DateTime CreateDate { get; set; }
         public string AuthorName { get; set; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ForumDbContext.Model.DTO {
-    class AnswerDbDTO {
+    public class AnswerDbDTO {
         public int AnswerId { get; set; }
         public int QuestionId { get; set; }
         public DateTime CreateDate { get; set; }

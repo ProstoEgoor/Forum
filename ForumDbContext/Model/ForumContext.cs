@@ -7,7 +7,7 @@ using ForumDbContext.Model.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumDbContext.Model {
-    class ForumContext : DbContext {
+    public class ForumContext : DbContext {
         public ForumContext() { }
         public ForumContext(DbContextOptions options) : base(options) { }
 

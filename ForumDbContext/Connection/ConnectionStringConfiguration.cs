@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 
 namespace ForumDbContext.Connection {
-    class ConnectionStringConfiguration {
+    public class ConnectionStringConfiguration {
         public string ConnectionString { get; set; }
 
         public ConnectionStringConfiguration(string appsettingsPath = "appsettings.json",
