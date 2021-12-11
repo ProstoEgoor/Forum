@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace ForumModel {
     public class Question {
+
+        public int? Id { get; set; }
         public string Author { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         protected HashSet<string> TagSet { get; } = new HashSet<string>();
