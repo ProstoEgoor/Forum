@@ -2,14 +2,24 @@
 using ForumModel;
 using ForumConsole.UserInterface;
 using ForumConsole.ModelWrapper;
+using ForumConsole.DB;
 
 namespace ForumConsole {
     class Program {
-        static void Main(string[] args) {
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
+        readonly static QuestionManagerWrapper questionManagerWrapper;
+        const bool useMocks = false;
+
+        static Program() {
             TagManager tagManager = new TagManager();
-            QuestionManager questionManager = new QuestionManager(tagManager, Mocks.MocksFabric.MockQuestion());
-            QuestionManagerWrapper questionManagerWrapper = new QuestionManagerWrapper(questionManager);
+            if (useMocks) {
+                questionManagerWrapper = new QuestionManagerWrapper(new QuestionManager(tagManager, Mocks.MocksFabric.MockQuestion()));
+            } else {
+                questionManagerWrapper = new QuestionManagerWrapper(new QuestionManager(tagManager, DBManager.GetQuestions()));
+            }
+        }
+
+        static void Main(string[] args) {
+            //Console.OutputEncoding = System.Text.Encoding.Unicode;
 
             ConsoleItem currentItem = ConsoleItemFabric.CreateMainItem(questionManagerWrapper);
 
@@ -18,6 +28,10 @@ namespace ForumConsole {
                 currentItem.SetCursor();
                 currentItem.HandlePressedKey(Console.ReadKey(true));
                 currentItem = currentItem.Next;
+            }
+
+            if (!useMocks) {
+                DBManager.UpdateQuestions(questionManagerWrapper.QuestionManager.Questions);
             }
 
             Console.Clear();

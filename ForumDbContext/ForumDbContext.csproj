@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>c60cb750-4ca5-4b58-9714-09026ed8ef6c</UserSecretsId>
   </PropertyGroup>
@@ -24,10 +23,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
   </ItemGroup>
   
-  <ItemGroup>
-    <None Update="..\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y $(SolutionDir)\appsettings.json  $(ProjectDir)$(OutDir)" />
+  </Target>
 
 </Project>

@@ -28,5 +28,10 @@ namespace ForumDbContext.Model {
             modelBuilder.ApplyConfiguration(new TagInQuestionDbConfig());
             modelBuilder.ApplyConfiguration(new TagFrequencyDbConfig());
         }
+
+        public void Replace<TEntity>(TEntity oldEntity, TEntity newEntity) where TEntity : class {
+            ChangeTracker.TrackGraph(oldEntity, e => e.Entry.State = EntityState.Deleted);
+            ChangeTracker.TrackGraph(newEntity, e => e.Entry.State = e.Entry.IsKeySet ? EntityState.Modified : EntityState.Added);
+        }
     }
 }

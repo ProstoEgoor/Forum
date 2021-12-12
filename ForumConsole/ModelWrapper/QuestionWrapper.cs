@@ -20,9 +20,17 @@ namespace ForumConsole.ModelWrapper {
                     new WriteField<string>(true, "QuestionTopic", "Тема", Question.Topic, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
                     new WriteField<string>(true, "QuestionTags", "Теги", string.Join(" ", Question.Tags), (field) => field, (field) => true, (int) CharType.All ^ (int) CharType.LineSeparator),
                     new WriteField<string>(true, "QuestionAuthor", "Автор", Question.Author, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All ^ (int) CharType.LineSeparator),
-                    new ReactiveWriteField<DateTime>("Дата", Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)),
-                    new WriteField<string>(true, "QuestionText", "Текст", Question.Text, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All)
+                    //new ReactiveWriteField<DateTime>("Дата", Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)),
+                    //new WriteField<string>(true, "QuestionText", "Текст", Question.Text, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All)
                 };
+
+                if (isEmpty) {
+                    writeFields.Add(new ReactiveWriteField<DateTime>("Дата создания", Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
+                } else {
+                    writeFields.Add(new WriteField<DateTime>(false, "", "Дата создания", Question.Date.ToString(), (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _), (int) CharType.All));
+                }
+
+                writeFields.Add(new WriteField<string>(true, "QuestionText", "Текст", Question.Text, (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All));
 
                 return writeFields;
             }
@@ -75,7 +83,7 @@ namespace ForumConsole.ModelWrapper {
             buffer.Append($"Тема: {Question.Topic}\r\n");
             buffer.Append($"Теги: {string.Join(", ", Question.Tags)}\r\n");
             buffer.Append($"Автор: {Question.Author}\r\n");
-            buffer.Append($"Дата: {Question.Date}\r\n");
+            buffer.Append($"Дата создания: {Question.Date}\r\n");
             buffer.Append($"{Question.Answers.Count} {PrintHelper.GetNumAddition(Question.Answers.Count, "Ответ", "Ответа", "Ответов")}\r\n");
             string str = buffer.ToString();
 
@@ -114,12 +122,18 @@ namespace ForumConsole.ModelWrapper {
             DateTime date = (writeFields[3] as WriteField<DateTime>).ParseField;
             string text = (writeFields[4] as WriteField<string>).ParseField;
 
-            return new Question(tags) {
+            var question = new Question(tags) {
                 Author = author,
                 Date = date,
                 Topic = topic,
                 Text = text
             };
+
+            if (!IsEmpty) {
+                question.Id = Element.Id;
+            }
+
+            return question;
         }
 
         public void Add(Answer answer) {
