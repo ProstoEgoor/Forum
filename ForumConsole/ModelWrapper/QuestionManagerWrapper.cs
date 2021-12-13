@@ -14,6 +14,8 @@ namespace ForumConsole.ModelWrapper {
         public string FindText { get; set; } = "";
         public List<string> FindTags { get; } = new List<string>();
 
+        public bool WasLoad { get; set; }
+
         public QuestionManagerWrapper(QuestionManager questionManager) {
             QuestionManager = questionManager;
         }
@@ -71,6 +73,8 @@ namespace ForumConsole.ModelWrapper {
                 QuestionManager newQuestionManager = new QuestionManager(tagManager, questions);
 
                 QuestionManager = newQuestionManager;
+
+                WasLoad = true;
 
                 return true;
             } catch (Exception e) {

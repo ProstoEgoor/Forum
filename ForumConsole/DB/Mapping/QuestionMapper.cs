@@ -34,7 +34,7 @@ namespace ForumConsole.DB.Mapping {
                 Topic = question.Topic,
                 QuestionText = question.Text,
                 Answers = question.Answers.Select(answer => AnswerMapper.Map(answer)).ToList(),
-                Tags = question.Tags.Select(tag => new TagInQuestionDbDTO() { QuestionId = question.Id ?? 0, TagName = tag }).ToList()
+                Tags = question.Tags.Select(tag => new TagInQuestionDbDTO() { TagName = tag }).ToList()
             };
         }
     }

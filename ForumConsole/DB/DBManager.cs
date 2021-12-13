@@ -56,7 +56,7 @@ namespace ForumConsole.DB {
                 context.SaveChanges();
 
                 var questionToAdd = questions
-                    .Where(question => question.Id == null/* || context.Question.Find(question.Id) == null*/)
+                    .Where(question => question.Id == null)
                     .Select(question => QuestionMapper.Map(question))
                     .ToList();
 

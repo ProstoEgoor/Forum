@@ -9,7 +9,7 @@ namespace ForumConsole.FIles {
 
     [XmlType(TypeName = "Question")]
     public class QuestionFileDto {
-        public int? Id { get; set; }
+        //public int? Id { get; set; }
         public string Author { get; set; }
         public DateTime Date { get; set; }
         public string[] Tags { get; set; }
@@ -19,7 +19,7 @@ namespace ForumConsole.FIles {
 
         public static QuestionFileDto Map(Question question) {
             return new QuestionFileDto() {
-                Id = question.Id,
+                //Id = question.Id,
                 Author = question.Author,
                 Date = question.Date,
                 Tags = question.Tags.ToArray(),
@@ -31,7 +31,7 @@ namespace ForumConsole.FIles {
 
         public static Question Map(QuestionFileDto question) {
             return new Question(question.Tags, question.Answers.Select(answer => AnswerFileDto.Map(answer))) {
-                Id = question.Id,
+                //Id = question.Id,
                 Author = question.Author,
                 Date = question.Date,
                 Topic = question.Topic,

@@ -30,7 +30,7 @@ namespace ForumConsole {
                 currentItem = currentItem.Next;
             }
 
-            if (!useMocks) {
+            if (!useMocks && !questionManagerWrapper.WasLoad) {
                 DBManager.UpdateQuestions(questionManagerWrapper.QuestionManager.Questions);
             }
 
