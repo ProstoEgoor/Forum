@@ -8,31 +8,19 @@ using ForumDbContext.Model.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumDbContext.Repositories {
-    class QuestionRepository : ForumRepositoryBase {
+    public class QuestionRepository : ForumRepositoryBase {
         public QuestionRepository(ForumContext context) : base(context) { }
-
-        public IAsyncEnumerable<QuestionDbDTO> GetAll(string textSearch = null, IEnumerable<string> tagsFilter = null) {
-            var questions = Context.Question.AsQueryable();
-
-            if (textSearch != null) {
-                questions = questions.Where(question => EF.Functions.Like(question.QuestionText, $"%{textSearch}%"));
-            }
-
-            questions = questions.Include(question => question.Tags);
-
-            if (tagsFilter != null) {
-                questions = questions.Where(question => tagsFilter.All(tag => question.Tags.Any(tagInQuestion => tagInQuestion.TagName == tag)));
-            }
-
-            return questions.AsAsyncEnumerable();
-        }
-
-        public async Task<QuestionDbDTO> GetAsync(int questionId, bool? dateSort, bool ratingSort) {
+        public async Task<QuestionDbDTO> GetAsync(int questionId, bool? dateSort = null, bool ratingSort = false) {
             var question = await Context.Question
                 .AsQueryable()
                 .Where(question => question.QuestionId == questionId)
                 .Include(question => question.Tags)
-                .FirstAsync();
+                .AsSingleQuery()
+                .FirstOrDefaultAsync();
+
+            if (question == null) {
+                return null;
+            }
 
             var answers = Context.Entry(question)
                 .Collection(question => question.Answers)
@@ -51,6 +39,28 @@ namespace ForumDbContext.Repositories {
             return question;
         }
 
+        public IAsyncEnumerable<QuestionDbDTO> GetAllAsync(string textSearch = null, IEnumerable<string> tagsFilter = null) {
+            var questions = Context.Question.AsQueryable();
+
+            if (textSearch != null) {
+                questions = questions.Where(question => EF.Functions.Like(question.Topic, $"%{textSearch}%") || EF.Functions.Like(question.QuestionText, $"%{textSearch}%"));
+            }
+
+            questions = questions.Include(question => question.Tags).AsSingleQuery();
+
+            if (tagsFilter != null) {
+                //questions = questions.Where(question => tagsFilter.All(tag => question.Tags.Any(tagInQuestion => tagInQuestion.TagName == tag)));
+                foreach (var tagFilter in tagsFilter) {
+                    questions = questions.Where(questions => questions.Tags.Any(tag => tag.TagName == tagFilter));
+                }
+            }
+
+            questions = questions.Include(question => question.Answers).AsSingleQuery();
+
+            return questions.AsAsyncEnumerable();
+        }
+
+
         public void Create(QuestionDbDTO question) {
             Context.Question.Add(question);
         }
@@ -63,14 +73,21 @@ namespace ForumDbContext.Repositories {
             Context.Question.Remove(question);
         }
 
-        public async Task<QuestionDbDTO> DeleteAsync(int id) {
-            var question = await Context.Question.FindAsync(id);
+        public async Task<QuestionDbDTO> DeleteAsync(int questionId) {
+            var question = await Context.Question.FindAsync(questionId);
 
             if (question != null) {
+                Context.Entry(question).Collection(question => question.Tags).Load();
+                Context.Entry(question).Collection(question => question.Answers).Load();
+
                 Delete(question);
             }
 
             return question;
+        }
+
+        public async Task<bool> ExistAsync(int questionId) {
+            return await Context.Question.AsQueryable().AnyAsync(question => question.QuestionId == questionId);
         }
     }
 }

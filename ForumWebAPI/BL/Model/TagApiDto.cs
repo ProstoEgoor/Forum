@@ -13,6 +13,19 @@ namespace ForumWebAPI.BL.Model {
         public TagApiDto(TagInQuestionDbDTO tag) {
             Name = tag.TagName;
         }
+
+        public TagInQuestionDbDTO Create() {
+            return new TagInQuestionDbDTO() {
+                TagName = Name
+            };
+        }
+
+        public TagInQuestionDbDTO Create(int questionId) {
+            return new TagInQuestionDbDTO() {
+                TagName = Name,
+                QuestionId = questionId
+            };
+        }
     }
 
     public class TagFrequencyApiDto : TagApiDto {

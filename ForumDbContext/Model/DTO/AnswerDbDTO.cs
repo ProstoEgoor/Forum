@@ -9,8 +9,8 @@ namespace ForumDbContext.Model.DTO {
         public DateTime CreateDate { get; set; }
         public string AuthorName { get; set; }
         public string AnswerText { get; set; }
-        public uint VotePositive { get; set; }
-        public uint VoteNegative { get; set; }
+        public int VotePositive { get; set; }
+        public int VoteNegative { get; set; }
         public int? Rating { get; set; }
 
         public QuestionDbDTO Question { get; set; }

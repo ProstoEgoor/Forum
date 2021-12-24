@@ -11,7 +11,7 @@ namespace ForumConsole.DB.Mapping {
                 return null;
             }
 
-            return new Answer(answer.Rating ?? 0, answer.VotePositive + answer.VoteNegative) {
+            return new Answer(answer.Rating ?? 0, (uint)(answer.VotePositive + answer.VoteNegative)) {
                 Id = answer.AnswerId,
                 Author = answer.AuthorName,
                 Date = answer.CreateDate,
@@ -29,8 +29,8 @@ namespace ForumConsole.DB.Mapping {
                 CreateDate = answer.Date,
                 AuthorName = answer.Author,
                 AnswerText = answer.Text,
-                VotePositive = (uint)((answer.NumberOfVotes + answer.Rating) / 2),
-                VoteNegative = (uint)((answer.NumberOfVotes - answer.Rating) / 2)
+                VotePositive = ((int)(answer.NumberOfVotes + answer.Rating) / 2),
+                VoteNegative = ((int)(answer.NumberOfVotes - answer.Rating) / 2)
             };
         }
     }

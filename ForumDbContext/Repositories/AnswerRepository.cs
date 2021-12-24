@@ -8,10 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace ForumDbContext.Repositories {
-    class AnswerRepository : ForumRepositoryBase {
+    public class AnswerRepository : ForumRepositoryBase {
         public AnswerRepository(ForumContext context) : base(context) { }
 
-        public IAsyncEnumerable<AnswerDbDTO> GetAnswers(int questionId, bool? dateSort, bool ratingSort) {
+        public async Task<AnswerDbDTO> GetAsync(int answerId) {
+            return await Context.Answers.FindAsync(answerId);
+        }
+
+        public IAsyncEnumerable<AnswerDbDTO> GetAssociatedAsync(int questionId, bool? dateSort, bool ratingSort) {
             var answers = Context.Answers
                 .AsQueryable()
                 .Where(answer => answer.QuestionId == questionId);

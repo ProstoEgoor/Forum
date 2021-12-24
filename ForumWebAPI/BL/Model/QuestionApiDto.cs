@@ -22,8 +22,31 @@ namespace ForumWebAPI.BL.Model {
             Author = question.AuthorName;
             Topic = question.Topic;
             Text = question.QuestionText;
-            AnswerCount = question.Answers.Count;
+            AnswerCount = question.Answers?.Count ?? 0;
             Tags = question.Tags.Select(tag => new TagApiDto(tag));
+        }
+
+        public QuestionDbDTO Create() {
+            return new QuestionDbDTO() {
+                CreateDate = CreateDate,
+                AuthorName = Author,
+                Topic = Topic,
+                QuestionText = Text,
+                Tags = Tags.Select(tag => tag.Create()).ToList()
+            };
+        }
+
+        public void Update(QuestionDbDTO question) {
+            if (Author != null)
+                question.AuthorName = Author;
+            if (Topic != null)
+                question.Topic = Topic;
+            if (Text != null)
+                question.QuestionText = Text;
+
+            if (Tags != null)
+                question.Tags = Tags.Select(tag => tag.Create(question.QuestionId)).ToList();
+
         }
     }
 

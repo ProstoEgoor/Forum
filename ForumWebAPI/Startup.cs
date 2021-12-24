@@ -12,6 +12,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using ForumDbContext.Model;
 using Microsoft.EntityFrameworkCore;
+using ForumDbContext.Repositories;
+using ForumWebAPI.BL.Services;
+using ForumWebAPI.BL;
+using Microsoft.OpenApi.Models;
 
 namespace ForumWebAPI {
     public class Startup {
@@ -26,9 +30,17 @@ namespace ForumWebAPI {
 
             services.AddDbContext<ForumContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                //options.LogTo(Console.WriteLine);
             });
 
+            services.AddForumRepositories();
+            services.AddForumServices();
+
             services.AddControllers();
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Forum API" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

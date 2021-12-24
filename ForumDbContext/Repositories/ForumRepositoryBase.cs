@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ForumDbContext.Model;
 
 namespace ForumDbContext.Repositories {
-    class ForumRepositoryBase {
+    public class ForumRepositoryBase {
         protected ForumContext Context { get; }
 
         public ForumRepositoryBase(ForumContext context) {
