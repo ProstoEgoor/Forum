@@ -15,6 +15,6 @@ namespace ForumDbContext.Model.DTO {
 
         public ICollection<AnswerDbDTO> Answers { get; set; }
         public ICollection<TagInQuestionDbDTO> Tags { get; set; }
-        //public UserDbDTO Author { get; set; }
+        public UserDbDTO Author { get; set; }
     }
 }

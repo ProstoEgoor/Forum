@@ -47,9 +47,10 @@ namespace ForumDbContext.Model.Configure {
                 .HasColumnType("nvarchar(max)")
                 .HasColumnName("question_text");
 
-            /*builder.HasOne(question => question.Author)
+            builder.HasOne(question => question.Author)
                 .WithMany()
-                .HasForeignKey(question => question.AuthorId);*/
+                .HasForeignKey(question => question.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

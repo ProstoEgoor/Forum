@@ -69,9 +69,10 @@ namespace ForumDbContext.Model.Configure {
                 .WithMany(question => question.Answers)
                 .HasForeignKey(answer => answer.QuestionId);
 
-            /*builder.HasOne(answer => answer.Author)
+            builder.HasOne(answer => answer.Author)
                 .WithMany()
-                .HasForeignKey(answer => answer.AnswerId);*/
+                .HasForeignKey(answer => answer.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

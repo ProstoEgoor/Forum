@@ -155,6 +155,16 @@ namespace ForumDbContext.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_question_author_id",
+                table: "question",
+                column: "author_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_answer_author_id",
+                table: "answer",
+                column: "author_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -192,10 +202,34 @@ namespace ForumDbContext.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_answer_AspNetUsers_author_id",
+                table: "answer",
+                column: "author_id",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_question_AspNetUsers_author_id",
+                table: "question",
+                column: "author_id",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_answer_AspNetUsers_author_id",
+                table: "answer");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_question_AspNetUsers_author_id",
+                table: "question");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -216,6 +250,14 @@ namespace ForumDbContext.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropIndex(
+                name: "IX_question_author_id",
+                table: "question");
+
+            migrationBuilder.DropIndex(
+                name: "IX_answer_author_id",
+                table: "answer");
         }
     }
 }

@@ -15,6 +15,6 @@ namespace ForumDbContext.Model.DTO {
         public int? Rating { get; set; }
 
         public QuestionDbDTO Question { get; set; }
-        //public UserDbDTO Author { get; set; }
+        public UserDbDTO Author { get; set; }
     }
 }

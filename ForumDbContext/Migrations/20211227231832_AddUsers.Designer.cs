@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ForumDbContext.Migrations
 {
     [DbContext(typeof(ForumContext))]
-    [Migration("20211227203922_AddUsers")]
+    [Migration("20211227231832_AddUsers")]
     partial class AddUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,8 @@ namespace ForumDbContext.Migrations
 
                     b.HasKey("AnswerId");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("QuestionId");
 
                     b.ToTable("answer");
@@ -118,6 +120,8 @@ namespace ForumDbContext.Migrations
                         .HasColumnName("topic");
 
                     b.HasKey("QuestionId");
+
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("question");
 
@@ -359,13 +363,32 @@ namespace ForumDbContext.Migrations
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.AnswerDbDTO", b =>
                 {
+                    b.HasOne("ForumDbContext.Model.DTO.UserDbDTO", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ForumDbContext.Model.DTO.QuestionDbDTO", "Question")
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Author");
+
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("ForumDbContext.Model.DTO.QuestionDbDTO", b =>
+                {
+                    b.HasOne("ForumDbContext.Model.DTO.UserDbDTO", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.TagInQuestionDbDTO", b =>
