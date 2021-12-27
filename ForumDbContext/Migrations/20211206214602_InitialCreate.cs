@@ -11,27 +11,30 @@ namespace ForumDbContext.Migrations
                 name: "question",
                 columns: table => new
                 {
-                    question_id = table.Column<int>(type: "int", nullable: false)
+                    question_id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     create_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    author_name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    change_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    author_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     topic = table.Column<string>(type: "nvarchar(1000)", nullable: false),
                     question_text = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_question", x => x.question_id);
+                    table.CheckConstraint("CK_question_change_date", "[change_date] >= [create_date]");
                 });
 
             migrationBuilder.CreateTable(
                 name: "answer",
                 columns: table => new
                 {
-                    answer_id = table.Column<int>(type: "int", nullable: false)
+                    answer_id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    question_id = table.Column<int>(type: "int", nullable: false),
+                    question_id = table.Column<long>(type: "bigint", nullable: false),
                     create_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    author_name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    change_date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
+                    author_id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     answer_text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     vote_positive = table.Column<int>(type: "int", nullable: false),
                     vote_negative = table.Column<int>(type: "int", nullable: false),
@@ -40,6 +43,7 @@ namespace ForumDbContext.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_answer", x => x.answer_id);
+                    table.CheckConstraint("CK_answer_change_date", "[change_date] >= [create_date]");
                     table.CheckConstraint("CK_answer_vote_pos", "[vote_positive] >= 0");
                     table.CheckConstraint("CK_answer_vote_neg", "[vote_negative] >= 0");
                     table.ForeignKey(
@@ -54,8 +58,8 @@ namespace ForumDbContext.Migrations
                 name: "tag_in_question",
                 columns: table => new
                 {
-                    question_id = table.Column<int>(type: "int", nullable: false),
-                    tag_name = table.Column<string>(type: "nvarchar(100)", nullable: false)
+                    question_id = table.Column<long>(type: "bigint", nullable: false),
+                    tag_name = table.Column<string>(type: "nvarchar(256)", nullable: false)
                 },
                 constraints: table =>
                 {

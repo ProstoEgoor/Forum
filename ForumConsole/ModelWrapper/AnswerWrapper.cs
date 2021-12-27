@@ -16,11 +16,13 @@ namespace ForumConsole.ModelWrapper {
                     //new WriteField<string>(true, "AnswerText", "Текст", Answer.Text, (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All)
                 };
 
-                if (isEmpty) {
-                    writeFields.Add(new ReactiveWriteField<DateTime>("Дата создания", Answer.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
+                /*if (isEmpty) {
+                    writeFields.Add(new ReactiveWriteField<DateTime>("Дата создания", Answer.CreateDate.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
                 } else {
-                    writeFields.Add(new WriteField<DateTime>(false, "", "Дата создания", Answer.Date.ToString(), (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _), (int)CharType.All));
+                    writeFields.Add(new WriteField<DateTime>(false, "", "Дата создания", Answer.CreateDate.ToString(), (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _), (int)CharType.All));
                 }
+                writeFields.Add(new ReactiveWriteField<DateTime>("Дата редактирования", Answer.ChangeDate.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));*/
+
                 writeFields.Add(new WriteField<string>(true, "AnswerText", "Текст", Answer.Text, (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All));
 
                 return writeFields;
@@ -63,7 +65,8 @@ namespace ForumConsole.ModelWrapper {
 
             StringBuilder buffer = new StringBuilder();
             buffer.Append($"Автор: {Answer.Author}\r\n");
-            buffer.Append($"Дата создания: {Answer.Date}\r\n");
+            buffer.Append($"Дата создания: {Answer.CreateDate}\r\n");
+            buffer.Append($"Дата редактирования: {Answer.ChangeDate}\r\n");
             buffer.Append($"Рейтинг: {Answer.Rating}\r\n");
             string str = buffer.ToString();
 
@@ -96,14 +99,16 @@ namespace ForumConsole.ModelWrapper {
 
         public Answer CreateFromWriteFields(IReadOnlyList<WriteField> writeFields) {
             string author = (writeFields[0] as WriteField<string>).ParseField;
-            DateTime date = (writeFields[1] as WriteField<DateTime>).ParseField;
+            DateTime createDate = Answer.CreateDate;
+            DateTime changeDate = DateTime.Now;
             string text = (writeFields[2] as WriteField<string>).ParseField;
-            int rating = Answer.Rating;
-            uint numberOfVotes = Answer.NumberOfVotes;
+            int votePositive = Answer.VotePositive;
+            int voteNegative = Answer.VoteNegative;
 
-            var answer = new Answer(rating, numberOfVotes) {
+            var answer = new Answer(votePositive, voteNegative) {
                 Author = author,
-                Date = date,
+                CreateDate = createDate,
+                ChangeDate = changeDate,
                 Text = text,
             };
 

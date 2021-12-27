@@ -14,7 +14,7 @@ namespace ForumDbContext.Model.Configure {
 
             builder.Property(question => question.QuestionId)
                 .IsRequired()
-                .HasColumnType("int")
+                .HasColumnType("bigint")
                 .HasColumnName("question_id");
 
 
@@ -24,10 +24,18 @@ namespace ForumDbContext.Model.Configure {
                 .HasColumnType("datetime2")
                 .HasDefaultValueSql("getdate()");
 
-            builder.Property(question => question.AuthorName)
+            builder.Property(question => question.ChangeDate)
                 .IsRequired()
-                .HasColumnType("nvarchar(100)")
-                .HasColumnName("author_name");
+                .HasColumnName("change_date")
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("getdate()");
+
+            builder.HasCheckConstraint("CK_question_change_date", "[change_date] >= [create_date]");
+
+            builder.Property(question => question.AuthorId)
+                .IsRequired()
+                .HasColumnType("nvarchar(450)")
+                .HasColumnName("author_id");
 
             builder.Property(question => question.Topic)
                 .IsRequired()
@@ -38,6 +46,10 @@ namespace ForumDbContext.Model.Configure {
                 .IsRequired()
                 .HasColumnType("nvarchar(max)")
                 .HasColumnName("question_text");
+
+            /*builder.HasOne(question => question.Author)
+                .WithMany()
+                .HasForeignKey(question => question.AuthorId);*/
         }
     }
 }

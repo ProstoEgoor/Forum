@@ -24,11 +24,13 @@ namespace ForumConsole.ModelWrapper {
                     //new WriteField<string>(true, "QuestionText", "Текст", Question.Text, (field) => field, (field) => field.Trim().Length > 0, (int) CharType.All)
                 };
 
-                if (isEmpty) {
-                    writeFields.Add(new ReactiveWriteField<DateTime>("Дата создания", Question.Date.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
+                /*if (isEmpty) {
+                    writeFields.Add(new ReactiveWriteField<DateTime>("Дата создания", Question.CreateDate.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
                 } else {
-                    writeFields.Add(new WriteField<DateTime>(false, "", "Дата создания", Question.Date.ToString(), (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _), (int) CharType.All));
-                }
+                    writeFields.Add(new WriteField<DateTime>(false, "", "Дата создания", Question.CreateDate.ToString(), (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _), (int) CharType.All));
+                }*/
+
+                //writeFields.Add(new ReactiveWriteField<DateTime>("Дата редактирования", Question.ChangeDate.ToString(), () => DateTime.Now, (field) => DateTime.Parse(field), (field) => DateTime.TryParse(field, out _)));
 
                 writeFields.Add(new WriteField<string>(true, "QuestionText", "Текст", Question.Text, (field) => field, (field) => field.Trim().Length > 0, (int)CharType.All));
 
@@ -83,7 +85,8 @@ namespace ForumConsole.ModelWrapper {
             buffer.Append($"Тема: {Question.Topic}\r\n");
             buffer.Append($"Теги: {string.Join(", ", Question.Tags)}\r\n");
             buffer.Append($"Автор: {Question.Author}\r\n");
-            buffer.Append($"Дата создания: {Question.Date}\r\n");
+            buffer.Append($"Дата создания: {Question.CreateDate}\r\n");
+            buffer.Append($"Дата редактирования: {Question.ChangeDate}\r\n");
             buffer.Append($"{Question.Answers.Count} {PrintHelper.GetNumAddition(Question.Answers.Count, "Ответ", "Ответа", "Ответов")}\r\n");
             string str = buffer.ToString();
 
@@ -119,12 +122,14 @@ namespace ForumConsole.ModelWrapper {
             string topic = (writeFields[0] as WriteField<string>).ParseField;
             string[] tags = (writeFields[1] as WriteField<string>).ParseField.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             string author = (writeFields[2] as WriteField<string>).ParseField;
-            DateTime date = (writeFields[3] as WriteField<DateTime>).ParseField;
-            string text = (writeFields[4] as WriteField<string>).ParseField;
+            DateTime createDate = Question.CreateDate;
+            DateTime changeDate = DateTime.Now;
+            string text = (writeFields[5] as WriteField<string>).ParseField;
 
             var question = new Question(tags) {
                 Author = author,
-                Date = date,
+                CreateDate = createDate,
+                ChangeDate = changeDate,
                 Topic = topic,
                 Text = text
             };

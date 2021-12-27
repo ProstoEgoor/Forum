@@ -8,29 +8,32 @@ namespace ForumConsole.FIles {
     [XmlType(TypeName = "Answer")]
     public class AnswerFileDto {
 
-        //public int? Id { get; set; }
+        //public long? Id { get; set; }
         public string Author { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime ChangeDate { get; set; }
         public string Text { get; set; }
-        public int Rating { get; set; }
-        public uint NumberOfVotes { get; set; }
+        public int VotePositive { get; set; }
+        public int VoteNegative { get; set; }
 
         public static AnswerFileDto Map(Answer answer) {
             return new AnswerFileDto() {
                 //Id = answer.Id,
                 Author = answer.Author,
-                Date = answer.Date,
+                CreateDate = answer.CreateDate,
+                ChangeDate = answer.ChangeDate,
                 Text = answer.Text,
-                Rating = answer.Rating,
-                NumberOfVotes = answer.NumberOfVotes
+                VotePositive = answer.VotePositive,
+                VoteNegative = answer.VoteNegative
             };
         }
 
         public static Answer Map(AnswerFileDto answer) {
-            return new Answer(answer.Rating, answer.NumberOfVotes) {
+            return new Answer(answer.VotePositive, answer.VoteNegative) {
                 //Id = answer.Id,
                 Author = answer.Author,
-                Date = answer.Date,
+                CreateDate = answer.CreateDate,
+                ChangeDate = answer.ChangeDate,
                 Text = answer.Text
             };
         }

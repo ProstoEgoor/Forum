@@ -15,8 +15,9 @@ namespace ForumConsole.DB.Mapping {
             return new Question(question.Tags.Select(tag => tag.TagName).ToList(),
                 question.Answers.Select(answer => AnswerMapper.Map(answer)).ToList()) {
                 Id = question.QuestionId,
-                Author = question.AuthorName,
-                Date = question.CreateDate,
+                Author = question.AuthorId,
+                CreateDate = question.CreateDate,
+                ChangeDate = question.ChangeDate,
                 Topic = question.Topic,
                 Text = question.QuestionText
             };
@@ -29,8 +30,9 @@ namespace ForumConsole.DB.Mapping {
 
             return new QuestionDbDTO() {
                 QuestionId = question.Id ?? 0,
-                CreateDate = question.Date,
-                AuthorName = question.Author,
+                CreateDate = question.CreateDate,
+                ChangeDate = question.ChangeDate,
+                AuthorId = question.Author,
                 Topic = question.Topic,
                 QuestionText = question.Text,
                 Answers = question.Answers.Select(answer => AnswerMapper.Map(answer)).ToList(),

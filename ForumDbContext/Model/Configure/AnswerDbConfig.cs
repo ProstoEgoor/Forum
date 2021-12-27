@@ -14,12 +14,12 @@ namespace ForumDbContext.Model.Configure {
 
             builder.Property(answer => answer.AnswerId)
                 .IsRequired()
-                .HasColumnType("int")
+                .HasColumnType("bigint")
                 .HasColumnName("answer_id");
 
             builder.Property(answer => answer.QuestionId)
                 .IsRequired()
-                .HasColumnType("int")
+                .HasColumnType("bigint")
                 .HasColumnName("question_id");
 
             builder.Property(answer => answer.CreateDate)
@@ -28,10 +28,18 @@ namespace ForumDbContext.Model.Configure {
                 .HasColumnType("datetime2")
                 .HasDefaultValueSql("getdate()");
 
-            builder.Property(answer => answer.AuthorName)
+            builder.Property(answer => answer.ChangeDate)
                 .IsRequired()
-                .HasColumnType("nvarchar(100)")
-                .HasColumnName("author_name");
+                .HasColumnName("change_date")
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("getdate()");
+
+            builder.HasCheckConstraint("CK_answer_change_date", "[change_date] >= [create_date]");
+
+            builder.Property(answer => answer.AuthorId)
+                .IsRequired()
+                .HasColumnType("nvarchar(450)")
+                .HasColumnName("author_id");
 
             builder.Property(answer => answer.AnswerText)
                 .IsRequired()
@@ -60,6 +68,10 @@ namespace ForumDbContext.Model.Configure {
             builder.HasOne(answer => answer.Question)
                 .WithMany(question => question.Answers)
                 .HasForeignKey(answer => answer.QuestionId);
+
+            /*builder.HasOne(answer => answer.Author)
+                .WithMany()
+                .HasForeignKey(answer => answer.AnswerId);*/
         }
     }
 }

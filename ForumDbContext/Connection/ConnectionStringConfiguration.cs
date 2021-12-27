@@ -14,7 +14,7 @@ namespace ForumDbContext.Connection {
             string userSecretsSection = "ForumDb") {
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile(appsettingsPath, optional: true)
+                .AddJsonFile(appsettingsPath, optional: false)
                 .AddUserSecrets<ForumContext>()
                 .Build();
 

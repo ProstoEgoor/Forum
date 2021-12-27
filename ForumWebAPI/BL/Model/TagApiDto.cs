@@ -20,7 +20,7 @@ namespace ForumWebAPI.BL.Model {
             };
         }
 
-        public TagInQuestionDbDTO Create(int questionId) {
+        public TagInQuestionDbDTO Create(long questionId) {
             return new TagInQuestionDbDTO() {
                 TagName = Name,
                 QuestionId = questionId

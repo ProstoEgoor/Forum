@@ -7,14 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ForumDbContext.Migrations
-{
+namespace ForumDbContext.Migrations {
     [DbContext(typeof(ForumContext))]
     [Migration("20211206220230_TagFrequency")]
-    partial class TagFrequency
-    {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
+    partial class TagFrequency {
+        protected override void BuildTargetModel(ModelBuilder modelBuilder) {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
@@ -22,148 +19,165 @@ namespace ForumDbContext.Migrations
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.AnswerDbDTO", b =>
-                {
-                    b.Property<int>("AnswerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("answer_id")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<long>("AnswerId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasColumnName("answer_id")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AnswerText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("answer_text");
+                b.Property<string>("AnswerText")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("answer_text");
 
-                    b.Property<string>("AuthorName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("author_name");
+                b.Property<string>("AuthorId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)")
+                    .HasColumnName("author_id");
 
-                    b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("create_date")
-                        .HasDefaultValueSql("getdate()");
+                b.Property<DateTime>("ChangeDate")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("datetime2")
+                    .HasColumnName("change_date")
+                    .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int")
-                        .HasColumnName("question_id");
+                b.Property<DateTime>("CreateDate")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("datetime2")
+                    .HasColumnName("create_date")
+                    .HasDefaultValueSql("getdate()");
 
-                    b.Property<int?>("Rating")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasColumnName("rating")
-                        .HasComputedColumnSql("([vote_positive]-[vote_negative])", false);
+                b.Property<long>("QuestionId")
+                    .HasColumnType("bigint")
+                    .HasColumnName("question_id");
 
-                    b.Property<int>("VoteNegative")
-                        .HasColumnType("int")
-                        .HasColumnName("vote_negative");
+                b.Property<int?>("Rating")
+                    .ValueGeneratedOnAddOrUpdate()
+                    .HasColumnType("int")
+                    .HasColumnName("rating")
+                    .HasComputedColumnSql("([vote_positive]-[vote_negative])", false);
 
-                    b.Property<int>("VotePositive")
-                        .HasColumnType("int")
-                        .HasColumnName("vote_positive");
+                b.Property<int>("VoteNegative")
+                    .HasColumnType("int")
+                    .HasColumnName("vote_negative");
 
-                    b.HasKey("AnswerId");
+                b.Property<int>("VotePositive")
+                    .HasColumnType("int")
+                    .HasColumnName("vote_positive");
 
-                    b.HasIndex("QuestionId");
+                b.HasKey("AnswerId");
 
-                    b.ToTable("answer");
+                b.HasIndex("QuestionId");
 
-                    b.HasCheckConstraint("CK_answer_vote_pos", "[vote_positive] >= 0");
+                b.ToTable("answer");
 
-                    b.HasCheckConstraint("CK_answer_vote_neg", "[vote_negative] >= 0");
-                });
+                b.HasCheckConstraint("CK_answer_change_date", "[change_date] >= [create_date]");
+
+                b.HasCheckConstraint("CK_answer_vote_pos", "[vote_positive] >= 0");
+
+                b.HasCheckConstraint("CK_answer_vote_neg", "[vote_negative] >= 0");
+            });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.QuestionDbDTO", b =>
-                {
-                    b.Property<int>("QuestionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<long>("QuestionId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint")
+                    .HasColumnName("question_id")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("author_name");
+                b.Property<string>("AuthorId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)")
+                    .HasColumnName("author_id");
 
-                    b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("create_date")
-                        .HasDefaultValueSql("getdate()");
+                b.Property<DateTime>("ChangeDate")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("datetime2")
+                    .HasColumnName("change_date")
+                    .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("QuestionText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("question_text");
+                b.Property<DateTime>("CreateDate")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("datetime2")
+                    .HasColumnName("create_date")
+                    .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(1000)")
-                        .HasColumnName("topic");
+                b.Property<string>("QuestionText")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)")
+                    .HasColumnName("question_text");
 
-                    b.HasKey("QuestionId");
+                b.Property<string>("Topic")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(1000)")
+                    .HasColumnName("topic");
 
-                    b.ToTable("question");
-                });
+                b.HasKey("QuestionId");
+
+                b.ToTable("question");
+
+                b.HasCheckConstraint("CK_question_change_date", "[change_date] >= [create_date]");
+            });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.TagFrequencyDbDTO", b =>
-                {
-                    b.Property<string>("TagName")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("tag_name");
+            {
+                b.Property<string>("TagName")
+                    .HasColumnType("nvarchar(450)")
+                    .HasColumnName("tag_name");
 
-                    b.Property<int?>("Frequency")
-                        .HasColumnType("int");
+                b.Property<int?>("Frequency")
+                    .HasColumnType("int");
 
-                    b.HasKey("TagName");
+                b.HasKey("TagName");
 
-                    b.ToView("tag");
-                });
+                b.ToView("tag_frequency");
+            });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.TagInQuestionDbDTO", b =>
-                {
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int")
-                        .HasColumnName("question_id");
+            {
+                b.Property<long>("QuestionId")
+                    .HasColumnType("bigint")
+                    .HasColumnName("question_id");
 
-                    b.Property<string>("TagName")
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("tag_name");
+                b.Property<string>("TagName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasColumnName("tag_name");
 
-                    b.HasKey("QuestionId", "TagName");
+                b.HasKey("QuestionId", "TagName");
 
-                    b.ToTable("tag_in_question");
-                });
+                b.ToTable("tag_in_question");
+            });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.AnswerDbDTO", b =>
-                {
-                    b.HasOne("ForumDbContext.Model.DTO.QuestionDbDTO", "Question")
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("ForumDbContext.Model.DTO.QuestionDbDTO", "Question")
+                    .WithMany("Answers")
+                    .HasForeignKey("QuestionId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Question");
-                });
+                b.Navigation("Question");
+            });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.TagInQuestionDbDTO", b =>
-                {
-                    b.HasOne("ForumDbContext.Model.DTO.QuestionDbDTO", "Question")
-                        .WithMany("Tags")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("ForumDbContext.Model.DTO.QuestionDbDTO", "Question")
+                    .WithMany("Tags")
+                    .HasForeignKey("QuestionId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("Question");
-                });
+                b.Navigation("Question");
+            });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.QuestionDbDTO", b =>
-                {
-                    b.Navigation("Answers");
+            {
+                b.Navigation("Answers");
 
-                    b.Navigation("Tags");
-                });
+                b.Navigation("Tags");
+            });
 #pragma warning restore 612, 618
         }
     }

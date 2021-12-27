@@ -5,9 +5,10 @@ using ForumDbContext.Connection;
 using ForumDbContext.Model.Configure;
 using ForumDbContext.Model.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ForumDbContext.Model {
-    public class ForumContext : DbContext {
+    public class ForumContext : IdentityDbContext<UserDbDTO> {
         public ForumContext() { }
         public ForumContext(DbContextOptions options) : base(options) { }
 
@@ -23,10 +24,13 @@ namespace ForumDbContext.Model {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new QuestionDbConfig());
             modelBuilder.ApplyConfiguration(new AnswerDbConfig());
             modelBuilder.ApplyConfiguration(new TagInQuestionDbConfig());
             modelBuilder.ApplyConfiguration(new TagFrequencyDbConfig());
+            modelBuilder.ApplyConfiguration(new UserDbConfig());
         }
 
         public void Replace<TEntity>(TEntity oldEntity, TEntity newEntity) where TEntity : class {

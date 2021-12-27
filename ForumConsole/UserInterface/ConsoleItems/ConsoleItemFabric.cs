@@ -162,11 +162,11 @@ namespace ForumConsole.UserInterface {
             });
 
             showAnswer.EventHandler.AddHandler("VotePos", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
-                answerWrapper.Answer.Vote(1);
+                answerWrapper.Answer.Vote(true);
             });
 
             showAnswer.EventHandler.AddHandler("VoteNeg", delegate (ConsoleItem consoleItem, ConsoleEventArgs consoleEventArgs) {
-                answerWrapper.Answer.Vote(-1);
+                answerWrapper.Answer.Vote(false);
             });
 
             return showAnswer;

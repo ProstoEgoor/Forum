@@ -11,10 +11,11 @@ namespace ForumConsole.DB.Mapping {
                 return null;
             }
 
-            return new Answer(answer.Rating ?? 0, (uint)(answer.VotePositive + answer.VoteNegative)) {
+            return new Answer(answer.VotePositive, answer.VoteNegative) {
                 Id = answer.AnswerId,
-                Author = answer.AuthorName,
-                Date = answer.CreateDate,
+                Author = answer.AuthorId,
+                CreateDate = answer.CreateDate,
+                ChangeDate = answer.ChangeDate,
                 Text = answer.AnswerText,
             };
         }
@@ -26,11 +27,12 @@ namespace ForumConsole.DB.Mapping {
 
             return new AnswerDbDTO() {
                 AnswerId = answer.Id ?? 0,
-                CreateDate = answer.Date,
-                AuthorName = answer.Author,
+                CreateDate = answer.CreateDate,
+                ChangeDate = answer.ChangeDate,
+                AuthorId = answer.Author,
                 AnswerText = answer.Text,
-                VotePositive = ((int)(answer.NumberOfVotes + answer.Rating) / 2),
-                VoteNegative = ((int)(answer.NumberOfVotes - answer.Rating) / 2)
+                VotePositive = answer.VotePositive,
+                VoteNegative = answer.VoteNegative
             };
         }
     }

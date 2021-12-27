@@ -6,9 +6,10 @@ using System.Linq;
 namespace ForumModel {
     public class Question {
 
-        public int? Id { get; set; }
+        public long? Id { get; set; }
         public string Author { get; set; }
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime CreateDate { get; set; } = DateTime.Now;
+        public DateTime ChangeDate { get; set; }
         protected HashSet<string> TagSet { get; } = new HashSet<string>();
         public string Topic { get; set; }
         public string Text { get; set; }
@@ -17,9 +18,13 @@ namespace ForumModel {
         public IReadOnlyList<Answer> Answers => ListAnswer;
         public IEnumerable<string> Tags => TagSet;
 
-        public Question() { }
+        public Question() {
+            if (ChangeDate == DateTime.MinValue) {
+                ChangeDate = CreateDate;
+            }
+        }
 
-        public Question(IEnumerable<string> tags) {
+        public Question(IEnumerable<string> tags) : this() {
             foreach (var tag in tags) {
                 TagSet.Add(tag);
             }
@@ -32,9 +37,9 @@ namespace ForumModel {
         public IReadOnlyList<Answer> GetSortedAnswers(bool sortDate, bool sortDateByAscending = false) {
             if (sortDate) {
                 if (sortDateByAscending) {
-                    return ListAnswer.OrderBy(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+                    return ListAnswer.OrderBy(answer => answer.ChangeDate).ThenByDescending(answer => answer.Rating).ToList();
                 } else {
-                    return ListAnswer.OrderByDescending(answer => answer.Date).ThenByDescending(answer => answer.Rating).ToList();
+                    return ListAnswer.OrderByDescending(answer => answer.ChangeDate).ThenByDescending(answer => answer.Rating).ToList();
                 }
             } else {
                 return ListAnswer.OrderByDescending(answer => answer.Rating).ToList();
@@ -60,17 +65,5 @@ namespace ForumModel {
             ListAnswer[position] = newAnswer;
             return true;
         }
-
-        public override string ToString() {
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"Тема:\t{Topic}\n\r");
-            sb.Append($"Теги:\t{string.Join(", ", Tags)}\n\r");
-            sb.Append($"Автор:\t{Author}\n\r");
-            sb.Append($"Дата:\t{Date}\n\r");
-            sb.Append($"{Answers.Count} Ответов\n\r");
-            sb.Append(Text);
-            return sb.ToString();
-        }
-
     }
 }

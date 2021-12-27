@@ -6,10 +6,11 @@ using ForumDbContext.Model.DTO;
 
 namespace ForumWebAPI.BL.Model {
     public class AnswerApiDto {
-        public int Id { get; set; }
-        public int QuestionId { get; set; }
+        public long Id { get; set; }
+        public long QuestionId { get; set; }
         public DateTime CreateDate { get; set; }
-        public string Author { get; set; }
+        public DateTime ChangeDate { get; set; }
+        public string AuthorId { get; set; }
         public string Text { get; set; }
         public int Rating => VotePositive - VoteNegative;
         public int VotePositive { get; set; }
@@ -20,8 +21,9 @@ namespace ForumWebAPI.BL.Model {
         public AnswerApiDto(AnswerDbDTO answer) {
             Id = answer.AnswerId;
             QuestionId = answer.QuestionId;
-            Author = answer.AuthorName;
             CreateDate = answer.CreateDate;
+            ChangeDate = answer.ChangeDate;
+            AuthorId = answer.AuthorId;
             Text = answer.AnswerText;
             VotePositive = answer.VotePositive;
             VoteNegative = answer.VoteNegative;
@@ -31,7 +33,8 @@ namespace ForumWebAPI.BL.Model {
             return new AnswerDbDTO() {
                 QuestionId = QuestionId,
                 CreateDate = CreateDate,
-                AuthorName = Author,
+                ChangeDate = ChangeDate,
+                AuthorId = AuthorId,
                 AnswerText = Text,
                 VotePositive = VotePositive,
                 VoteNegative = VoteNegative
@@ -39,8 +42,6 @@ namespace ForumWebAPI.BL.Model {
         }
 
         public void Update(AnswerDbDTO answer) {
-            if (Author != null)
-                answer.AuthorName = Author;
             if (Text != null) {
                 answer.AnswerText = Text;
             }

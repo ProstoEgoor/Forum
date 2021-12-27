@@ -17,12 +17,12 @@ namespace ForumDbContext.Model.Configure {
 
             builder.Property(tagInQuestion => tagInQuestion.QuestionId)
                 .IsRequired()
-                .HasColumnType("int")
+                .HasColumnType("bigint")
                 .HasColumnName("question_id");
 
             builder.Property(tagInQuestion => tagInQuestion.TagName)
                 .IsRequired()
-                .HasColumnType("nvarchar(100)")
+                .HasColumnType("nvarchar(256)")
                 .HasColumnName("tag_name");
 
             builder.HasOne(tagInQuestion => tagInQuestion.Question)

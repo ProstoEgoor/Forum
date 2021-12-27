@@ -86,7 +86,7 @@ namespace ForumDbContext.Repositories {
             return question;
         }
 
-        public async Task<bool> ExistAsync(int questionId) {
+        public async Task<bool> ExistAsync(long questionId) {
             return await Context.Question.AsQueryable().AnyAsync(question => question.QuestionId == questionId);
         }
     }

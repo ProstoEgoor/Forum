@@ -6,13 +6,15 @@ using System.Text;
 
 namespace ForumDbContext.Model.DTO {
     public class QuestionDbDTO {
-        public int QuestionId { get; set; }
+        public long QuestionId { get; set; }
         public DateTime CreateDate { get; set; }
-        public string AuthorName { get; set; }
+        public DateTime ChangeDate { get; set; }
+        public string AuthorId { get; set; }
         public string Topic { get; set; }
         public string QuestionText { get; set; }
 
         public ICollection<AnswerDbDTO> Answers { get; set; }
         public ICollection<TagInQuestionDbDTO> Tags { get; set; }
+        //public UserDbDTO Author { get; set; }
     }
 }

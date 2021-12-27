@@ -23,9 +23,9 @@ namespace ForumDbContext.Migrations
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.AnswerDbDTO", b =>
                 {
-                    b.Property<int>("AnswerId")
+                    b.Property<long>("AnswerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("answer_id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -34,10 +34,16 @@ namespace ForumDbContext.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("answer_text");
 
-                    b.Property<string>("AuthorName")
+                    b.Property<string>("AuthorId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("author_name");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("author_id");
+
+                    b.Property<DateTime>("ChangeDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("change_date")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
@@ -45,8 +51,8 @@ namespace ForumDbContext.Migrations
                         .HasColumnName("create_date")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int")
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint")
                         .HasColumnName("question_id");
 
                     b.Property<int?>("Rating")
@@ -69,6 +75,8 @@ namespace ForumDbContext.Migrations
 
                     b.ToTable("answer");
 
+                    b.HasCheckConstraint("CK_answer_change_date", "[change_date] >= [create_date]");
+
                     b.HasCheckConstraint("CK_answer_vote_pos", "[vote_positive] >= 0");
 
                     b.HasCheckConstraint("CK_answer_vote_neg", "[vote_negative] >= 0");
@@ -76,16 +84,22 @@ namespace ForumDbContext.Migrations
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.QuestionDbDTO", b =>
                 {
-                    b.Property<int>("QuestionId")
+                    b.Property<long>("QuestionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("bigint")
                         .HasColumnName("question_id")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorName")
+                    b.Property<string>("AuthorId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnName("author_name");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("author_id");
+
+                    b.Property<DateTime>("ChangeDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("change_date")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
@@ -106,16 +120,18 @@ namespace ForumDbContext.Migrations
                     b.HasKey("QuestionId");
 
                     b.ToTable("question");
+
+                    b.HasCheckConstraint("CK_question_change_date", "[change_date] >= [create_date]");
                 });
 
             modelBuilder.Entity("ForumDbContext.Model.DTO.TagInQuestionDbDTO", b =>
                 {
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int")
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint")
                         .HasColumnName("question_id");
 
                     b.Property<string>("TagName")
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("nvarchar(256)")
                         .HasColumnName("tag_name");
 
                     b.HasKey("QuestionId", "TagName");

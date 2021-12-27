@@ -6,9 +6,10 @@ using ForumDbContext.Model.DTO;
 
 namespace ForumWebAPI.BL.Model {
     public class QuestionApiDto {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public DateTime CreateDate { get; set; }
-        public string Author { get; set; }
+        public DateTime ChangeDate { get; set; }
+        public string AuthorId { get; set; }
         public string Topic { get; set; }
         public string Text { get; set; }
         public int AnswerCount { get; set; }
@@ -19,7 +20,8 @@ namespace ForumWebAPI.BL.Model {
         public QuestionApiDto(QuestionDbDTO question) {
             Id = question.QuestionId;
             CreateDate = question.CreateDate;
-            Author = question.AuthorName;
+            ChangeDate = question.ChangeDate;
+            AuthorId = question.AuthorId;
             Topic = question.Topic;
             Text = question.QuestionText;
             AnswerCount = question.Answers?.Count ?? 0;
@@ -29,7 +31,8 @@ namespace ForumWebAPI.BL.Model {
         public QuestionDbDTO Create() {
             return new QuestionDbDTO() {
                 CreateDate = CreateDate,
-                AuthorName = Author,
+                ChangeDate = ChangeDate,
+                AuthorId = AuthorId,
                 Topic = Topic,
                 QuestionText = Text,
                 Tags = Tags.Select(tag => tag.Create()).ToList()
@@ -37,8 +40,6 @@ namespace ForumWebAPI.BL.Model {
         }
 
         public void Update(QuestionDbDTO question) {
-            if (Author != null)
-                question.AuthorName = Author;
             if (Topic != null)
                 question.Topic = Topic;
             if (Text != null)
