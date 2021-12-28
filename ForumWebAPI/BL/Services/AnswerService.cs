@@ -34,12 +34,12 @@ namespace ForumWebAPI.BL.Services {
             return (answers.Select(answer => new AnswerApiDto(answer)), null);
         }
 
-        public async Task<(AnswerApiDto, Exception)> CreateAsync(AnswerApiDto answer) {
+        public async Task<(AnswerApiDto, Exception)> CreateAsync(AnswerCreateApiDto answer) {
             if (!await QuestionRepository.ExistAsync(answer.QuestionId)) {
                 return (null, new KeyNotFoundException($"Вопрос с id:{answer.QuestionId} не найден."));
             }
 
-            var answerToCreate = answer.Create();
+            var answerToCreate = answer.Create("author");
             AnswerRepository.Create(answerToCreate);
 
             try {
@@ -48,12 +48,11 @@ namespace ForumWebAPI.BL.Services {
                 return (null, e);
             }
 
-            answer.Id = answerToCreate.AnswerId;
 
-            return (answer, null);
+            return (new AnswerApiDto(answerToCreate), null);
         }
 
-        public async Task<Exception> UpdateAsync(int answerId, AnswerApiDto answer) {
+        public async Task<Exception> UpdateAsync(int answerId, AnswerEditApiDto answer) {
             var answerToUpdate = await AnswerRepository.GetAsync(answerId);
 
             if (answerToUpdate == null) {

@@ -55,7 +55,7 @@ namespace ForumWebAPI.Controllers {
         }
 
         [HttpPost]
-        public async Task<ActionResult<QuestionApiDto>> Post([FromBody] QuestionApiDto question) {
+        public async Task<ActionResult<QuestionApiDto>> Post([FromBody] QuestionCreateApiDto question) {
             (QuestionApiDto CreatedQuestion, Exception e) = await QuestionService.CreateAsync(question);
             if (e != null) {
                 return StatusCode(500);
@@ -65,7 +65,7 @@ namespace ForumWebAPI.Controllers {
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put([FromRoute] int id, [FromBody] QuestionApiDto question) {
+        public async Task<ActionResult> Put([FromRoute] int id, [FromBody] QuestionEditApiDto question) {
             Exception e = await QuestionService.UpdateAsync(id, question);
             if (e != null) {
                 if (e is KeyNotFoundException) {

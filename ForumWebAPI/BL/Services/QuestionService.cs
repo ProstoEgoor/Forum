@@ -29,11 +29,9 @@ namespace ForumWebAPI.BL.Services {
         }
 
 
-        public async Task<(QuestionApiDto, Exception)> CreateAsync(QuestionApiDto question) {
-            if (question.CreateDate == DateTime.MinValue) {
-                question.CreateDate = DateTime.Now;
-            }
-            var questionToCreate = question.Create();
+        public async Task<(QuestionApiDto, Exception)> CreateAsync(QuestionCreateApiDto question) {
+
+            var questionToCreate = question.Create("author");
             QuestionRepository.Create(questionToCreate);
 
             try {
@@ -42,12 +40,10 @@ namespace ForumWebAPI.BL.Services {
                 return (null, e);
             }
 
-            question.Id = questionToCreate.QuestionId;
-
-            return (question, null);
+            return (new QuestionApiDto(questionToCreate), null);
         }
 
-        public async Task<Exception> UpdateAsync(int questionId, QuestionApiDto question) {
+        public async Task<Exception> UpdateAsync(int questionId, QuestionEditApiDto question) {
             var questionToUpdate = await QuestionRepository.GetAsync(questionId);
 
             if (questionToUpdate == null) {

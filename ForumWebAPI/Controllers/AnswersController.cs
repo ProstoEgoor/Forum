@@ -33,7 +33,7 @@ namespace ForumWebAPI.Controllers {
         }
 
         [HttpPost]
-        public async Task<ActionResult<AnswerApiDto>> Post([FromBody] AnswerApiDto answer) {
+        public async Task<ActionResult<AnswerApiDto>> Post([FromBody] AnswerCreateApiDto answer) {
             (AnswerApiDto createdAnswer, Exception e) = await AnswerService.CreateAsync(answer);
 
             if (e != null) {
@@ -48,7 +48,7 @@ namespace ForumWebAPI.Controllers {
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put([FromRoute] int id, [FromBody] AnswerApiDto answer) {
+        public async Task<ActionResult> Put([FromRoute] int id, [FromBody] AnswerEditApiDto answer) {
             Exception e = await AnswerService.UpdateAsync(id, answer);
 
             if (e != null) {
