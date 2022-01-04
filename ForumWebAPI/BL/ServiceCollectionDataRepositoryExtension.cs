@@ -15,7 +15,7 @@ namespace ForumWebAPI.BL {
             services.AddTransient<QuestionService>();
             services.AddTransient<AnswerService>();
             services.AddTransient<TagService>();
-            //services.AddScoped<UsersService>();
+            services.AddScoped<UserService>();
         }
 
     }

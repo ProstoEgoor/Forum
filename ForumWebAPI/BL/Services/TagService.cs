@@ -7,14 +7,14 @@ using ForumWebAPI.BL.Model;
 
 namespace ForumWebAPI.BL.Services {
     public class TagService {
-        TagRepository TagRepository { get; }
+        private readonly TagRepository tagRepository;
 
         public TagService(TagRepository tagRepository) {
-            TagRepository = tagRepository;
+            this.tagRepository = tagRepository;
         }
 
         public IAsyncEnumerable<TagFrequencyApiDto> GetFrequencyAsync() {
-            return TagRepository.GetFrequencyAsync().Select(tag => new TagFrequencyApiDto(tag));
+            return tagRepository.GetFrequencyAsync().Select(tag => new TagFrequencyApiDto(tag));
         }
     }
 }

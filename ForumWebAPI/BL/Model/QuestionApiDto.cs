@@ -12,10 +12,8 @@ namespace ForumWebAPI.BL.Model {
         public IEnumerable<TagApiDto> Tags { get; set; }
 
         public void Update(QuestionDbDTO question) {
-            if (Topic != null)
-                question.Topic = Topic;
-            if (Text != null)
-                question.QuestionText = Text;
+            question.Topic = Topic ?? question.Topic;
+            question.QuestionText = Text ?? question.QuestionText;
             if (Tags != null)
                 question.Tags = Tags.Select(tag => tag.Create(question.QuestionId)).ToList();
 
@@ -25,11 +23,11 @@ namespace ForumWebAPI.BL.Model {
 
     public class QuestionCreateApiDto : QuestionEditApiDto {
 
-        public QuestionDbDTO Create(string author) {
+        public QuestionDbDTO Create(string authorId) {
             return new QuestionDbDTO() {
                 CreateDate = DateTime.Now,
                 ChangeDate = DateTime.Now,
-                AuthorId = author,
+                AuthorId = authorId,
                 Topic = Topic,
                 QuestionText = Text,
                 Tags = Tags.Select(tag => tag.Create()).ToList()
@@ -41,7 +39,7 @@ namespace ForumWebAPI.BL.Model {
         public long Id { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ChangeDate { get; set; }
-        public string AuthorId { get; set; }
+        public string Author { get; set; }
         public int AnswerCount { get; set; }
 
         public QuestionApiDto() { }
@@ -50,7 +48,7 @@ namespace ForumWebAPI.BL.Model {
             Id = question.QuestionId;
             CreateDate = question.CreateDate;
             ChangeDate = question.ChangeDate;
-            AuthorId = question.AuthorId;
+            Author = question.Author?.UserName;
             Topic = question.Topic;
             Text = question.QuestionText;
             AnswerCount = question.Answers?.Count ?? 0;

@@ -11,11 +11,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ForumDbContext.Model;
+using ForumDbContext.Model.DTO;
 using Microsoft.EntityFrameworkCore;
 using ForumDbContext.Repositories;
 using ForumWebAPI.BL.Services;
 using ForumWebAPI.BL;
+using ForumWebAPI.BL.Auth;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ForumWebAPI {
     public class Startup {
@@ -33,6 +37,14 @@ namespace ForumWebAPI {
                 //options.LogTo(Console.WriteLine);
             });
 
+            services.AddIdentity<UserDbDTO, IdentityRole>(options => {
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
+            })
+                .AddEntityFrameworkStores<ForumContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddScoped<IUserClaimsPrincipalFactory<UserDbDTO>, AdditionalUserClaimsPrincipalFactory>();
+
             services.AddForumRepositories();
             services.AddForumServices();
 
@@ -41,6 +53,16 @@ namespace ForumWebAPI {
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Forum API" });
             });
+
+            services.AddScoped<IdentityDataInitializer>();
+            services.AddHostedService<SetupIdentityDataInitializer>();
+
+            services.AddAuthorization(options => {
+                options.AddPolicy("EditPolicy", policy => policy.Requirements.Add(new SameAuthorRequirement(new string[] { "Moderator" })));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, QuestionAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, AnswerAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +82,7 @@ namespace ForumWebAPI {
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {

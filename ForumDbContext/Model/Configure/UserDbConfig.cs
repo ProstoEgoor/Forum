@@ -6,12 +6,10 @@ namespace ForumDbContext.Model.Configure {
     class UserDbConfig : IEntityTypeConfiguration<UserDbDTO> {
         public void Configure(EntityTypeBuilder<UserDbDTO> builder) {
             builder.Property(user => user.FirstName)
-                .HasColumnType("nvarchar(256)")
-                .HasColumnName("first_name");
+                .HasColumnType("nvarchar(256)");
 
             builder.Property(user => user.LastName)
-                .HasColumnType("nvarchar(256)")
-                .HasColumnName("last_name");
+                .HasColumnType("nvarchar(256)");
         }
     }
 }

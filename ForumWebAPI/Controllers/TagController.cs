@@ -6,20 +6,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using ForumWebAPI.BL.Model;
 using ForumWebAPI.BL.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ForumWebAPI.Controllers {
+    [AllowAnonymous]
     [Route("api/tags")]
     [ApiController]
     public class TagController : ControllerBase {
-        TagService TagService { get; }
+        private readonly TagService tagService;
 
         public TagController(TagService tagService) {
-            TagService = tagService;
+            this.tagService = tagService;
         }
 
         [HttpGet]
         public IAsyncEnumerable<TagFrequencyApiDto> Get() {
-            return TagService.GetFrequencyAsync();
+            return tagService.GetFrequencyAsync();
         }
     }
 }

@@ -26,8 +26,8 @@ namespace ForumDbContext.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    first_name = table.Column<string>(type: "nvarchar(256)", nullable: true),
-                    last_name = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(256)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(256)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -155,11 +155,6 @@ namespace ForumDbContext.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_question_author_id",
-                table: "question",
-                column: "author_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_answer_author_id",
                 table: "answer",
                 column: "author_id");
@@ -202,6 +197,11 @@ namespace ForumDbContext.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_question_author_id",
+                table: "question",
+                column: "author_id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_answer_AspNetUsers_author_id",
@@ -252,12 +252,12 @@ namespace ForumDbContext.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropIndex(
-                name: "IX_question_author_id",
-                table: "question");
-
-            migrationBuilder.DropIndex(
                 name: "IX_answer_author_id",
                 table: "answer");
+
+            migrationBuilder.DropIndex(
+                name: "IX_question_author_id",
+                table: "question");
         }
     }
 }

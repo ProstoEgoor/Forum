@@ -10,11 +10,12 @@ using Microsoft.EntityFrameworkCore;
 namespace ForumDbContext.Repositories {
     public class QuestionRepository : ForumRepositoryBase {
         public QuestionRepository(ForumContext context) : base(context) { }
-        public async Task<QuestionDbDTO> GetAsync(int questionId, bool? dateSort = null, bool ratingSort = false) {
+        public async Task<QuestionDbDTO> GetAsync(long questionId, bool? dateSort = null, bool ratingSort = false) {
             var question = await Context.Question
                 .AsQueryable()
                 .Where(question => question.QuestionId == questionId)
                 .Include(question => question.Tags)
+                .Include(question => question.Author)
                 .AsSingleQuery()
                 .FirstOrDefaultAsync();
 
@@ -34,7 +35,7 @@ namespace ForumDbContext.Repositories {
                 answers = answers.OrderByDescending(answer => answer.Rating);
             }
 
-            await answers.LoadAsync();
+            await answers.Include(answer => answer.Author).LoadAsync();
 
             return question;
         }
@@ -46,7 +47,7 @@ namespace ForumDbContext.Repositories {
                 questions = questions.Where(question => EF.Functions.Like(question.Topic, $"%{textSearch}%") || EF.Functions.Like(question.QuestionText, $"%{textSearch}%"));
             }
 
-            questions = questions.Include(question => question.Tags).AsSingleQuery();
+            questions = questions.Include(question => question.Tags);
 
             if (tagsFilter != null) {
                 //questions = questions.Where(question => tagsFilter.All(tag => question.Tags.Any(tagInQuestion => tagInQuestion.TagName == tag)));
@@ -55,7 +56,10 @@ namespace ForumDbContext.Repositories {
                 }
             }
 
-            questions = questions.Include(question => question.Answers).AsSingleQuery();
+            questions = questions
+                .Include(question => question.Answers)
+                .Include(question => question.Author)
+                .AsSingleQuery();
 
             return questions.AsAsyncEnumerable();
         }
@@ -73,12 +77,14 @@ namespace ForumDbContext.Repositories {
             Context.Question.Remove(question);
         }
 
-        public async Task<QuestionDbDTO> DeleteAsync(int questionId) {
+        public async Task<QuestionDbDTO> DeleteAsync(long questionId) {
             var question = await Context.Question.FindAsync(questionId);
 
             if (question != null) {
-                Context.Entry(question).Collection(question => question.Tags).Load();
-                Context.Entry(question).Collection(question => question.Answers).Load();
+                var entry = Context.Entry(question);
+                await entry.Collection(question => question.Tags).LoadAsync();
+                await entry.Collection(question => question.Answers).LoadAsync();
+                await entry.Navigation("Author").LoadAsync();
 
                 Delete(question);
             }
@@ -88,6 +94,10 @@ namespace ForumDbContext.Repositories {
 
         public async Task<bool> ExistAsync(long questionId) {
             return await Context.Question.AsQueryable().AnyAsync(question => question.QuestionId == questionId);
+        }
+
+        public async Task LoadAuthor(QuestionDbDTO question) {
+            await Context.Entry(question).Navigation("Author").LoadAsync();
         }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ForumDbContext.Migrations
 {
     [DbContext(typeof(ForumContext))]
-    [Migration("20211227231832_AddUsers")]
+    [Migration("20211228091551_AddUsers")]
     partial class AddUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,12 +177,10 @@ namespace ForumDbContext.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("first_name");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasColumnName("last_name");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -366,7 +364,7 @@ namespace ForumDbContext.Migrations
                     b.HasOne("ForumDbContext.Model.DTO.UserDbDTO", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ForumDbContext.Model.DTO.QuestionDbDTO", "Question")
@@ -385,7 +383,7 @@ namespace ForumDbContext.Migrations
                     b.HasOne("ForumDbContext.Model.DTO.UserDbDTO", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Author");

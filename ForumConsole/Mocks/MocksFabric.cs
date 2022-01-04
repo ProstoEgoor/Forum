@@ -90,7 +90,7 @@ Effective C# и More Effective C#, Bill Wagner. О том, как надо и к
 Если вам нужно не только распарсить HTML, но и запустить полноценный браузер, выполнить все скрипты, понажимать на кнопки и посмотреть, что получилось, то используйте CefSharp или Selenium. Учтите, что это будет на порядки медленнее."
             });
             question3.AddAnswer(new Answer(23) {
-                Author = "Vadim Ovchinnikov",
+                Author = "VadimOvchinnikov",
                 CreateDate = new DateTime(2016, 11, 27, 7, 31, 0),
                 Text = @"Используйте библиотеку CefSharp для решения подобных задач."
             });
