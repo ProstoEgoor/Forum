@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ForumDbContext.Model.DTO;
 
 namespace ForumWebAPI.BL.Model {
@@ -38,6 +35,8 @@ namespace ForumWebAPI.BL.Model {
         public int Rating => VotePositive - VoteNegative;
         public int VotePositive { get; set; }
         public int VoteNegative { get; set; }
+
+        public bool? MyVote { get; set; }
 
         public AnswerApiDto() { }
 

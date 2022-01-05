@@ -41,7 +41,7 @@ namespace ForumWebAPI.Controllers {
             if (result is KeyNotFoundException) {
                 return NotFound(result.Message);
             } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n Inner exception: {result.InnerException.Message}");
+                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
             } else if (result != null) {
                 return StatusCode(500, result.Message);
             }

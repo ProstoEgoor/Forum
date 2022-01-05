@@ -34,7 +34,7 @@ namespace ForumWebAPI.BL.Services {
             profile.Update(user);
             var result = await userManager.UpdateAsync(user);
             await signInManager.RefreshSignInAsync(user);
-            return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.First().Description));
+            return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.FirstOrDefault().Description));
         }
 
         public async Task<Exception> UpdateProfileAsync(string userName, UserProfileEditApiDto profile) {
@@ -47,7 +47,7 @@ namespace ForumWebAPI.BL.Services {
             }
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             var result = await userManager.ResetPasswordAsync(user, token, newPassword);
-            return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.First().Description));
+            return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.FirstOrDefault().Description));
         }
 
         public async Task<Exception> ResetPasswordAsync(string userName, string newPassword) {
@@ -77,7 +77,7 @@ namespace ForumWebAPI.BL.Services {
                 return new KeyNotFoundException("Пользователь не найден.");
             }
             var result = await userManager.DeleteAsync(user);
-            return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.First().Description));
+            return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.FirstOrDefault().Description));
         }
 
         public async Task<Exception> DeleteAsync(string userName) {

@@ -18,13 +18,15 @@ namespace ForumWebAPI.Controllers {
         private readonly QuestionRepository questionRepository;
         private readonly QuestionService questionService;
         private readonly AnswerService answerService;
+        private readonly VoteService voteService;
         private readonly IAuthorizationService authorizationService;
 
-        public QuestionsController(QuestionService questionService, AnswerService answerService, IAuthorizationService authorizationService, QuestionRepository questionRepository) {
+        public QuestionsController(QuestionService questionService, AnswerService answerService, IAuthorizationService authorizationService, QuestionRepository questionRepository, VoteService voteService) {
             this.questionService = questionService;
             this.answerService = answerService;
             this.authorizationService = authorizationService;
             this.questionRepository = questionRepository;
+            this.voteService = voteService;
         }
 
         [AllowAnonymous]
@@ -44,7 +46,11 @@ namespace ForumWebAPI.Controllers {
                 return StatusCode(500);
             }
 
-            return question;
+            if (User.Identity.IsAuthenticated) {
+                question.Answers = await voteService.IncludeVoteAsync(question.Answers.ToAsyncEnumerable(), User.FindFirst(ClaimTypes.NameIdentifier).Value).ToArrayAsync();
+            }
+
+            return Ok(question);
 
         }
 
@@ -57,6 +63,12 @@ namespace ForumWebAPI.Controllers {
                 return NotFound(result.Message);
             } else if (result != null) {
                 return StatusCode(500);
+            }
+
+            answers = (await answers.ToListAsync()).ToAsyncEnumerable();
+
+            if (User.Identity.IsAuthenticated) {
+                answers = voteService.IncludeVoteAsync(answers, User.FindFirst(ClaimTypes.NameIdentifier).Value);
             }
 
             return Ok(answers);

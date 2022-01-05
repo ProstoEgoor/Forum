@@ -16,5 +16,6 @@ namespace ForumDbContext.Model.DTO {
 
         public QuestionDbDTO Question { get; set; }
         public UserDbDTO Author { get; set; }
+        public ICollection<VoteDbDTO> Votes { get; set; }
     }
 }

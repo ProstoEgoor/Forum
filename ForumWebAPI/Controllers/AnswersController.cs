@@ -9,6 +9,7 @@ using ForumWebAPI.BL.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ForumDbContext.Repositories;
+using ForumWebAPI.BL.Exceptions;
 
 namespace ForumWebAPI.Controllers {
     [Authorize]
@@ -17,12 +18,14 @@ namespace ForumWebAPI.Controllers {
     public class AnswersController : ControllerBase {
         private readonly AnswerRepository answerRepository;
         private readonly AnswerService answerService;
+        private readonly VoteService voteService;
         private readonly IAuthorizationService authorizationService;
 
-        public AnswersController(AnswerService answerService, AnswerRepository answerRepository, IAuthorizationService authorizationService) {
+        public AnswersController(AnswerService answerService, AnswerRepository answerRepository, IAuthorizationService authorizationService, VoteService voteService) {
             this.answerService = answerService;
             this.answerRepository = answerRepository;
             this.authorizationService = authorizationService;
+            this.voteService = voteService;
         }
 
         [AllowAnonymous]
@@ -36,13 +39,16 @@ namespace ForumWebAPI.Controllers {
                 return StatusCode(500);
             }
 
+            if (User.Identity.IsAuthenticated) {
+                answer = await voteService.IncludeVoteAsync(answer, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            }
+
             return Ok(answer);
         }
 
         [HttpPost]
         public async Task<ActionResult<AnswerApiDto>> Post([FromBody] AnswerCreateApiDto answer) {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            (AnswerApiDto createdAnswer, Exception result) = await answerService.CreateAsync(answer, identity.FindFirst(ClaimTypes.NameIdentifier).Value);
+            (AnswerApiDto createdAnswer, Exception result) = await answerService.CreateAsync(answer, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (result is KeyNotFoundException) {
                 return NotFound(result.Message);
@@ -77,7 +83,6 @@ namespace ForumWebAPI.Controllers {
             return Ok();
         }
 
-        [Authorize(Roles = "Moderator")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<AnswerApiDto>> Delete([FromRoute] long id) {
             var answerToDelete = await answerRepository.GetAsync(id);
@@ -102,12 +107,14 @@ namespace ForumWebAPI.Controllers {
             return Ok(deletedAnswer);
         }
 
-        [HttpPost("{id}")]
-        public async Task<ActionResult> Vote([FromRoute] long id, [FromQuery] bool vote) {
-            Exception result = await answerService.VoteAsync(id, vote);
+        [HttpPost("{id}/vote")]
+        public async Task<ActionResult> Vote([FromRoute] long id, [FromQuery] bool? vote) {
+            Exception result = await voteService.VoteAsync(id, vote, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             if (result is KeyNotFoundException) {
                 return NotFound(result.Message);
+            } else if (result is AlreadyVotesException) {
+                return Conflict(result.Message);
             } else if (result != null) {
                 return StatusCode(500);
             }

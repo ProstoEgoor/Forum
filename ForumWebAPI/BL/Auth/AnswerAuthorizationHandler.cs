@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace ForumWebAPI.BL.Auth {
     public class AnswerAuthorizationHandler : AuthorizationHandler<SameAuthorRequirement, AnswerDbDTO> {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SameAuthorRequirement requirement, AnswerDbDTO resource) {
-            if (requirement.RolesCanChange.Any(role => context.User.HasClaim(ClaimTypes.Role, role))) {
+            if (requirement.RolesThatCanModify.Any(role => context.User.HasClaim(ClaimTypes.Role, role))) {
                 context.Succeed(requirement);
             }
             if (context.User.HasClaim(ClaimTypes.NameIdentifier, resource.AuthorId)) {

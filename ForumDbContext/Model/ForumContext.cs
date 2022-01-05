@@ -16,6 +16,7 @@ namespace ForumDbContext.Model {
         public DbSet<AnswerDbDTO> Answers { get; set; }
         public DbSet<TagInQuestionDbDTO> TagInQuestions { get; set; }
         public DbSet<TagFrequencyDbDTO> TagsFrequency { get; set; }
+        public DbSet<VoteDbDTO> Votes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             if (!optionsBuilder.IsConfigured) {
@@ -31,6 +32,7 @@ namespace ForumDbContext.Model {
             modelBuilder.ApplyConfiguration(new TagInQuestionDbConfig());
             modelBuilder.ApplyConfiguration(new TagFrequencyDbConfig());
             modelBuilder.ApplyConfiguration(new UserDbConfig());
+            modelBuilder.ApplyConfiguration(new VoteDbConfig());
         }
 
         public void Replace<TEntity>(TEntity oldEntity, TEntity newEntity) where TEntity : class {

@@ -27,9 +27,9 @@ namespace ForumDbContext.Repositories {
                 .AsQueryable();
 
             if (dateSort == true) {
-                answers = answers.OrderBy(answer => answer.CreateDate);
+                answers = answers.OrderBy(answer => answer.ChangeDate);
             } else if (dateSort == false) {
-                answers = answers.OrderByDescending(answers => answers.CreateDate);
+                answers = answers.OrderByDescending(answers => answers.ChangeDate);
             } else if (ratingSort) {
                 answers = answers.OrderByDescending(answers => answers.Rating);
             }
@@ -53,7 +53,7 @@ namespace ForumDbContext.Repositories {
             var answer = await Context.Answers.FindAsync(answerId);
 
             if (answer != null) {
-                await Context.Entry(answer).Navigation("Author").LoadAsync();
+                await LoadAuthor(answer);
                 Delete(answer);
             }
 

@@ -9,12 +9,14 @@ namespace ForumWebAPI.BL {
             services.AddTransient<QuestionRepository>();
             services.AddTransient<AnswerRepository>();
             services.AddTransient<TagRepository>();
+            services.AddTransient<VoteRepository>();
         }
 
         public static void AddForumServices(this IServiceCollection services) {
             services.AddTransient<QuestionService>();
             services.AddTransient<AnswerService>();
             services.AddTransient<TagService>();
+            services.AddTransient<VoteService>();
             services.AddScoped<UserService>();
         }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ForumDbContext.Model.DTO;
 
 namespace ForumWebAPI.BL.Model {
@@ -22,7 +19,7 @@ namespace ForumWebAPI.BL.Model {
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public virtual UserDbDTO Create() {
+        public UserDbDTO Create() {
             return new UserDbDTO() {
                 UserName = UserName,
                 Email = Email,

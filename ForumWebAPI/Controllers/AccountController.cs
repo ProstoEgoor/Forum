@@ -44,7 +44,7 @@ namespace ForumWebAPI.Controllers {
 
         [HttpGet]
         public UserProfileApiDto Get() {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var identity = User.Identity as ClaimsIdentity;
             var profile = new UserProfileApiDto() {
                 UserName = identity.Name,
                 Email = identity.FindFirst(ClaimTypes.Email)?.Value,
@@ -64,7 +64,7 @@ namespace ForumWebAPI.Controllers {
             if (result is AlreadyExistsException) {
                 return Conflict(result.Message);
             } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n Inner exception: {result.InnerException.Message}");
+                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
             } else if (result != null) {
                 return StatusCode(500, result.Message);
             }
@@ -79,7 +79,7 @@ namespace ForumWebAPI.Controllers {
             if (result is KeyNotFoundException) {
                 return NotFound(result.Message);
             } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n Inner exception: {result.InnerException.Message}");
+                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
             } else if (result != null) {
                 return StatusCode(500, result.Message);
             }
@@ -94,7 +94,7 @@ namespace ForumWebAPI.Controllers {
             if (result is KeyNotFoundException) {
                 return NotFound(result.Message);
             } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n Inner exception: {result.InnerException.Message}");
+                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
             } else if (result != null) {
                 return StatusCode(500, result.Message);
             }

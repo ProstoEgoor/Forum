@@ -105,29 +105,5 @@ namespace ForumWebAPI.BL.Services {
 
             return (new AnswerApiDto(answerToDelete), null);
         }
-
-        public async Task<Exception> VoteAsync(long answerId, bool positiveVote) {
-            var answer = await answerRepository.GetAsync(answerId);
-
-            if (answer == null) {
-                return new ArgumentNullException($"Ответ с id:{answerId} не найден.");
-            }
-
-            if (positiveVote) {
-                answer.VotePositive++;
-            } else {
-                answer.VoteNegative++;
-            }
-
-            answerRepository.Update(answer);
-
-            try {
-                await answerRepository.SaveAsync();
-            } catch (Exception e) {
-                return new SaveChangesException(e);
-            }
-
-            return null;
-        }
     }
 }
