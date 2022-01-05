@@ -11,7 +11,7 @@ using ForumWebAPI.BL.Exceptions;
 
 namespace ForumWebAPI.Controllers {
     [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase {
         private readonly UserService userService;
