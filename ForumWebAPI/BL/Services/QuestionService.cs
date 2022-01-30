@@ -71,7 +71,7 @@ namespace ForumWebAPI.BL.Services {
         }
 
 
-        public async Task<(QuestionDetailApiDto, Exception)> DeleteAsync(long questionId) {
+        public async Task<(QuestionApiDto, Exception)> DeleteAsync(long questionId) {
             var questionToDelete = await questionRepository.DeleteAsync(questionId);
 
             if (questionToDelete == null) {
@@ -82,7 +82,7 @@ namespace ForumWebAPI.BL.Services {
 
         }
 
-        public async Task<(QuestionDetailApiDto, Exception)> DeleteAsync(QuestionDbDTO questionToDelete) {
+        public async Task<(QuestionApiDto, Exception)> DeleteAsync(QuestionDbDTO questionToDelete) {
             if (questionToDelete == null) {
                 return (null, new ArgumentNullException());
             }
@@ -93,7 +93,7 @@ namespace ForumWebAPI.BL.Services {
                 return (null, new SaveChangesException(e));
             }
 
-            return (new QuestionDetailApiDto(questionToDelete), null);
+            return (new QuestionApiDto(questionToDelete), null);
         }
     }
 }

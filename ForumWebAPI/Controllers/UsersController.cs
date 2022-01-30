@@ -78,5 +78,29 @@ namespace ForumWebAPI.Controllers {
 
             return Ok();
         }
+
+        [HttpPut("{userName}")]
+        public async Task<ActionResult> PutUser([FromRoute] string userName, [FromBody] UserProfileFullEditApiDto profile) {
+            var result = await userService.UpdateProfileAsync(userName, profile);
+
+            if (result == null && profile.NewPassword != null) {
+                result = await userService.ResetPasswordAsync(userName, profile.NewPassword);
+            }
+
+            if (result == null && profile.Roles != null) {
+                result = await userService.SetRoles(userName, profile.Roles);
+            }
+
+            if (result is KeyNotFoundException) {
+                return NotFound(result.Message);
+            } else if (result is SaveChangesException) {
+                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
+            } else if (result != null) {
+                return StatusCode(500, result.Message);
+            }
+
+            return Ok();
+        }
+
     }
 }

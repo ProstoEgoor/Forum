@@ -82,8 +82,8 @@ namespace ForumDbContext.Repositories {
 
             if (question != null) {
                 var entry = Context.Entry(question);
-                await entry.Collection(question => question.Tags).LoadAsync();
-                await entry.Collection(question => question.Answers).LoadAsync();
+                //await entry.Collection(question => question.Tags).LoadAsync();
+                //await entry.Collection(question => question.Answers).LoadAsync();
                 await LoadAuthor(question);
 
                 Delete(question);

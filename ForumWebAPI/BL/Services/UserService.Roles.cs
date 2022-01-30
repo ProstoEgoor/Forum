@@ -30,5 +30,21 @@ namespace ForumWebAPI.BL.Services {
 		public async Task<Exception> RemoveFromRoleAsync(string userName, string role) {
 			return await ApplyToUserAsync(userName, user => RemoveFromRoleAsync(user, role));
 		}
+
+		public async Task<Exception> SetRoles(UserDbDTO user, IEnumerable<string> roles) {
+			var result = await userManager.RemoveFromRolesAsync(user, await userManager.GetRolesAsync(user));
+			if (result.Succeeded) {
+				result = await userManager.AddToRolesAsync(user, roles);
+            }
+
+			if (!result.Succeeded) {
+				return new SaveChangesException($"Не удалось назначить пользователю {user.UserName} роли.");
+			}
+			return null;
+		}
+
+		public async Task<Exception> SetRoles(string userName, IEnumerable<string> roles) {
+			return await ApplyToUserAsync(userName, user => SetRoles(user, roles));
+		}
 	}
 }

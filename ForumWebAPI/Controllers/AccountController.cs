@@ -87,8 +87,8 @@ namespace ForumWebAPI.Controllers {
             return Ok();
         }
 
-        [HttpPost("password")]
-        public async Task<ActionResult> PostPassword([FromBody] PasswordChangeRequestApiDto request) {
+        [HttpPut("password")]
+        public async Task<ActionResult> PutPassword([FromBody] PasswordChangeRequestApiDto request) {
             var result = await userService.ResetPasswordAsync(HttpContext.User.Identity.Name, request.NewPassword);
 
             if (result is KeyNotFoundException) {

@@ -110,7 +110,7 @@ namespace ForumWebAPI.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<QuestionDetailApiDto>> Delete([FromRoute] long id) {
+        public async Task<ActionResult<QuestionApiDto>> Delete([FromRoute] long id) {
             var questionToDelete = await questionRepository.GetAsync(id);
             if (questionToDelete == null) {
                 return NotFound();
@@ -123,7 +123,7 @@ namespace ForumWebAPI.Controllers {
                     return new ChallengeResult();
                 }
             }
-            (QuestionDetailApiDto deletedQuestion, Exception result) = await questionService.DeleteAsync(id);
+            (QuestionApiDto deletedQuestion, Exception result) = await questionService.DeleteAsync(id);
 
             if (result != null) {
                 return StatusCode(500);
