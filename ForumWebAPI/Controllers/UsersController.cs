@@ -80,16 +80,23 @@ namespace ForumWebAPI.Controllers {
         }
 
         [HttpPut("{userName}")]
-        public async Task<ActionResult> PutUser([FromRoute] string userName, [FromBody] UserProfileFullEditApiDto profile) {
+        public async Task<ActionResult> PutUser([FromRoute] string userName, [FromBody] UserProfileEditApiDto profile) {
             var result = await userService.UpdateProfileAsync(userName, profile);
 
-            if (result == null && profile.NewPassword != null) {
-                result = await userService.ResetPasswordAsync(userName, profile.NewPassword);
+            if (result is KeyNotFoundException) {
+                return NotFound(result.Message);
+            } else if (result is SaveChangesException) {
+                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
+            } else if (result != null) {
+                return StatusCode(500, result.Message);
             }
 
-            if (result == null && profile.Roles != null) {
-                result = await userService.SetRoles(userName, profile.Roles);
-            }
+            return Ok();
+        }
+
+        [HttpPut("{userName}/password")]
+        public async Task<ActionResult> ChangePassword([FromRoute] string userName, [FromBody] PasswordChangeRequestApiDto request) {
+            var result = await userService.ResetPasswordAsync(userName, request.NewPassword);
 
             if (result is KeyNotFoundException) {
                 return NotFound(result.Message);

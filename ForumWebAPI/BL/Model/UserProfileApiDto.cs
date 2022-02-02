@@ -46,9 +46,4 @@ namespace ForumWebAPI.BL.Model {
             Roles = roles;
         }
     }
-
-    public class UserProfileFullEditApiDto : UserProfileEditApiDto {
-        public string NewPassword { get; set; }
-        public IEnumerable<string> Roles { get; set; }
-    }
 }
