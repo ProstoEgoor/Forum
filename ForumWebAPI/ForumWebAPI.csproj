@@ -20,5 +20,9 @@
     <ProjectReference Include="..\ForumDbContext\ForumDbContext.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 
 </Project>

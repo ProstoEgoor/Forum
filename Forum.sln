@@ -12,13 +12,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumModel", "ForumModel\Fo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{090526B7-0543-4AEF-8553-388A62F0EC27}"
 	ProjectSection(SolutionItems) = preProject
-		appsettings.json = appsettings.json
 		Naming convetion.txt = Naming convetion.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumDbContext", "ForumDbContext\ForumDbContext.csproj", "{0A71A6BB-8EC6-44E8-92D6-2D721CD1E24A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForumWebAPI", "ForumWebAPI\ForumWebAPI.csproj", "{1F7F8AE6-24AD-4FFB-B9E6-D655EAEEAE54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ForumWebAPI", "ForumWebAPI\ForumWebAPI.csproj", "{1F7F8AE6-24AD-4FFB-B9E6-D655EAEEAE54}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EC405771-DA31-4569-AC4D-3D9334F9D1F7} = {EC405771-DA31-4569-AC4D-3D9334F9D1F7}
 		{0A71A6BB-8EC6-44E8-92D6-2D721CD1E24A} = {0A71A6BB-8EC6-44E8-92D6-2D721CD1E24A}

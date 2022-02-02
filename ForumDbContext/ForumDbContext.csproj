@@ -24,9 +24,5 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
     <PackageReference Include="System.Linq.Async" Version="5.1.0" />
   </ItemGroup>
-  
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y $(SolutionDir)\appsettings.json  $(ProjectDir)$(OutDir)" />
-  </Target>
 
 </Project>

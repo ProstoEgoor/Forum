@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Forum - Редактирование пользователя</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+	<link rel="stylesheet" href="../_css/style.css">
+</head>
+
+<body>
+	<header class="navbar navbar-expand-lg navbar-dark bg-success">
+		<div class="container">
+			<a href="../index.html" class="navbar-brand order-1 mb-1">Форум</a>
+			<span class="navbar-text order-2 me-auto">Редактирование пользователя</span>
+			<nav class="order-4 order-md-3 ms-auto">
+				<ul class="navbar-nav align-items-center gap-2">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">Пользователи</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="../questions/create.html">Задать вопрос</a>
+					</li>
+					<li hidden class="nav-item">
+						<a class="nav-link" href="#">Войти</a>
+					</li>
+					<li hidden class="nav-item">
+						<a class="nav-link" href="#">Зарегистрироваться</a>
+					</li>
+				</ul>
+			</nav>
+			<div class="dropdown order-3 order-md-4">
+				<button class="btn btn-success dropdown-toggle fs-5" type="button" id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false">
+					<i class="bi bi-person-circle"></i>
+					Name
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileMenu">
+					<li><a class="dropdown-item" href="../profile/index.html">Профиль</a></li>
+					<li><a class="dropdown-item" href="../questions/user_questions.html">Мои вопросы</a></li>
+					<li>
+						<hr class="dropdown-divider">
+					</li>
+					<li><a class="dropdown-item" href="#">Выйти</a></li>
+				</ul>
+			</div>
+	</header>
+
+	<main class="my-3">
+		<div class="container">
+			<h3 class="h3">Пользователь admin</h3>
+			<input type="radio" class="visually-hidden" name="tab" id="tab-userProfile" value="userProfile" checked>
+			<input type="radio" class="visually-hidden" name="tab" id="tab-changePassword" value="changePassword">
+			<input type="radio" class="visually-hidden" name="tab" id="tab-userRoles" value="userRoles">
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<label class="nav-link text-dark fw-bold" for="tab-userProfile">Редактирование профиля</label>
+				</li>
+				<li class="nav-item">
+					<label class="nav-link text-dark fw-bold" for="tab-changePassword">Смена пароля</label>
+				</li>
+				<li class="nav-item">
+					<label class="nav-link text-dark fw-bold" for="tab-userRoles">Назначение роли</label>
+				</li>
+			</ul>
+
+			<form id="form-userProfile">
+				<div class="row">
+					<div class="col my-3">
+						<label for="emailInput" class="form-label">Email</label>
+						<input type="text" class="form-control" name="emailInput" placeholder="Email" value="admin@example.com">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md my-3">
+						<label for="lastNameInput" class="form-label">Фамилия</label>
+						<input type="text" class="form-control" name="lastNameInput" placeholder="Фамилия" value="Павлов">
+					</div>
+					<div class="col-md my-3">
+						<label for="firstNameInput" class="form-label">Имя</label>
+						<input type="text" class="form-control" name="firstNameInput" placeholder="Имя" value="Георгий">
+					</div>
+				</div>
+				<div class="row my-5">
+					<div class="col">
+						<button class="btn btn-outline-secondary" type="submit">Сохранить</button>
+					</div>
+				</div>
+			</form>
+			<form id="form-changePassword">
+				<div class="row">
+					<div class="col-md my-3">
+						<label for="passwordInput" class="form-label">Пароль</label>
+						<input type="password" class="form-control" name="passwordInput" placeholder="Введите новый пароль">
+					</div>
+					<div class="col-md my-3">
+						<label for="passwordConfirmationInput" class="form-label">Подтвержение пароля</label>
+						<input type="password" class="form-control" name="passwordConfirmationInput" placeholder="Введите новый пароль еще раз">
+					</div>
+				</div>
+				<div class="row my-5">
+					<div class="col">
+						<button class="btn btn-outline-secondary" type="submit">Сохранить</button>
+					</div>
+				</div>
+			</form>
+			<form id="form-userRoles">
+				<div class="row mt-3">
+					<div class="col">
+						<div class="form-label">Роли</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="roleInput" id="roleInput-Admin" checked>
+							<label class="form-check-label" for="roleInput-Admin">Администратор</label>
+						</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="roleInput" id="roleInput-Manager">
+							<label class="form-check-label" for="roleInput-Manager">Модератор</label>
+						</div>
+					</div>
+				</div>
+				<div class="row my-5">
+					<div class="col">
+						<button class="btn btn-outline-secondary" type="submit">Сохранить</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<footer class="d-flex flex-wrap justify-content-between align-items-center py-2 border-top text-secondary">
+		<div class="container">
+			<a href="https://webzavod.ru" class="link-info">Вебзавод</a> Учебный курс ДБР 2021-2022. Павлов Георгий.
+			<a href="https://github.com/ProstoEgoor/Forum" class="link-info">GitHub</a>
+		</div>
+	</footer>
+</body>
+
+</html>

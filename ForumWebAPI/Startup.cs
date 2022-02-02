@@ -75,10 +75,13 @@ namespace ForumWebAPI {
 
             app.UseSwaggerUI(setup => {
                 setup.SwaggerEndpoint("/swagger/v1/swagger.json", "Forum API V1");
-                setup.RoutePrefix = string.Empty;
+                setup.RoutePrefix = "swagger";
             });
 
             app.UseHttpsRedirection();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 

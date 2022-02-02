@@ -1,0 +1,81 @@
+* {
+  /* Шрифт по умолчанию */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  /* Включать ширину рамки в размер блока.
+		 Иначе при наличии рамки блоки будут "вылезать" в стороны. */
+  box-sizing: border-box;
+}
+
+/* Опускаем подвал к нижней границе страницы,
+ растянув main */
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  font-size: smaller;
+}
+
+input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
+.overflow-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar nav {
+  flex-basis: 100%;
+}
+
+@media (min-width: 576px) {
+  .navbar-nav {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar nav {
+    flex-basis: auto;
+  }
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #198754;
+}
+
+.text-pre-line {
+  white-space: pre-line;
+}
+
+.link-secondary-dark {
+  color: #6c757d;
+}
+
+.link-secondary-dark:hover,
+.link-secondary-dark:active {
+  color: #212529;
+  text-shadow: 0 0 1px #212529;
+}
+
+.btn-reset {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+}
+
+.disabled-link {
+  pointer-events: none;
+}
