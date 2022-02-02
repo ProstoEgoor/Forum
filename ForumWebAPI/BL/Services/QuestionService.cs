@@ -6,12 +6,15 @@ using ForumDbContext.Repositories;
 using ForumWebAPI.BL.Model;
 using ForumWebAPI.BL.Exceptions;
 using ForumDbContext.Model.DTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace ForumWebAPI.BL.Services {
     public class QuestionService {
         private readonly QuestionRepository questionRepository;
-        public QuestionService(QuestionRepository questionRepository, AnswerRepository answerRepository) {
+        private readonly UserManager<UserDbDTO> userManager;
+        public QuestionService(QuestionRepository questionRepository, UserManager<UserDbDTO> userManager) {
             this.questionRepository = questionRepository;
+            this.userManager = userManager;
         }
         public async Task<(QuestionDetailApiDto, Exception)> GetAsync(long questionId, bool? dateSort, bool ratingSort) {
             var question = await questionRepository.GetAsync(questionId, dateSort, ratingSort);
@@ -22,9 +25,19 @@ namespace ForumWebAPI.BL.Services {
             }
         }
 
-        public IAsyncEnumerable<QuestionApiDto> GetAllAsync(string textSearch, IEnumerable<string> tagsFilter) {
-            var questions = questionRepository.GetAllAsync(textSearch, tagsFilter);
-            return questions.Select(question => new QuestionApiDto(question));
+        public async IAsyncEnumerable<QuestionApiDto> GetAllAsync(string userName, string textSearch, IEnumerable<string> tagsFilter) {
+            string authorId = null;
+            if (userName != null) {
+                var user = await userManager.FindByNameAsync(userName);
+                if (user == null) {
+                    yield break;
+                }
+                authorId = user.Id;
+            }
+            var questions = questionRepository.GetAllAsync(authorId, textSearch, tagsFilter);
+            await foreach (var question in questions) {
+                yield return new QuestionApiDto(question);
+            }
         }
 
 

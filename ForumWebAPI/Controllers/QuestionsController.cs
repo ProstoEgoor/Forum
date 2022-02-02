@@ -31,8 +31,9 @@ namespace ForumWebAPI.Controllers {
 
         [AllowAnonymous]
         [HttpGet]
-        public IAsyncEnumerable<QuestionApiDto> Get([FromQuery] string text, [FromQuery] string tags) {
-            return questionService.GetAllAsync(text, tags?.Split(','));
+        public IAsyncEnumerable<QuestionApiDto> Get([FromQuery] string userName, [FromQuery] string text, [FromQuery] string tags) {
+            
+            return questionService.GetAllAsync(userName, text, tags?.Split(','));
         }
 
         [AllowAnonymous]

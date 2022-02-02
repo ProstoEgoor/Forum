@@ -40,8 +40,12 @@ namespace ForumDbContext.Repositories {
             return question;
         }
 
-        public IAsyncEnumerable<QuestionDbDTO> GetAllAsync(string textSearch = null, IEnumerable<string> tagsFilter = null) {
+        public IAsyncEnumerable<QuestionDbDTO> GetAllAsync(string authorId = null, string textSearch = null, IEnumerable<string> tagsFilter = null) {
             var questions = Context.Question.AsQueryable();
+
+            if (authorId != null) {
+                questions = questions.Where(question => question.AuthorId == authorId);
+            }
 
             if (textSearch != null) {
                 questions = questions.Where(question => EF.Functions.Like(question.Topic, $"%{textSearch}%") || EF.Functions.Like(question.QuestionText, $"%{textSearch}%"));
