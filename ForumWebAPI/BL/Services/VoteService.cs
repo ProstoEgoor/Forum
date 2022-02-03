@@ -33,7 +33,7 @@ namespace ForumWebAPI.BL.Services {
             var answer = await answerRepository.GetAsync(answerId);
 
             if (answer == null) {
-                return new KeyNotFoundException($"Ответ с id:{answerId} не найден.");
+                return new KeyNotFoundException($"Ответ с id:{answerId} не найден");
             }
 
             var currentVote = await voteRepository.GetAsync(answerId, authorId);
@@ -71,7 +71,7 @@ namespace ForumWebAPI.BL.Services {
                     answer.VoteNegative++;
                 }
             } else {
-                return new AlreadyVotesException($"Ваш голос за ответ с id:{answerId} уже учтен.");
+                return new AlreadyVotesException($"Ваш голос за ответ с id:{answerId} уже учтен");
             }
 
             answerRepository.Update(answer);

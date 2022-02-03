@@ -20,7 +20,7 @@ namespace ForumWebAPI.BL.Services {
             var answer = await answerRepository.GetAsync(answerId);
 
             if (answer == null) {
-                return (null, new KeyNotFoundException($"Ответ с id:{answerId} не найден."));
+                return (null, new KeyNotFoundException($"Ответ с id:{answerId} не найден"));
             } else {
                 return (new AnswerApiDto(answer), null);
             }
@@ -28,7 +28,7 @@ namespace ForumWebAPI.BL.Services {
 
         public async Task<(IAsyncEnumerable<AnswerApiDto>, Exception)> GetAssociatedAsync(long questionId, bool? dateSort, bool ratingSort) {
             if (!await questionRepository.ExistAsync(questionId)) {
-                return (null, new KeyNotFoundException($"Вопрос с id:{questionId} не найден."));
+                return (null, new KeyNotFoundException($"Вопрос с id:{questionId} не найден"));
             }
 
             var answers = answerRepository.GetAssociatedAsync(questionId, dateSort, ratingSort);
@@ -38,7 +38,7 @@ namespace ForumWebAPI.BL.Services {
 
         public async Task<(AnswerApiDto, Exception)> CreateAsync(AnswerCreateApiDto answer, string authorId) {
             if (!await questionRepository.ExistAsync(answer.QuestionId)) {
-                return (null, new KeyNotFoundException($"Вопрос с id:{answer.QuestionId} не найден."));
+                return (null, new KeyNotFoundException($"Вопрос с id:{answer.QuestionId} не найден"));
             }
 
             var answerToCreate = answer.Create(authorId);
@@ -59,7 +59,7 @@ namespace ForumWebAPI.BL.Services {
             var answerToUpdate = await answerRepository.GetAsync(answerId);
 
             if (answerToUpdate == null) {
-                return new KeyNotFoundException($"Вопрос с id:{answerId} не найден.");
+                return new KeyNotFoundException($"Вопрос с id:{answerId} не найден");
             }
 
             return await UpdateAsync(answerToUpdate, answer);
@@ -86,7 +86,7 @@ namespace ForumWebAPI.BL.Services {
             var answerToDelete = await answerRepository.DeleteAsync(answerId);
 
             if (answerToDelete == null) {
-                return (null, new ArgumentNullException($"Ответ с id:{answerId} не найден."));
+                return (null, new ArgumentNullException($"Ответ с id:{answerId} не найден"));
             }
 
             return await DeleteAsync(answerToDelete);

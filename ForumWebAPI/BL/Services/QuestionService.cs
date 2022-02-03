@@ -19,7 +19,7 @@ namespace ForumWebAPI.BL.Services {
         public async Task<(QuestionDetailApiDto, Exception)> GetAsync(long questionId, bool? dateSort, bool ratingSort) {
             var question = await questionRepository.GetAsync(questionId, dateSort, ratingSort);
             if (question == null) {
-                return (null, new KeyNotFoundException($"Вопрос с id:{questionId} не найден."));
+                return (null, new KeyNotFoundException($"Вопрос с id:{questionId} не найден"));
             } else {
                 return (new QuestionDetailApiDto(question), null);
             }
@@ -60,7 +60,7 @@ namespace ForumWebAPI.BL.Services {
             var questionToUpdate = await questionRepository.GetAsync(questionId);
 
             if (questionToUpdate == null) {
-                return new KeyNotFoundException($"Вопрос с id:{questionId} не найден.");
+                return new KeyNotFoundException($"Вопрос с id:{questionId} не найден");
             }
 
             return await UpdateAsync(questionToUpdate, question);
@@ -88,7 +88,7 @@ namespace ForumWebAPI.BL.Services {
             var questionToDelete = await questionRepository.DeleteAsync(questionId);
 
             if (questionToDelete == null) {
-                return (null, new KeyNotFoundException($"Вопрос с id:{questionId} не найден."));
+                return (null, new KeyNotFoundException($"Вопрос с id:{questionId} не найден"));
             }
 
             return await DeleteAsync(questionToDelete);

@@ -43,7 +43,7 @@ namespace ForumWebAPI.Controllers {
             (QuestionDetailApiDto question, Exception result) = await questionService.GetAsync(id, dateSort, ratingSort);
 
             if (result != null) {
-                return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+                return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
             }
 
             if (User.Identity.IsAuthenticated) {
@@ -60,7 +60,7 @@ namespace ForumWebAPI.Controllers {
             (IAsyncEnumerable<AnswerApiDto> answers, Exception result) = await answerService.GetAssociatedAsync(id, dateSort, ratingSort);
 
             if (result != null) {
-                return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+                return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
             }
 
             answers = (await answers.ToListAsync()).ToAsyncEnumerable();
@@ -77,7 +77,7 @@ namespace ForumWebAPI.Controllers {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             (QuestionApiDto CreatedQuestion, Exception result) = await questionService.CreateAsync(question, identity.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", CreatedQuestion);
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}", CreatedQuestion);
         }
 
         [HttpPut("{id}")]
@@ -96,7 +96,7 @@ namespace ForumWebAPI.Controllers {
             }
             Exception result = await questionService.UpdateAsync(questionToUpdate, question);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
         [HttpDelete("{id}")]
@@ -115,7 +115,7 @@ namespace ForumWebAPI.Controllers {
             }
             (QuestionApiDto deletedQuestion, Exception result) = await questionService.DeleteAsync(id);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", deletedQuestion);
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}", deletedQuestion);
         }
     }
 }

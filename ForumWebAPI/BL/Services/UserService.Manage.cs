@@ -29,7 +29,7 @@ namespace ForumWebAPI.BL.Services {
 
         public async Task<Exception> UpdateProfileAsync(UserDbDTO user, UserProfileEditApiDto profile) {
             if (user == null) {
-                return new KeyNotFoundException("Пользователь не найден.");
+                return new KeyNotFoundException("Пользователь не найден");
             }
             profile.Update(user);
             var result = await userManager.UpdateAsync(user);
@@ -43,7 +43,7 @@ namespace ForumWebAPI.BL.Services {
 
         public async Task<Exception> ResetPasswordAsync(UserDbDTO user, string newPassword) {
             if (user == null) {
-                return new KeyNotFoundException("Пользователь не найден.");
+                return new KeyNotFoundException("Пользователь не найден");
             }
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             var result = await userManager.ResetPasswordAsync(user, token, newPassword);
@@ -59,14 +59,14 @@ namespace ForumWebAPI.BL.Services {
             var result = await userManager.CreateAsync(user, profile.Password);
             if (!result.Succeeded) {
                 if (await UserExistsAsync(profile.UserName)) {
-                    return new AlreadyExistsException($"Пользователь с именем {profile.UserName} уже существует.");
+                    return new AlreadyExistsException($"Пользователь с именем {profile.UserName} уже существует");
                 }
-                return new SaveChangesException("Не удалось создать пользователя с указанными параметрами."
+                return new SaveChangesException("Не удалось создать пользователя с указанными параметрами"
                     , new Exception(result.Errors.First().Description));
             }
             result = await userManager.AddToRolesAsync(user, roles);
             if (!result.Succeeded) {
-                return new SaveChangesException("Не удалось назначить пользователю одну или несколько из указанных ролей."
+                return new SaveChangesException("Не удалось назначить пользователю одну или несколько из указанных ролей"
                     , new Exception(result.Errors.First().Description));
             }
             return null;
@@ -74,7 +74,7 @@ namespace ForumWebAPI.BL.Services {
 
         public async Task<Exception> DeleteAsync(UserDbDTO user) {
             if (user == null) {
-                return new KeyNotFoundException("Пользователь не найден.");
+                return new KeyNotFoundException("Пользователь не найден");
             }
             var result = await userManager.DeleteAsync(user);
             return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.FirstOrDefault().Description));

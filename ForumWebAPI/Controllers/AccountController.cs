@@ -62,21 +62,21 @@ namespace ForumWebAPI.Controllers {
             var result = await userService.CreateAsync(profile, UserProfileCreateApiDto.DefaultRoles);
 
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
         [HttpPut]
         public async Task<ActionResult> Put([FromBody] UserProfileEditApiDto profile) {
             var result = await userService.UpdateProfileAsync(HttpContext.User.Identity.Name, profile);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
         [HttpPut("password")]
         public async Task<ActionResult> PutPassword([FromBody] PasswordChangeRequestApiDto request) {
             var result = await userService.ResetPasswordAsync(HttpContext.User.Identity.Name, request.NewPassword);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ForumWebAPI.BL.Services {
 		public async Task<Exception> AssignRoleAsync(UserDbDTO user, string role) {
 			var result = await userManager.AddToRoleAsync(user, role);
 			if (!result.Succeeded) {
-				return new SaveChangesException($"Не удалось назначить пользователю {user.UserName} роль {role}.");
+				return new SaveChangesException($"Не удалось назначить пользователю {user.UserName} роль {role}");
 			}
 			return null;
 		}
@@ -22,7 +22,7 @@ namespace ForumWebAPI.BL.Services {
 		public async Task<Exception> RemoveFromRoleAsync(UserDbDTO user, string role) {
 			var result = await userManager.RemoveFromRoleAsync(user, role);
 			if (!result.Succeeded) {
-				return new SaveChangesException($"Не удалось удалить у пользователя {user.UserName} роль {role}.");
+				return new SaveChangesException($"Не удалось удалить у пользователя {user.UserName} роль {role}");
 			}
 			return null;
 		}
@@ -38,7 +38,7 @@ namespace ForumWebAPI.BL.Services {
             }
 
 			if (!result.Succeeded) {
-				return new SaveChangesException($"Не удалось назначить пользователю {user.UserName} роли.");
+				return new SaveChangesException($"Не удалось назначить пользователю {user.UserName} роли");
 			}
 			return null;
 		}

@@ -34,7 +34,7 @@ namespace ForumWebAPI.Controllers {
             (AnswerApiDto answer, Exception result) = await answerService.GetAsync(id);
 
             if (result != null) {
-                return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+                return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
             }
 
             if (User.Identity.IsAuthenticated) {
@@ -48,7 +48,7 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult<AnswerApiDto>> Post([FromBody] AnswerCreateApiDto answer) {
             (AnswerApiDto createdAnswer, Exception result) = await answerService.CreateAsync(answer, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", createdAnswer);
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}", createdAnswer);
         }
 
         [HttpPut("{id}")]
@@ -68,7 +68,7 @@ namespace ForumWebAPI.Controllers {
 
             Exception result = await answerService.UpdateAsync(answerToUpdate, answer);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
         [HttpDelete("{id}")]
@@ -88,14 +88,14 @@ namespace ForumWebAPI.Controllers {
 
             (AnswerApiDto deletedAnswer, Exception result) = await answerService.DeleteAsync(answerToDelete);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", deletedAnswer);
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}", deletedAnswer);
         }
 
         [HttpPost("{id}/vote")]
         public async Task<ActionResult> Vote([FromRoute] long id, [FromQuery] bool? vote) {
             Exception result = await voteService.VoteAsync(id, vote, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
     }
 }

@@ -18,7 +18,7 @@ namespace ForumWebAPI.BL.Services {
         async Task<Exception> ApplyToUserAsync(string userName, Func<UserDbDTO, Task<Exception>> method) {
             var user = await userManager.FindByNameAsync(userName);
             if (user == null) {
-                return new KeyNotFoundException($"Пользователь {userName} не найден.");
+                return new KeyNotFoundException($"Пользователь {userName} не найден");
             }
             return await method(user);
         }
