@@ -33,10 +33,8 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult<AnswerApiDto>> Get([FromRoute] long id) {
             (AnswerApiDto answer, Exception result) = await answerService.GetAsync(id);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result != null) {
-                return StatusCode(500);
+            if (result != null) {
+                return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
             }
 
             if (User.Identity.IsAuthenticated) {
@@ -50,13 +48,7 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult<AnswerApiDto>> Post([FromBody] AnswerCreateApiDto answer) {
             (AnswerApiDto createdAnswer, Exception result) = await answerService.CreateAsync(answer, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result != null) {
-                return StatusCode(500);
-            }
-
-            return Ok(createdAnswer);
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", createdAnswer);
         }
 
         [HttpPut("{id}")]
@@ -76,11 +68,7 @@ namespace ForumWebAPI.Controllers {
 
             Exception result = await answerService.UpdateAsync(answerToUpdate, answer);
 
-            if (result != null) {
-                return StatusCode(500);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpDelete("{id}")]
@@ -100,26 +88,14 @@ namespace ForumWebAPI.Controllers {
 
             (AnswerApiDto deletedAnswer, Exception result) = await answerService.DeleteAsync(answerToDelete);
 
-            if (result != null) {
-                return StatusCode(500);
-            }
-
-            return Ok(deletedAnswer);
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", deletedAnswer);
         }
 
         [HttpPost("{id}/vote")]
         public async Task<ActionResult> Vote([FromRoute] long id, [FromQuery] bool? vote) {
             Exception result = await voteService.VoteAsync(id, vote, User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is AlreadyVotesException) {
-                return Conflict(result.Message);
-            } else if (result != null) {
-                return StatusCode(500);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
     }
 }

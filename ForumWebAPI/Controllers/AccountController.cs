@@ -14,7 +14,7 @@ using ForumWebAPI.BL.Exceptions;
 
 namespace ForumWebAPI.Controllers {
     [Authorize]
-    [Route("api/account")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase {
         private readonly UserService userService;
@@ -61,45 +61,22 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult> Post([FromBody] UserProfileCreateApiDto profile) {
             var result = await userService.CreateAsync(profile, UserProfileCreateApiDto.DefaultRoles);
 
-            if (result is AlreadyExistsException) {
-                return Conflict(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
 
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpPut]
         public async Task<ActionResult> Put([FromBody] UserProfileEditApiDto profile) {
             var result = await userService.UpdateProfileAsync(HttpContext.User.Identity.Name, profile);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpPut("password")]
         public async Task<ActionResult> PutPassword([FromBody] PasswordChangeRequestApiDto request) {
             var result = await userService.ResetPasswordAsync(HttpContext.User.Identity.Name, request.NewPassword);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
     }
 }

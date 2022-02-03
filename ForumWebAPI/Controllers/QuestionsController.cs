@@ -9,6 +9,7 @@ using ForumWebAPI.BL.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ForumDbContext.Repositories;
+using ForumWebAPI.BL.Exceptions;
 
 namespace ForumWebAPI.Controllers {
     [Authorize]
@@ -41,10 +42,8 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult<QuestionDetailApiDto>> Get([FromRoute] long id, [FromQuery] bool? dateSort, [FromQuery] bool ratingSort) {
             (QuestionDetailApiDto question, Exception result) = await questionService.GetAsync(id, dateSort, ratingSort);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result != null) {
-                return StatusCode(500);
+            if (result != null) {
+                return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
             }
 
             if (User.Identity.IsAuthenticated) {
@@ -60,10 +59,8 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult<IAsyncEnumerable<AnswerApiDto>>> GetAssociatedAnswers([FromRoute] long id, [FromQuery] bool? dateSort, [FromQuery] bool ratingSort) {
             (IAsyncEnumerable<AnswerApiDto> answers, Exception result) = await answerService.GetAssociatedAsync(id, dateSort, ratingSort);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result != null) {
-                return StatusCode(500);
+            if (result != null) {
+                return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
             }
 
             answers = (await answers.ToListAsync()).ToAsyncEnumerable();
@@ -80,11 +77,7 @@ namespace ForumWebAPI.Controllers {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             (QuestionApiDto CreatedQuestion, Exception result) = await questionService.CreateAsync(question, identity.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (result != null) {
-                return StatusCode(500);
-            }
-
-            return Ok(CreatedQuestion);
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", CreatedQuestion);
         }
 
         [HttpPut("{id}")]
@@ -103,11 +96,7 @@ namespace ForumWebAPI.Controllers {
             }
             Exception result = await questionService.UpdateAsync(questionToUpdate, question);
 
-            if (result != null) {
-                return StatusCode(500);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpDelete("{id}")]
@@ -126,11 +115,7 @@ namespace ForumWebAPI.Controllers {
             }
             (QuestionApiDto deletedQuestion, Exception result) = await questionService.DeleteAsync(id);
 
-            if (result != null) {
-                return StatusCode(500);
-            }
-
-            return deletedQuestion;
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}", deletedQuestion);
         }
     }
 }

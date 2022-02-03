@@ -38,75 +38,35 @@ namespace ForumWebAPI.Controllers {
         public async Task<ActionResult> Delete([FromRoute] string userName) {
             var result = await userService.DeleteAsync(userName);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpPost("{userName}/roles")]
         public async Task<ActionResult> PostRole([FromRoute] string userName, [FromQuery] string role) {
             var result = await userService.AssignRoleAsync(userName, role);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest(result.Message);
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpDelete("{userName}/roles")]
         public async Task<ActionResult> DeleteRole([FromRoute] string userName, [FromQuery] string role) {
             var result = await userService.RemoveFromRoleAsync(userName, role);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest(result.Message);
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpPut("{userName}")]
         public async Task<ActionResult> PutUser([FromRoute] string userName, [FromBody] UserProfileEditApiDto profile) {
             var result = await userService.UpdateProfileAsync(userName, profile);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
         [HttpPut("{userName}/password")]
         public async Task<ActionResult> ChangePassword([FromRoute] string userName, [FromBody] PasswordChangeRequestApiDto request) {
             var result = await userService.ResetPasswordAsync(userName, request.NewPassword);
 
-            if (result is KeyNotFoundException) {
-                return NotFound(result.Message);
-            } else if (result is SaveChangesException) {
-                return BadRequest($"{result.Message} \n {result.InnerException.Message}");
-            } else if (result != null) {
-                return StatusCode(500, result.Message);
-            }
-
-            return Ok();
+            return result.GetResultObject($"{result?.Message} \n {result?.InnerException?.Message}");
         }
 
     }
