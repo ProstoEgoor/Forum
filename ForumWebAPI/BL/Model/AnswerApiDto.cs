@@ -20,7 +20,6 @@ namespace ForumWebAPI.BL.Model {
             return new AnswerDbDTO() {
                 QuestionId = QuestionId,
                 CreateDate = DateTime.Now,
-                ChangeDate = DateTime.Now,
                 AuthorId = authorId,
                 AnswerText = Text
             };
@@ -30,7 +29,7 @@ namespace ForumWebAPI.BL.Model {
     public class AnswerApiDto : AnswerCreateApiDto {
         public long Id { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime ChangeDate { get; set; }
+        public DateTime? ChangeDate { get; set; }
         public string Author { get; set; }
         public int Rating => VotePositive - VoteNegative;
         public int VotePositive { get; set; }

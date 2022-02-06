@@ -11,7 +11,7 @@ namespace ForumWebAPI.BL.Services {
     public partial class UserService {
         public async IAsyncEnumerable<UserProfileApiDto> GetProfilesAsync() {
             var users = await userManager.Users.ToListAsync();
-            foreach(var user in users) {
+            foreach (var user in users) {
                 yield return new UserProfileApiDto(user, await userManager.GetRolesAsync(user));
             }
         }
@@ -27,18 +27,20 @@ namespace ForumWebAPI.BL.Services {
             return profile;
         }
 
-        public async Task<Exception> UpdateProfileAsync(UserDbDTO user, UserProfileEditApiDto profile) {
+        public async Task<Exception> UpdateProfileAsync(UserDbDTO user, UserProfileEditApiDto profile, bool updateCookies) {
             if (user == null) {
                 return new KeyNotFoundException("Пользователь не найден");
             }
             profile.Update(user);
             var result = await userManager.UpdateAsync(user);
-            await signInManager.RefreshSignInAsync(user);
+            if (updateCookies) {
+                await signInManager.RefreshSignInAsync(user);
+            }
             return result.Succeeded ? null : new SaveChangesException(new Exception(result.Errors.FirstOrDefault().Description));
         }
 
-        public async Task<Exception> UpdateProfileAsync(string userName, UserProfileEditApiDto profile) {
-            return await ApplyToUserAsync(userName, (user) => UpdateProfileAsync(user, profile));
+        public async Task<Exception> UpdateProfileAsync(string userName, UserProfileEditApiDto profile, bool updateCookies = false) {
+            return await ApplyToUserAsync(userName, (user) => UpdateProfileAsync(user, profile, updateCookies));
         }
 
         public async Task<Exception> ResetPasswordAsync(UserDbDTO user, string newPassword) {

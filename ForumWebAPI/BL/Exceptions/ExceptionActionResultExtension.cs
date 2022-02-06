@@ -12,7 +12,7 @@ namespace ForumWebAPI.BL.Exceptions {
                 return new BadRequestObjectResult(errorMsg);
             } else if (exception is KeyNotFoundException) {
                 return new NotFoundObjectResult(errorMsg);
-            } else if (exception is AlreadyVotesException) {
+            } else if (exception is AlreadyVotesException || exception is AlreadyExistsException) {
                 return new ConflictObjectResult(errorMsg);
             } else if (exception != null) {
                 return new StatusCodeResult(500);

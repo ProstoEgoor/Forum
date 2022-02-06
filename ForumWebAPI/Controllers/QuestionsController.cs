@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ForumDbContext.Repositories;
 using ForumWebAPI.BL.Exceptions;
+using System.Net;
 
 namespace ForumWebAPI.Controllers {
     [Authorize]
@@ -34,7 +35,7 @@ namespace ForumWebAPI.Controllers {
         [HttpGet]
         public IAsyncEnumerable<QuestionApiDto> Get([FromQuery] string userName, [FromQuery] string text, [FromQuery] string tags) {
             
-            return questionService.GetAllAsync(userName, text, tags?.Split(','));
+            return questionService.GetAllAsync(WebUtility.UrlDecode(userName), WebUtility.UrlDecode(text), WebUtility.UrlDecode(tags)?.Split(','));
         }
 
         [AllowAnonymous]

@@ -41,23 +41,30 @@ namespace ForumWebAPI.Controllers {
             return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
-        [HttpPost("{userName}/roles")]
+        /*[HttpPost("{userName}/roles")]
         public async Task<ActionResult> PostRole([FromRoute] string userName, [FromQuery] string role) {
-            var result = await userService.AssignRoleAsync(userName, role);
+            var result = await userService.AssignRoleAsync(userName, role, HttpContext.User.Identity.Name == userName);
 
             return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
         [HttpDelete("{userName}/roles")]
         public async Task<ActionResult> DeleteRole([FromRoute] string userName, [FromQuery] string role) {
-            var result = await userService.RemoveFromRoleAsync(userName, role);
+            var result = await userService.RemoveFromRoleAsync(userName, role, HttpContext.User.Identity.Name == userName);
+
+            return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
+        }*/
+
+        [HttpPost("{userName}")]
+        public async Task<ActionResult> PostRole([FromRoute] string userName, [FromQuery] string roles) {
+            var result = await userService.SetRoles(userName, roles.Split(','), HttpContext.User.Identity.Name == userName);
 
             return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }
 
         [HttpPut("{userName}")]
         public async Task<ActionResult> PutUser([FromRoute] string userName, [FromBody] UserProfileEditApiDto profile) {
-            var result = await userService.UpdateProfileAsync(userName, profile);
+            var result = await userService.UpdateProfileAsync(userName, profile, HttpContext.User.Identity.Name == userName);
 
             return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}");
         }

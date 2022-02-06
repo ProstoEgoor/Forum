@@ -12,7 +12,7 @@ namespace ForumConsole.FIles {
         //public long? Id { get; set; }
         public string Author { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime ChangeDate { get; set; }
+        public DateTime? ChangeDate { get; set; }
         public string Topic { get; set; }
         public string Text { get; set; }
         public string[] Tags { get; set; }

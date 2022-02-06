@@ -7,7 +7,7 @@ namespace ForumDbContext.Model.DTO {
         public long AnswerId { get; set; }
         public long QuestionId { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime ChangeDate { get; set; }
+        public DateTime? ChangeDate { get; set; }
         public string AuthorId { get; set; }
         public string AnswerText { get; set; }
         public int VotePositive { get; set; }

@@ -29,12 +29,8 @@ namespace ForumDbContext.Model.Configure {
                 .HasDefaultValueSql("getdate()");
 
             builder.Property(answer => answer.ChangeDate)
-                .IsRequired()
                 .HasColumnName("change_date")
-                .HasColumnType("datetime2")
-                .HasDefaultValueSql("getdate()");
-
-            builder.HasCheckConstraint("CK_answer_change_date", "[change_date] >= [create_date]");
+                .HasColumnType("datetime2");
 
             builder.Property(answer => answer.AuthorId)
                 .IsRequired()

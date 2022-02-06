@@ -25,7 +25,6 @@ namespace ForumWebAPI.BL.Model {
         public QuestionDbDTO Create(string authorId) {
             return new QuestionDbDTO() {
                 CreateDate = DateTime.Now,
-                ChangeDate = DateTime.Now,
                 AuthorId = authorId,
                 Topic = Topic,
                 QuestionText = Text,
@@ -37,7 +36,7 @@ namespace ForumWebAPI.BL.Model {
     public class QuestionApiDto : QuestionCreateApiDto {
         public long Id { get; set; }
         public DateTime CreateDate { get; set; }
-        public DateTime ChangeDate { get; set; }
+        public DateTime? ChangeDate { get; set; }
         public string Author { get; set; }
         public int AnswerCount { get; set; }
 

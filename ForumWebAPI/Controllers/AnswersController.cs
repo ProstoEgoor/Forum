@@ -86,7 +86,7 @@ namespace ForumWebAPI.Controllers {
                 }
             }
 
-            (AnswerApiDto deletedAnswer, Exception result) = await answerService.DeleteAsync(answerToDelete);
+            (AnswerApiDto deletedAnswer, Exception result) = await answerService.DeleteAsync(id);
 
             return result.GetResultObject($"{result?.Message}. {result?.InnerException?.Message}", deletedAnswer);
         }

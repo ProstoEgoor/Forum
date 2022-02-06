@@ -5,7 +5,7 @@ namespace ForumModel {
         public long? Id { get; set; }
         public string Author { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
-        public DateTime ChangeDate { get; set; }
+        public DateTime? ChangeDate { get; set; }
         public string Text { get; set; }
         public int Rating => VotePositive - VoteNegative;
         public int VotePositive { get; private set; } = 0;
