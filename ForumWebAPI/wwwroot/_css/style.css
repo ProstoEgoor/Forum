@@ -79,3 +79,25 @@ input::-webkit-calendar-picker-indicator {
 .disabled-link {
   pointer-events: none;
 }
+
+alert-message {
+  display: block;
+  transition: all 0.25s ease-out;
+  margin: 0 !important;
+  padding: 0 1rem !important;
+  opacity: 0;
+}
+
+alert-message.show {
+  margin: 1rem 0 !important;
+  padding: 1rem 1rem !important;
+  opacity: 1;
+}
+
+tag-list {
+  display: block;
+}
+
+textarea {
+  resize: none;
+}

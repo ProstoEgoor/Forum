@@ -11,190 +11,62 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="_css/style.css">
+	<script src="/questions/_js/questions.js" type="module"></script>
+	<script src="/components/auth.header/auth.header.js" type="module"></script>
 </head>
 
 <body>
-	<header class="navbar navbar-expand-lg navbar-dark bg-success">
-		<div class="container">
-			<a href="index.html" class="navbar-brand mb-1">Форум</a>
-			<span class="navbar-text me-auto">Вопросы</span>
-			<nav class="order-4 order-md-3 ms-auto">
-				<ul class="navbar-nav align-items-center gap-2">
-					<li class="nav-item">
-						<a class="nav-link" href="users/index.html">Пользователи</a>
-					</li>
-					<li hidden class="nav-item">
-						<a class="nav-link" href="questions/create.html">Задать вопрос</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Войти</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="profile/create.html">Зарегистрироваться</a>
-					</li>
-				</ul>
-			</nav>
-			<div hidden class="dropdown order-3 order-md-4">
-				<button class="btn btn-success dropdown-toggle fs-5" type="button" id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="bi bi-person-circle"></i>
-					Name
-				</button>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileMenu">
-					<li><a class="dropdown-item" href="profile/index.html">Профиль</a></li>
-					<li><a class="dropdown-item" href="questions/user_questions.html">Мои вопросы</a></li>
-					<li>
-						<hr class="dropdown-divider">
-					</li>
-					<li><a class="dropdown-item" href="#">Выйти</a></li>
-				</ul>
-			</div>
-	</header>
+	<auth-header page-title="Вопросы" spinner-color="light"></auth-header>
 
 	<main>
 		<div class="border-bottom">
 			<div class="container py-3">
-				<form>
-					<div class="row align-items-center gy-3 mb-3">
-						<div class="col-12 col-md-auto">
-							<div class="input-group">
-								<input class="form-control" id="tag-input" placeholder="Искать тег..." list="tag-datalist" aria-describedby="button-add-tag" autocomplete="off">
-								<datalist id="tag-datalist">
-									<option value="c#">
-									<option value=".net">
-									<option value="faq">
-								</datalist>
-								<button type="button" class="btn btn-outline-secondary" id="button-add-tag">Добавить</button>
-							</div>
-						</div>
-						<div class="col-12 col-lg">
-							<ul class="list-group list-group-horizontal flex-wrap gap-2">
-								<li class="list-group-item d-flex align-items-baseline border-1 rounded-pill py-0 pe-1">
-									<span class="me-2">c#</span>
-									<button type="button" class="link-secondary-dark btn-reset">
-										<i class="bi bi-x-circle"></i>
-									</button>
-								</li>
-								<li class="list-group-item d-flex align-items-baseline border-1 rounded-pill py-0 pe-1">
-									<span class="me-2">faq</span>
-									<button type="button" class="link-secondary-dark btn-reset">
-										<i class="bi bi-x-circle"></i>
-									</button>
-								</li>
-							</ul>
-						</div>
-					</div>
+				<form id="search-form">
+					<tag-list class="mb-3"></tag-list>
 					<div class="row gy-3">
 						<div class="col-12 col-md-auto me-auto">
 							<input type="text" class="form-control" id="text-search" placeholder="Искать текст...">
 						</div>
 						<div class="d-grid col-12 col-md-auto">
-							<button type="submit" class="btn btn-outline-secondary">Поиск</button>
+							<button is="button-submit" spinner-color="secondary" spinner-small class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
+								Поиск
+							</button>
 						</div>
 					</div>
 				</form>
 			</div>
 		</div>
 		<div class="container">
-			<ul class="mx-0 px-0">
-				<li class="card my-3">
-					<div class="card-body">
-						<p class="card-title fs-4 fw-bold">Что такое NullReferenceException, и как мне исправить код?</p>
-						<p class="card-text text-pre-line overflow-ellipsis">Когда я выполняю некоторый код, выбрасывается исключение
-							NullReferenceException со следующим сообщением:
-							Object reference not set to an instance of an object.
-							или
-							В экземпляре объекта не задана ссылка на объект.
-							Что это значит, и как мне исправить код ?</p>
-						<div class="row justify-content-between align-items-start">
-							<div class="col">
-								<ul class="list-group list-group-horizontal flex-wrap gap-2">
-									<li class="list-group-item border-1 rounded-pill py-0">c#</li>
-									<li class="list-group-item border-1 rounded-pill py-0">.net</li>
-									<li class="list-group-item border-1 rounded-pill py-0">vb.net</li>
-									<li class="list-group-item border-1 rounded-pill py-0">faq</li>
-									<li class="list-group-item border-1 rounded-pill py-0">c#-faq</li>
-								</ul>
+			<alert-message></alert-message>
+			<ul class="mx-0 mt-3 px-0" id="questions-container">
+				<template id="questions-template">
+					<li class="card mb-3">
+						<div class="card-body">
+							<p class="card-title fs-4 fw-bold" name="topic"></p>
+							<p class="card-text text-pre-line overflow-ellipsis" name="text"></p>
+							<div class="row justify-content-between align-items-start gy-2">
+								<div class="col">
+									<ul class="list-group list-group-horizontal flex-wrap gap-2" name="tag-container">
+										<template id="question-tag-template">
+											<li class="list-group-item border-1 rounded-pill py-0" name="tag"></li>
+										</template>
+									</ul>
+								</div>
+								<div class="col-12 col-md-auto">
+									<p class="text-end">Спросил <span name="author"></span> <span name="createDate"></span></p>
+								</div>
 							</div>
-							<div class="col-12 col-md-auto">
-								<p class="text-end">Спросил <span>Kyubey</span> <span>01.04.2015</span> в <span>10:18</span></p>
-							</div>
-						</div>
-						<div class="row justify-content-between">
-							<div class="col">
-								<p class="mb-0">2 ответа</p>
-							</div>
-							<div class="col-auto">
-								<a href="questions" class="card-link link-info">Подробнее</a>
+							<div class="row justify-content-between">
+								<div class="col">
+									<p class="mb-0" name="answer-count"></p>
+								</div>
+								<div class="col-auto">
+									<a href="questions" class="card-link link-info" name="description-link">Подробнее</a>
+								</div>
 							</div>
 						</div>
-					</div>
-				</li>
-				<li class="card my-3">
-					<div class="card-body">
-						<p class="card-title fs-4 fw-bold">Книги и учебные ресурсы по C#</p>
-						<p class="card-text text-pre-line overflow-ellipsis">Вопросы о литературе по различным языкам программирования возникают очень часто. Здесь мы попробуем собрать лучшие ответы и рекомендации насчёт литературы и других учебных ресурсов по языку C#, платформе и популярным библиотекам.
-							Не забывайте, однако, что никакая теория не заменит опыта программирования! Читайте, пробуйте, тренируйтесь. Спрашивайте, если непонятно. Попробуйте запрограммировать свой проект, это лучший путь.</p>
-						<div class="row justify-content-between align-items-start">
-							<div class="col">
-								<ul class="list-group list-group-horizontal flex-wrap gap-2">
-									<li class="list-group-item border-1 rounded-pill py-0">c#</li>
-									<li class="list-group-item border-1 rounded-pill py-0">книги</li>
-									<li class="list-group-item border-1 rounded-pill py-0">faq</li>
-								</ul>
-							</div>
-							<div class="col-12 col-md-auto">
-								<p class="text-end">Спросил <span>Nofate</span> <span>06.04.2018</span> в <span>15:07</span></p>
-							</div>
-						</div>
-						<div class="row justify-content-between">
-							<div class="col">
-								<p class="mb-0">1 ответ</p>
-							</div>
-							<div class="col-auto">
-								<a href="questions" class="card-link link-info">Подробнее</a>
-							</div>
-						</div>
-					</div>
-				</li>
-				<li class="card my-3">
-					<div class="card-body">
-						<p class="card-title fs-4 fw-bold">Как распарсить HTML в .NET?</p>
-						<p class="card-text text-pre-line overflow-ellipsis">Необходимо извлечь все URL из атрибутов href тегов a в HTML странице. Я попробовал воспользоваться регулярными выражениями.
-
-							Но возникает множество потенциальных проблем:
-
-							Как отфильтровать только специфические ссылки, например, по CSS классу?
-							Что будет, если кавычки у атрибута другие?
-							Что будет, если вокруг знака равенства пробелы?
-							Что будет, если кусок страницы закомментирован?
-							Что будет, если попадётся кусок JavaScript?
-							И так далее.
-
-							Регулярное выражение очень быстро становится монструозным и нечитаемыми, а проблемных мест обнаруживается всё больше и больше.
-
-							Что делать?</p>
-						<div class="row justify-content-between align-items-start">
-							<div class="col">
-								<ul class="list-group list-group-horizontal flex-wrap gap-2">
-									<li class="list-group-item border-1 rounded-pill py-0">c#</li>
-									<li class="list-group-item border-1 rounded-pill py-0">книги</li>
-									<li class="list-group-item border-1 rounded-pill py-0">faq</li>
-								</ul>
-							</div>
-							<div class="col-12 col-md-auto">
-								<p class="text-end">Спросил <span>Kyubey</span> <span>09.01.2015</span> в <span>09:32</span></p>
-							</div>
-						</div>
-						<div class="row justify-content-between">
-							<div class="col">
-								<p class="mb-0">5 ответов</p>
-							</div>
-							<div class="col-auto">
-								<a href="questions" class="card-link link-info">Подробнее</a>
-							</div>
-						</div>
-					</div>
-				</li>
+					</li>
+				</template>
 			</ul>
 		</div>
 	</main>

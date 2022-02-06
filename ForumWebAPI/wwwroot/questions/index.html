@@ -5,160 +5,112 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Forum - Что такое NullReferenceException, и как мне исправить код?</title>
+	<title>Forum</title>
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="../_css/style.css">
+	<script src="/questions/_js/question.js" type="module"></script>
+	<script src="/components/auth.header/auth.header.js" type="module"></script>
 </head>
 
 <body>
-	<header class="navbar navbar-expand-lg navbar-dark bg-success">
-		<div class="container">
-			<a href="../index.html" class="navbar-brand order-1 mb-1">Форум</a>
-			<span class="navbar-text order-2 me-auto">Вопрос</span>
-			<nav class="order-4 order-md-3 ms-auto">
-				<ul class="navbar-nav align-items-center gap-2">
-					<li class="nav-item">
-						<a class="nav-link" href="create.html">Задать вопрос</a>
-					</li>
-					<li hidden class="nav-item">
-						<a class="nav-link" href="#">Войти</a>
-					</li>
-					<li hidden class="nav-item">
-						<a class="nav-link" href="#">Зарегистрироваться</a>
-					</li>
-				</ul>
-			</nav>
-			<div class="dropdown order-3 order-md-4">
-				<button class="btn btn-success dropdown-toggle fs-5" type="button" id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="bi bi-person-circle"></i>
-					Name
-				</button>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileMenu">
-					<li><a class="dropdown-item" href="../profile/index.html">Профиль</a></li>
-					<li><a class="dropdown-item" href="user_questions.html">Мои вопросы</a></li>
-					<li><a class="dropdown-item" href="../profile/change_password.html">Сменить пароль</a></li>
-					<li>
-						<hr class="dropdown-divider">
-					</li>
-					<li><a class="dropdown-item" href="#">Выйти</a></li>
-				</ul>
-			</div>
-	</header>
+	<auth-header page-title="Вопрос" spinner-color="light"></auth-header>
 
 	<main>
 		<div class="container">
-			<div class="card border-0">
+			<div class="card border-0" id="question">
 				<div class="card-body px-0 clearfix">
-					<div class="float-end">
+					<div class="float-end" name="modification-icons">
 						<div class="d-flex flex-column flex-md-row-reverse gap-2">
-							<button type="button" class="btn-reset link-secondary-dark fs-5"><i class="bi bi-x-circle"></i></button>
-							<a href="edit.html" class="link-secondary-dark fs-5"><i class="bi bi-pencil-square"></i></a>
+							<button type="button" class="btn-reset link-secondary-dark fs-5" name="delete"><i class="bi bi-x-circle"></i></button>
+							<a href="edit.html" class="link-secondary-dark fs-5" name="edit"><i class="bi bi-pencil-square"></i></a>
 						</div>
 					</div>
-					<p class="card-title fs-4 fw-bold">Что такое NullReferenceException, и как мне исправить код?</p>
-					<p class="card-text text-pre-line">Когда я выполняю некоторый код, выбрасывается исключение
-						NullReferenceException со следующим сообщением:
-						Object reference not set to an instance of an object.
-						или
-						В экземпляре объекта не задана ссылка на объект.
-						Что это значит, и как мне исправить код ?</p>
+					<p class="card-title fs-4 fw-bold" name="topic"></p>
+					<p class="card-text text-pre-line" name="text"></p>
 					<div class="row justify-content-between align-items-start gy-3">
 						<div class="col">
-							<ul class="list-group list-group-horizontal flex-wrap gap-2">
-								<li class="list-group-item border-1 rounded-pill py-0">c#</li>
-								<li class="list-group-item border-1 rounded-pill py-0">.net</li>
-								<li class="list-group-item border-1 rounded-pill py-0">vb.net</li>
-								<li class="list-group-item border-1 rounded-pill py-0">faq</li>
-								<li class="list-group-item border-1 rounded-pill py-0">c#-faq</li>
+							<ul class="list-group list-group-horizontal flex-wrap gap-2" name="tag-container">
+								<template id="question-tag-template">
+									<li class="list-group-item border-1 rounded-pill py-0" name="tag"></li>
+								</template>
 							</ul>
 						</div>
 						<div class="col-12 col-md-auto d-flex flex-column align-items-md-end mb-3">
-							<p>Спросил <span>Kyubey</span> <span>01.04.2015</span> в <span>10:18</span></p>
-							<p class="mb-0">Изменил <span>03.04.2015</span> в <span>10:20</span></p>
+							<p class="text-end">Спросил <span name="author"></span> <span name="createDate"></span></p>
+							<p class="mb-0" name="changeDate-container">Изменил <span name="changeDate"></span></p>
 						</div>
 					</div>
 					<div class="row justify-content-between align-items-baseline gy-3">
 						<div class="col">
-							<p class="mb-0">2 ответа</p>
+							<p class="mb-0" name="answer-count"></p>
 						</div>
 						<div class="col-auto">
-							<button class="btn btn-outline-secondary">Ответить</button>
+							<button class="btn btn-outline-secondary" name="answer-button">Ответить</button>
 						</div>
 						<div class="col-auto ms-auto">
-							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-								<input type="radio" class="btn-check" name="sort" value="useful" id="sort-useful" autocomplete="off" checked>
-								<label class="btn btn-outline-secondary" for="sort-useful">Полезные</label>
+							<form id="sort-form">
+								<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+									<input type="radio" class="btn-check" name="sort" value="useful" id="sort-useful" autocomplete="off" checked>
+									<label class="btn btn-outline-secondary" for="sort-useful">Полезные</label>
 
-								<input type="radio" class="btn-check" name="sort" value="new" id="sort-new" autocomplete="off">
-								<label class="btn btn-outline-secondary" for="sort-new">Новые</label>
+									<input type="radio" class="btn-check" name="sort" value="new" id="sort-new" autocomplete="off">
+									<label class="btn btn-outline-secondary" for="sort-new">Новые</label>
 
-								<input type="radio" class="btn-check" name="sort" value="old" id="sort-old" autocomplete="off">
-								<label class="btn btn-outline-secondary" for="sort-old">Старые</label>
-							</div>
+									<input type="radio" class="btn-check" name="sort" value="old" id="sort-old" autocomplete="off">
+									<label class="btn btn-outline-secondary" for="sort-old">Старые</label>
+								</div>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="d-flex justify-content-center mt-2">
+				<loading-element id="loading-spinner" spinner-color="secondary"></loading-element>
+			</div>
+			<alert-message></alert-message>
 		</div>
 		<div class="container">
-			<ul class="mx-0 px-0">
-				<li class="card my-3">
-					<div class="card-body">
-						<form>
-							<div class="mb-3">
-								<textarea class="form-control" id="answer-text-input" placeholder="Введите ответ..." rows="5"></textarea>
-							</div>
-							<div class="d-flex justify-content-end">
-								<button type="submit" class="btn btn-outline-secondary">Сохранить ответ</button>
-							</div>
-						</form>
-					</div>
-				</li>
-				<li class="card my-3">
-					<div class="card-body clearfix">
-						<div class="float-end ms-1">
-							<div class="d-flex flex-column flex-md-row-reverse gap-1">
-								<button type="button" class="btn-reset link-secondary-dark"><i class="bi bi-x-circle"></i></button>
-								<button type="button" class="btn-reset link-secondary-dark"><i class="bi bi-pencil-square"></i></button>
-							</div>
+			<ul class="mx-0 px-0" id="asnwers-container">
+				<template id="answer-edit-template">
+					<li class="card my-0">
+						<div class="card-body">
+							<form>
+								<div class="mb-3">
+									<textarea is="resizable-textarea" class="form-control" id="answer-text-input" placeholder="Введите ответ..." rows="5" name="text" autoresize required></textarea>
+								</div>
+								<div class="d-flex justify-content-end">
+									<button is="button-submit" spinner-color="secondary" spinner-small class="btn btn-outline-secondary d-flex align-items-center">
+										Сохранить ответ
+									</button>
+								</div>
+							</form>
 						</div>
-						<p class="card-text text-pre-line">Вы пытаетесь воспользоваться чем-то, что равно null (или Nothing в VB.NET). Это означает, что либо вы присвоили это значение, либо вы ничего не присваивали.
-							Как и любое другое значение, null может передаваться от объекта к объекту, от метода к методу. Если нечто равно null в методе "А", вполне может быть, что метод "В" передал это значение в метод "А".</p>
-						<div class="float-start d-flex flex-column">
-							<button type="button" class="btn-reset link-secondary-dark fs-2 lh-1"><i class="bi bi-caret-up-fill"></i></button>
-							<span class="lh-1 text-center">105</span>
-							<button type="button" class="btn-reset link-secondary-dark fs-2 lh-1"><i class="bi bi-caret-down"></i></button>
-						</div>
+					</li>
+				</template>
+				<template id="answer-template">
+					<li class="card mb-3">
+						<div class="card-body clearfix">
+							<div class="float-end ms-1" name="modification-icons">
+								<div class="d-flex flex-column flex-md-row-reverse gap-1">
+									<button type="button" class="btn-reset link-secondary-dark" name="delete"><i class="bi bi-x-circle"></i></button>
+									<button type="button" class="btn-reset link-secondary-dark" name="edit"><i class="bi bi-pencil-square"></i></button>
+								</div>
+							</div>
+							<p class="card-text text-pre-line" name="text"></p>
+							<div class="float-start d-flex flex-column">
+								<button type="button" class="btn-reset link-secondary-dark fs-2 lh-1" name="upRating-button"><i class="bi bi-caret-up-fill"></i></button>
+								<span class="lh-1 text-center" name="rating"></span>
+								<button type="button" class="btn-reset link-secondary-dark fs-2 lh-1" name="downRating-button"><i class="bi bi-caret-down"></i></button>
+							</div>
 
-						<p class="text-end">Ответил <span>Kyubey</span> <span>01.04.2015</span> в <span>10:18</span></p>
-						<p class="text-end">Изменил <span>Moderator</span> <span>05.04.2015</span> в <span>11:22</span></p>
-
-					</div>
-				</li>
-				<li class="card my-3">
-					<div class="card-body clearfix">
-						<div class="float-end ms-1">
-							<div class="d-flex flex-column flex-md-row-reverse gap-1">
-								<button type="button" class="btn-reset link-secondary-dark px-0"><i class="bi bi-x-circle"></i></button>
-								<button type="button" class="btn-reset link-secondary-dark px-0"><i class="bi bi-pencil-square"></i></button>
-							</div>
+							<p class="text-end">Ответил <span name="author"></span> <span name="createDate"></span></p>
+							<p class="mb-0 text-end" name="changeDate-container">Изменил <span name="changeDate"></span></p>
 						</div>
-						<p class="card-text text-pre-line">В дополнение к ответу @Kyubey, давайте рассмотрим вопрос с другой стороны.
-							Если у вас в процессе выполнения программы случился NullReferenceException при доступе по какой - то ссылке, вы должны прежде всего задать себе важный вопрос:
-							а имеет ли право эта ссылка иметь значение null ?
-							Во многих случаях правильным ответом будет «нет», и значит, исправлять придётся истинную причину ошибки, которая находится в другом месте, и произошла раньше.</p>
-						<div class="float-start d-flex flex-column">
-							<button type="button" class="btn-reset link-secondary-dark fs-2 lh-1"><i class="bi bi-caret-up"></i></button>
-							<span class="lh-1 text-center">38</span>
-							<button type="button" class="btn-reset link-secondary-dark fs-2 lh-1"><i class="bi bi-caret-down"></i></button>
-						</div>
-						<p class="text-end">Ответил <span>VladD</span> <span>26.11.2015</span> в <span>10:18</span></p>
-						<p class="text-end">Изменил <span>Very__Long__User__Name</span> <span>05.04.2015</span> в <span>11:22</span></p>
-					</div>
-				</li>
+					</li>
+				</template>
 			</ul>
 		</div>
 	</main>

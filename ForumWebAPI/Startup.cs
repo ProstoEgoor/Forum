@@ -20,6 +20,8 @@ using ForumWebAPI.BL.Auth;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace ForumWebAPI {
     public class Startup {
@@ -44,6 +46,25 @@ namespace ForumWebAPI {
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IUserClaimsPrincipalFactory<UserDbDTO>, AdditionalUserClaimsPrincipalFactory>();
+
+            services.ConfigureApplicationCookie(o => {
+                o.Events = new CookieAuthenticationEvents() {
+                    OnRedirectToLogin = (ctx) => {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200) {
+                            ctx.Response.StatusCode = 401;
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnRedirectToAccessDenied = (ctx) => {
+                        if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200) {
+                            ctx.Response.StatusCode = 403;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             services.AddForumRepositories();
             services.AddForumServices();
@@ -84,6 +105,13 @@ namespace ForumWebAPI {
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(builder => {
+                builder
+                    .SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -11,123 +11,98 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="../_css/style.css">
+	<script src="./_js/edit.user.js" type="module"></script>
+	<script src="/components/auth.header/auth.header.js" type="module"></script>
 </head>
 
 <body>
-	<header class="navbar navbar-expand-lg navbar-dark bg-success">
-		<div class="container">
-			<a href="../index.html" class="navbar-brand order-1 mb-1">Форум</a>
-			<span class="navbar-text order-2 me-auto">Редактирование пользователя</span>
-			<nav class="order-4 order-md-3 ms-auto">
-				<ul class="navbar-nav align-items-center gap-2">
-					<li class="nav-item">
-						<a class="nav-link" href="index.html">Пользователи</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="../questions/create.html">Задать вопрос</a>
-					</li>
-					<li hidden class="nav-item">
-						<a class="nav-link" href="#">Войти</a>
-					</li>
-					<li hidden class="nav-item">
-						<a class="nav-link" href="#">Зарегистрироваться</a>
-					</li>
-				</ul>
-			</nav>
-			<div class="dropdown order-3 order-md-4">
-				<button class="btn btn-success dropdown-toggle fs-5" type="button" id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false">
-					<i class="bi bi-person-circle"></i>
-					Name
-				</button>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileMenu">
-					<li><a class="dropdown-item" href="../profile/index.html">Профиль</a></li>
-					<li><a class="dropdown-item" href="../questions/user_questions.html">Мои вопросы</a></li>
-					<li>
-						<hr class="dropdown-divider">
-					</li>
-					<li><a class="dropdown-item" href="#">Выйти</a></li>
-				</ul>
-			</div>
-	</header>
+	<auth-header page-title="Редактирование пользователя" spinner-color="light"></auth-header>
 
 	<main class="my-3">
 		<div class="container">
-			<h3 class="h3">Пользователь admin</h3>
-			<input type="radio" class="visually-hidden" name="tab" id="tab-userProfile" value="userProfile" checked>
-			<input type="radio" class="visually-hidden" name="tab" id="tab-changePassword" value="changePassword">
-			<input type="radio" class="visually-hidden" name="tab" id="tab-userRoles" value="userRoles">
-			<ul class="nav nav-tabs">
-				<li class="nav-item">
-					<label class="nav-link text-dark fw-bold" for="tab-userProfile">Редактирование профиля</label>
+			<ul class="nav nav-tabs" id="user-tab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link link-secondary active" id="userProfile-tab" data-bs-toggle="tab" data-bs-target="#userProfile-form" type="button" role="tab" aria-controls="userProfile-form" aria-selected="true">Профиль пользователя</button>
 				</li>
-				<li class="nav-item">
-					<label class="nav-link text-dark fw-bold" for="tab-changePassword">Смена пароля</label>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link link-secondary" id="changePassword-tab" data-bs-toggle="tab" data-bs-target="#changePassword-form" type="button" role="tab" aria-controls="changePassword-form" aria-selected="true">Пароль</button>
 				</li>
-				<li class="nav-item">
-					<label class="nav-link text-dark fw-bold" for="tab-userRoles">Назначение роли</label>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link link-secondary" id="userRoles-tab" data-bs-toggle="tab" data-bs-target="#userRoles-form" type="button" role="tab" aria-controls="userRoles-form" aria-selected="true">Роли пользователя</button>
 				</li>
 			</ul>
 
-			<form id="form-userProfile">
-				<div class="row">
-					<div class="col my-3">
-						<label for="emailInput" class="form-label">Email</label>
-						<input type="text" class="form-control" name="emailInput" placeholder="Email" value="admin@example.com">
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md my-3">
-						<label for="lastNameInput" class="form-label">Фамилия</label>
-						<input type="text" class="form-control" name="lastNameInput" placeholder="Фамилия" value="Павлов">
-					</div>
-					<div class="col-md my-3">
-						<label for="firstNameInput" class="form-label">Имя</label>
-						<input type="text" class="form-control" name="firstNameInput" placeholder="Имя" value="Георгий">
-					</div>
-				</div>
-				<div class="row my-5">
-					<div class="col">
-						<button class="btn btn-outline-secondary" type="submit">Сохранить</button>
-					</div>
-				</div>
-			</form>
-			<form id="form-changePassword">
-				<div class="row">
-					<div class="col-md my-3">
-						<label for="passwordInput" class="form-label">Пароль</label>
-						<input type="password" class="form-control" name="passwordInput" placeholder="Введите новый пароль">
-					</div>
-					<div class="col-md my-3">
-						<label for="passwordConfirmationInput" class="form-label">Подтвержение пароля</label>
-						<input type="password" class="form-control" name="passwordConfirmationInput" placeholder="Введите новый пароль еще раз">
-					</div>
-				</div>
-				<div class="row my-5">
-					<div class="col">
-						<button class="btn btn-outline-secondary" type="submit">Сохранить</button>
-					</div>
-				</div>
-			</form>
-			<form id="form-userRoles">
-				<div class="row mt-3">
-					<div class="col">
-						<div class="form-label">Роли</div>
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" name="roleInput" id="roleInput-Admin" checked>
-							<label class="form-check-label" for="roleInput-Admin">Администратор</label>
-						</div>
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" name="roleInput" id="roleInput-Manager">
-							<label class="form-check-label" for="roleInput-Manager">Модератор</label>
+			<div class="tab-content" id="user-tab-content">
+				<form class="tab-pane fade show active" id="userProfile-form" role="tabpanel" aria-labelledby="userProfile-tab">
+					<div class="row">
+						<div class="col my-3">
+							<div class="col-md">
+								<form-field name="email" type="email" label="Email" placeholder="Введите Email" required></form-field>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row my-5">
-					<div class="col">
-						<button class="btn btn-outline-secondary" type="submit">Сохранить</button>
+					<div class="row">
+						<div class="col-md my-3">
+							<form-field name="lastName" label="Фамилия" placeholder="Введите фамилию" required></form-field>
+						</div>
+						<div class="col-md my-3">
+							<form-field name="firstName" label="Имя" placeholder="Введите имя" required></form-field>
+						</div>
 					</div>
-				</div>
-			</form>
+					<div class="row my-3">
+						<div class="col">
+							<button is="button-submit" spinner-color="secondary" spinner-small class="btn btn-outline-secondary d-flex align-items-center">
+								Сохранить
+							</button>
+						</div>
+					</div>
+				</form>
+				<form class="tab-pane fade" id="changePassword-form" role="tabpanel" aria-labelledby="changePassword-tab">
+					<div class="row">
+						<div class="row my-3">
+							<div class="col-6">
+								<form-field type="password" label="Новый пароль" name="password" placeholder="Введите новый пароль" required></form-field>
+							</div>
+						</div>
+						<div class="row my-3">
+							<div class="col-6">
+								<form-field type="password" label="Подтвержение пароля" name="passwordConfirmation" placeholder="Введите новый пароль еще раз" required></form-field>
+							</div>
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col">
+							<button is="button-submit" spinner-color="secondary" spinner-small class="btn btn-outline-secondary d-flex align-items-center">
+								Сохранить
+							</button>
+						</div>
+					</div>
+				</form>
+				<form class="tab-pane fade" id="userRoles-form" role="tabpanel" aria-labelledby="userRoles-tab">
+					<div class="row my-3">
+						<div class="col">
+							<div class="form-label">Роли</div>
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" name="role" value="Admin" id="roleInput-Admin" />
+								<label class="form-check-label" for="roleInput-Admin">Администратор</label>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" name="role" value="Moderator" id="roleInput-Manager" />
+								<label class="form-check-label" for="roleInput-Manager">Модератор</label>
+							</div>
+							<input type="hidden" class="form-check-input" name="role" value="User" id="roleInput-User" checked />
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col">
+							<button is="button-submit" spinner-color="secondary" spinner-small class="btn btn-outline-secondary d-flex align-items-center">
+								Сохранить
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<alert-message></alert-message>
 		</div>
 	</main>
 

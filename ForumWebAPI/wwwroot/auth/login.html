@@ -5,50 +5,44 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Forum - Регистрация</title>
+	<title>Forum - Вход</title>
 
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 	<link rel="stylesheet" href="../_css/style.css">
-	<script src="./_js/create.profile.js" type="module"></script>
+	<script src="./_js/login.js" type="module"></script>
 	<script src="/components/auth.header/auth.header.js" type="module"></script>
 </head>
 
 <body>
-	<auth-header page-title="Регистрация" register-page spinner-color="light"></auth-header>
+	<auth-header page-title="Вход" login-page spinner-color="light"></auth-header>
 
 	<main class="my-3">
 		<div class="container">
-			<form id="form-profile">
+			<form id="login-form">
 				<div class="row mt-3">
-					<div class="col-md">
-						<form-field name="userName" label="Имя пользователя" placeholder="Введите никнейм" required></form-field>
-					</div>
-					<div class="col-md">
-						<form-field name="email" type="email" label="Email" placeholder="Введите Email" required></form-field>
+					<div class="col-6">
+						<label for="username" class="form-label">Логин</label>
+						<input type="text" class="form-control" name="userName" placeholder="Введите логин..." required />
 					</div>
 				</div>
 				<div class="row mt-3">
-					<div class="col-md">
-						<form-field name="lastName" label="Фамилия" placeholder="Введите фамилию" required></form-field>
-					</div>
-					<div class="col-md">
-						<form-field name="firstName" label="Имя" placeholder="Введите имя" required></form-field>
+					<div class="col-6">
+						<label for="password" class="form-label">Пароль</label>
+						<input type="password" class="form-control" name="password" placeholder="Введите пароль..." required />
 					</div>
 				</div>
 				<div class="row mt-3">
-					<div class="col-md">
-						<form-field name="password" type="password" label="Пароль" placeholder="Введите пароль" required></form-field>
-					</div>
-					<div class="col-md">
-						<form-field name="passwordConfirmation" type="password" label="Подтвержение пароля" placeholder="Введите пароль еще раз" required></form-field>
+					<div class="col">
+						<input type="checkbox" class="form-check-input" name="rememberMe" />
+						<label for="rememberMe" class="form-label">Запомнить меня</label>
 					</div>
 				</div>
-				<div class="row mt-5">
+				<div class="row mt-2">
 					<div class="col">
 						<button is="button-submit" spinner-color="secondary" spinner-small class="btn btn-outline-secondary d-flex align-items-center">
-							Зарегистрироваться
+							Войти
 						</button>
 					</div>
 				</div>
